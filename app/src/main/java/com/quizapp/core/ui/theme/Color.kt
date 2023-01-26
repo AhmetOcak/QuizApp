@@ -13,3 +13,14 @@ val Grapefruit = Color(0xFF904E95)
 val OpenGray = Color(0xFFD3D3D3)
 val TransparentWhite = Color(0xBFFFFFFF)
 val StrangePurple = Color(0xFF261962)
+
+val LightPurple = Color(0xFF845EC2)
+val LightPink = Color(0xFFD65DB1)
+val StrangeRed = Color(0xFFFF6F91)
+val StrangeOrange = Color(0xFFFF9671)
+val LightBrown = Color(0xFFFFC75F)
+val LightYellow = Color(0xFFF9F871)
+
+val WhiteSmoke = Color(0xFFF5F5F5)
+
+val HighTransparentWhite = Color(0xBFFFFFFF)

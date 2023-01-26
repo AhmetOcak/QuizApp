@@ -3,16 +3,19 @@ package com.quizapp.core.navigation
 import androidx.compose.animation.AnimatedContentScope
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.animation.core.tween
+import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.BottomAppBar
-import androidx.compose.material.BottomNavigationItem
-import androidx.compose.material.Icon
+import androidx.compose.material.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.rounded.Menu
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
@@ -21,9 +24,11 @@ import com.google.accompanist.navigation.animation.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import com.google.accompanist.navigation.animation.AnimatedNavHost
 import com.google.accompanist.navigation.animation.rememberAnimatedNavController
+import com.quizapp.R
 import com.quizapp.core.ui.component.CustomScaffold
 import com.quizapp.core.ui.theme.StrangePurple
 import com.quizapp.core.ui.theme.TransparentWhite
+import com.quizapp.core.ui.theme.WhiteSmoke
 import com.quizapp.presentation.search.SearchScreen
 import com.quizapp.presentation.forgot_password.ForgotPasswordScreen
 import com.quizapp.presentation.home.HomeScreen
@@ -45,7 +50,12 @@ fun NavGraph(
 
     CustomScaffold(
         modifier = modifier.fillMaxSize(),
-        backgroundColor = StrangePurple,
+        backgroundColor = WhiteSmoke,
+        topBar = {
+            if (currentRoute == NavScreen.ProfileScreen.route) {
+                MyTopAppBar()
+            }
+        },
         content = {
             AnimatedNavHost(
                 modifier = modifier.padding(it),
@@ -99,6 +109,33 @@ fun NavGraph(
 }
 
 @Composable
+private fun MyTopAppBar() {
+    TopAppBar(
+        title = {},
+        navigationIcon = {
+            IconButton(onClick = { /*TODO*/ }) {
+                Icon(
+                    painter = painterResource(id = R.drawable.ic_baseline_headphones),
+                    contentDescription = null,
+                    tint = Color.Black
+                )
+            }
+        },
+        actions = {
+            IconButton(onClick = { /*TODO*/ }) {
+                Icon(
+                    painter = painterResource(id = R.drawable.ic_baseline_edit),
+                    contentDescription = null,
+                    tint = Color.Black
+                )
+            }
+        },
+        elevation = 0.dp,
+        backgroundColor = WhiteSmoke
+    )
+}
+
+@Composable
 private fun BottomAppBar(modifier: Modifier, currentRoute: String?, navController: NavController) {
     Box(modifier = modifier.fillMaxSize(), contentAlignment = Alignment.BottomCenter) {
         BottomNavItems.items.forEach { navItem ->
@@ -107,7 +144,11 @@ private fun BottomAppBar(modifier: Modifier, currentRoute: String?, navControlle
                     modifier = modifier
                         .padding(start = 16.dp, end = 16.dp, bottom = 16.dp)
                         .navigationBarsPadding()
-                        .clip(shape = RoundedCornerShape(20)),
+                        .clip(shape = RoundedCornerShape(20))
+                        .border(
+                            border = BorderStroke(width = 1.dp, color = StrangePurple),
+                            shape = RoundedCornerShape(20)
+                        ),
                     backgroundColor = TransparentWhite,
                     elevation = 0.dp
                 ) {
@@ -126,6 +167,8 @@ private fun RowScope.BottomAppBarContent(currentRoute: String?, navController: N
     BottomNavItems.items.forEachIndexed { index, screen ->
         BottomNavigationItem(
             selected = currentRoute == screen.route,
+            selectedContentColor = StrangePurple,
+            unselectedContentColor = Color.Gray,
             onClick = {
                 if (currentRoute == screen.route) {
                     return@BottomNavigationItem
@@ -147,7 +190,6 @@ private fun RowScope.BottomAppBarContent(currentRoute: String?, navController: N
                 Icon(
                     painter = painterResource(id = screen.icon),
                     contentDescription = null,
-                    tint = StrangePurple
                 )
             }
         )
