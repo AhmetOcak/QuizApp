@@ -20,6 +20,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.quizapp.R
 import com.quizapp.core.ui.theme.*
+import com.quizapp.presentation.utils.Dimens
 
 @Composable
 fun HomeScreen(modifier: Modifier = Modifier) {
@@ -90,13 +91,12 @@ private fun UserNameLevel(modifier: Modifier) {
         Text(
             text = "Hello, Ahmet",
             style = MaterialTheme.typography.body2.copy(
-                fontWeight = FontWeight.Bold,
-                color = Color.White
+                fontWeight = FontWeight.Bold
             )
         )
         Text(
             text = "Lv. 1  Beginner",
-            style = MaterialTheme.typography.h5.copy(color = Color.White)
+            style = MaterialTheme.typography.h5
         )
     }
 }
@@ -108,13 +108,12 @@ private fun Notification(modifier: Modifier) {
         IconButton(
             modifier = modifier
                 .clip(shape = RoundedCornerShape(20))
-                .background(color = TransparentWhite),
+                .background(color = Color.White),
             onClick = { /*TODO*/ }) {
             Icon(
                 modifier = modifier.size(24.dp),
                 painter = painterResource(id = R.drawable.notification_alert),
-                contentDescription = null,
-                tint = StrangePurple
+                contentDescription = null
             )
         }
     }
@@ -132,7 +131,6 @@ private fun PopularQuizzesSection(modifier: Modifier) {
             text = "Popular Quizzes",
             style = MaterialTheme.typography.h2.copy(
                 fontWeight = FontWeight.Bold,
-                color = Color.White
             )
         )
         LazyRow(
@@ -164,13 +162,15 @@ private fun QuizCategoriesSection(modifier: Modifier) {
         Text(
             text = "Categories",
             style = MaterialTheme.typography.h2.copy(
-                fontWeight = FontWeight.Bold,
-                color = Color.White
+                fontWeight = FontWeight.Bold
             )
         )
         // 56.dp added (offset image value)
         LazyColumn(
-            contentPadding = PaddingValues(vertical = 72.dp),
+            contentPadding = PaddingValues(
+                top = 72.dp,
+                bottom = 72.dp + Dimens.AppBarDefaultHeight
+            ),
             verticalArrangement = Arrangement.spacedBy(64.dp),
         ) {
             items(5) {
