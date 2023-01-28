@@ -48,8 +48,8 @@ private fun LeaderboardScreenContent(modifier: Modifier) {
             .fillMaxSize()
             .padding(
                 top = 32.dp,
-                start = 32.dp,
-                end = 32.dp
+                start = 16.dp,
+                end = 16.dp
             ),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.SpaceBetween
@@ -239,8 +239,8 @@ private fun ProfileImage(modifier: Modifier, userImage: Int, imageSize: Dp = 112
 @Composable
 private fun QueueSection(modifier: Modifier) {
     LazyColumn(
-        modifier = modifier.padding(bottom = Dimens.AppBarDefaultHeight),
-        contentPadding = PaddingValues(vertical = 32.dp),
+        modifier = modifier.fillMaxWidth(),
+        contentPadding = PaddingValues(top = 32.dp, bottom = 32.dp + Dimens.AppBarDefaultHeight),
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
         items(10) {
