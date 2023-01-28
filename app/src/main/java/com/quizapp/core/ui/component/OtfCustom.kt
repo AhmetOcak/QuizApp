@@ -1,16 +1,13 @@
-package com.quizapp.core.component
+package com.quizapp.core.ui.component
 
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
@@ -20,7 +17,7 @@ import com.quizapp.R
 
 // Default OutlinedTextField
 @Composable
-fun OtfDefault(
+fun OtfCustom(
     modifier: Modifier,
     value: String = "",
     onValueChanged: (String) -> Unit,

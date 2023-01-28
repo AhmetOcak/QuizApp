@@ -1,6 +1,5 @@
-package com.quizapp.core.component
+package com.quizapp.core.ui.component
 
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
@@ -11,7 +10,7 @@ import androidx.compose.ui.unit.dp
 
 // Default OutlinedButton
 @Composable
-fun OutBtnDefault(modifier: Modifier, onClick: () -> Unit, buttonText: String) {
+fun OutBtnCustom(modifier: Modifier, onClick: () -> Unit, buttonText: String) {
     OutlinedButton(
         modifier = modifier.size(
             height = TextFieldDefaults.MinHeight + 8.dp,
