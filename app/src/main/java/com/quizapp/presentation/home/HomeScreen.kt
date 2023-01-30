@@ -91,12 +91,14 @@ private fun UserNameLevel(modifier: Modifier) {
         Text(
             text = "Hello, Ahmet",
             style = MaterialTheme.typography.body2.copy(
-                fontWeight = FontWeight.Bold
+                fontWeight = FontWeight.Bold,
+                color = MaterialTheme.colors.primaryVariant
             )
         )
         Text(
             text = "Lv. 1  Beginner",
-            style = MaterialTheme.typography.h5
+            style = MaterialTheme.typography.h5,
+            color = MaterialTheme.colors.primaryVariant
         )
     }
 }
@@ -108,7 +110,7 @@ private fun Notification(modifier: Modifier) {
         IconButton(
             modifier = modifier
                 .clip(shape = RoundedCornerShape(20))
-                .background(color = Color.White),
+                .background(color = MaterialTheme.colors.primary),
             onClick = { /*TODO*/ }) {
             Icon(
                 modifier = modifier.size(24.dp),
@@ -131,6 +133,7 @@ private fun PopularQuizzesSection(modifier: Modifier) {
             text = "Popular Quizzes",
             style = MaterialTheme.typography.h2.copy(
                 fontWeight = FontWeight.Bold,
+                color = MaterialTheme.colors.primaryVariant
             )
         )
         LazyRow(
@@ -144,8 +147,7 @@ private fun PopularQuizzesSection(modifier: Modifier) {
                 PopularQuizCard(
                     modifier = modifier,
                     onClick = { /*TODO*/ },
-                    quizName = "Math",
-                    colors = listOf(Sunset, Grapefruit)
+                    quizName = "Math"
                 )
             }
         }
@@ -162,7 +164,8 @@ private fun QuizCategoriesSection(modifier: Modifier) {
         Text(
             text = "Categories",
             style = MaterialTheme.typography.h2.copy(
-                fontWeight = FontWeight.Bold
+                fontWeight = FontWeight.Bold,
+                color = MaterialTheme.colors.primaryVariant
             )
         )
         // 56.dp added (offset image value)
@@ -184,16 +187,15 @@ private fun QuizCategoriesSection(modifier: Modifier) {
 private fun PopularQuizCard(
     modifier: Modifier,
     onClick: () -> Unit,
-    quizName: String,
-    colors: List<Color>
+    quizName: String
 ) {
     Card(
         modifier = modifier
             .width(144.dp)
             .height(176.dp),
-        shape = RoundedCornerShape(20),
+        shape = RoundedCornerShape(20)
     ) {
-        QuizCardBackground(modifier = modifier, colors = colors)
+        QuizCardBackground(modifier = modifier, isQuizCard = true)
         Column(
             modifier = modifier
                 .fillMaxSize()
@@ -208,16 +210,15 @@ private fun PopularQuizCard(
 
 // Created for Quiz Card and Category Card
 @Composable
-private fun QuizCardBackground(modifier: Modifier, colors: List<Color>) {
-    Box(
-        modifier = modifier
-            .fillMaxSize()
-            .background(
-                brush = Brush.horizontalGradient(
-                    colors = colors
-                )
-            )
-    )
+private fun QuizCardBackground(modifier: Modifier, isQuizCard: Boolean) {
+    Box(modifier = modifier.fillMaxSize()) {
+        Image(
+            modifier = modifier.fillMaxSize(),
+            painter = painterResource(id = if (isQuizCard) R.drawable.quiz_back else R.drawable.categori_back),
+            contentDescription = null,
+            contentScale = ContentScale.Crop
+        )
+    }
 }
 
 // Created for Quiz Card
@@ -232,14 +233,14 @@ private fun QuizCardText(modifier: Modifier, quizName: String) {
             text = quizName,
             style = MaterialTheme.typography.h3.copy(
                 fontWeight = FontWeight.Bold,
-                color = Color.White
+                color = MaterialTheme.colors.primaryVariant
             )
         )
         Text(
             text = "Quiz",
             style = MaterialTheme.typography.h1.copy(
                 fontWeight = FontWeight.Bold,
-                color = Color.White
+                color = MaterialTheme.colors.primaryVariant
             )
         )
     }
@@ -256,12 +257,22 @@ private fun QuizCardButton(modifier: Modifier, onClick: () -> Unit) {
         colors = ButtonDefaults.outlinedButtonColors(),
         shape = RoundedCornerShape(30),
         contentPadding = PaddingValues(0.dp),
-        border = null
+        border = BorderStroke(
+            width = 1.dp,
+            brush = Brush.horizontalGradient(
+                colors = listOf(
+                    LightPurple,
+                    LightPink,
+                    StrangeRed,
+                    StrangeOrange
+                )
+            )
+        )
     ) {
         Icon(
             painter = painterResource(id = R.drawable.ic_baseline_play_arrow),
             contentDescription = null,
-            tint = Sunset
+            tint = Color.White
         )
     }
 }
@@ -276,7 +287,7 @@ private fun CategoryCard(modifier: Modifier, onClick: () -> Unit) {
                 .clickable(onClick = onClick),
             shape = RoundedCornerShape(25)
         ) {
-            QuizCardBackground(modifier = modifier, colors = listOf(Sunset, Grapefruit))
+            QuizCardBackground(modifier = modifier, isQuizCard = false)
             CategoryInterface(modifier = modifier, categoryName = "Literature", onClick = onClick)
         }
         CategoryImage(modifier = modifier, image = R.drawable.books)
@@ -316,7 +327,7 @@ private fun CategoryInterface(modifier: Modifier, categoryName: String, onClick:
             text = categoryName,
             style = MaterialTheme.typography.h1.copy(
                 fontWeight = FontWeight.Bold,
-                color = Color.White
+                color = MaterialTheme.colors.primaryVariant
             )
         )
     }

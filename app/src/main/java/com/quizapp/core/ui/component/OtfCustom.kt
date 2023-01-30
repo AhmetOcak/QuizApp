@@ -58,6 +58,10 @@ fun OtfCustom(
                     )
                 }
             }
-        }
+        },
+        colors = TextFieldDefaults.outlinedTextFieldColors(
+            focusedBorderColor = MaterialTheme.colors.onPrimary,
+            cursorColor = MaterialTheme.colors.onPrimary
+        )
     )
 }

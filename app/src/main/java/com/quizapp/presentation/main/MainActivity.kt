@@ -21,7 +21,7 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colors.background
                 ) {
-                    NavGraph(startDestination = NavScreen.HomeScreen.route)
+                    NavGraph(startDestination = NavScreen.QuizScreen.route)
                 }
             }
         }

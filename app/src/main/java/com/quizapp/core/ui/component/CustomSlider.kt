@@ -18,7 +18,8 @@ fun CustomSlider(
     trackHeight: Dp,
     onValueChange: (Float) -> Unit,
     value: Float,
-    borderStroke: BorderStroke? = null
+    borderStroke: BorderStroke? = null,
+    inactiveTrackColor: Color = Color.LightGray
 ) {
     ColorfulSlider(
         modifier = modifier,
@@ -28,7 +29,7 @@ fun CustomSlider(
         valueRange = 0f..100f,
         onValueChange = onValueChange,
         colors = MaterialSliderDefaults.materialColors(
-            inactiveTrackColor = SliderBrushColor(color = Color.LightGray),
+            inactiveTrackColor = SliderBrushColor(color = inactiveTrackColor),
             activeTrackColor = SliderBrushColor(
                 brush = Brush.horizontalGradient(
                     colors = listOf(

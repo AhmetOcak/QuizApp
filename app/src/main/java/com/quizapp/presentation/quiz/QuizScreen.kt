@@ -18,13 +18,19 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.quizapp.R
-import com.quizapp.core.component.CircleCheckbox
-import com.quizapp.core.component.OutBtnDefault
-import com.quizapp.core.ui.theme.Grapefruit
-import com.quizapp.core.ui.theme.Sunset
-import com.smarttoolfactory.slider.ColorfulSlider
-import com.smarttoolfactory.slider.MaterialSliderDefaults
-import com.smarttoolfactory.slider.SliderBrushColor
+import com.quizapp.core.ui.component.CircleCheckbox
+import com.quizapp.core.ui.component.CustomSlider
+import com.quizapp.core.ui.component.OutBtnCustom
+import com.quizapp.core.ui.theme.*
+
+private val gradientColors = listOf(
+    LightPurple,
+    LightPink,
+    StrangeRed,
+    StrangeOrange,
+    LightBrown,
+    LightYellow
+)
 
 @Composable
 fun QuizScreen(modifier: Modifier = Modifier) {
@@ -35,18 +41,18 @@ fun QuizScreen(modifier: Modifier = Modifier) {
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
 private fun QuizScreenContent(modifier: Modifier) {
-    Scaffold(modifier = modifier) {
+    Scaffold() {
         Column(
             modifier = modifier
                 .fillMaxSize()
-                .padding(32.dp),
+                .padding(16.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.SpaceAround
         ) {
             TimerSection(modifier = modifier)
             QuestionSection(modifier = modifier)
             AnswersSection(modifier = modifier)
-            OutBtnDefault(
+            OutBtnCustom(
                 modifier = modifier
                     .fillMaxWidth()
                     .padding(top = 32.dp),
@@ -65,29 +71,22 @@ private fun TimerSection(modifier: Modifier) {
         verticalAlignment = Alignment.CenterVertically
     ) {
         Box(modifier = modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
-            ColorfulSlider(
-                value = 50f,
-                thumbRadius = 0.dp,
+            CustomSlider(
+                modifier = modifier.fillMaxWidth(),
                 trackHeight = 42.dp,
-                valueRange = 0f..100f,
                 onValueChange = { value -> },
-                colors = MaterialSliderDefaults.materialColors(
-                    inactiveTrackColor = SliderBrushColor(color = Color.White),
-                    activeTrackColor = SliderBrushColor(
-                        brush = Brush.horizontalGradient(colors = listOf(Sunset, Grapefruit)),
-                    ),
-                    thumbColor = SliderBrushColor(color = Color.Transparent),
-                ),
+                value = 50f,
+                inactiveTrackColor = Color.Transparent,
                 borderStroke = BorderStroke(
-                    3.dp,
-                    Brush.horizontalGradient(colors = listOf(Color.Gray, Color.Gray))
-                ),
+                    width = 1.dp,
+                    brush = Brush.horizontalGradient(colors = gradientColors)
+                )
             )
             Text(
                 text = "50",
                 style = MaterialTheme.typography.body2.copy(
                     fontWeight = FontWeight.Bold,
-                    color = Color.White
+                    color = MaterialTheme.colors.primaryVariant
                 )
             )
             Box(
@@ -99,7 +98,7 @@ private fun TimerSection(modifier: Modifier) {
                 Icon(
                     painter = painterResource(id = R.drawable.ic_baseline_access_time),
                     contentDescription = null,
-                    tint = Color.Black
+                    tint = MaterialTheme.colors.primaryVariant
                 )
             }
         }
@@ -129,7 +128,8 @@ private fun QuestionTracker(modifier: Modifier) {
             .padding(top = 32.dp),
         text = "Question 1/10",
         style = MaterialTheme.typography.h1.copy(fontWeight = FontWeight.SemiBold),
-        textAlign = TextAlign.Start
+        textAlign = TextAlign.Start,
+        color = MaterialTheme.colors.primaryVariant
     )
 }
 
@@ -138,7 +138,8 @@ private fun Question(modifier: Modifier) {
     Text(
         modifier = modifier.fillMaxWidth(),
         text = "What attraction in Montreal is one of the largest in the world",
-        style = MaterialTheme.typography.h2.copy(color = Color.Black, fontWeight = FontWeight.Bold)
+        style = MaterialTheme.typography.h2.copy(color = Color.Black, fontWeight = FontWeight.Bold),
+        color = MaterialTheme.colors.primaryVariant
     )
 }
 
@@ -148,6 +149,11 @@ private fun AnswersSection(modifier: Modifier) {
         modifier = modifier.padding(top = 64.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
+        Answer(
+            modifier = modifier.padding(vertical = 8.dp),
+            answerText = "The Botanical Gardens",
+            onChecked = {}
+        )
         Answer(
             modifier = modifier.padding(vertical = 8.dp),
             answerText = "The Botanical Gardens",
@@ -179,12 +185,12 @@ private fun Answer(
     Row(
         modifier = modifier
             .fillMaxWidth()
-            .height(54.dp)
+            .height(TextFieldDefaults.MinHeight + 8.dp)
             .border(
-                border = BorderStroke(width = 2.dp, color = Color.Gray),
+                border = BorderStroke(width = 1.dp, color = Color.Black),
                 shape = RoundedCornerShape(25)
             )
-            .background(color = Color.LightGray, shape = RoundedCornerShape(25))
+            .background(color = MaterialTheme.colors.primary, shape = RoundedCornerShape(25))
             .clickable(enabled = true, onClick = {}),
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
@@ -192,7 +198,7 @@ private fun Answer(
         Text(
             modifier = modifier.padding(start = 16.dp),
             text = answerText,
-            style = MaterialTheme.typography.body2.copy(color = Color.Black)
+            style = MaterialTheme.typography.body2.copy(color = MaterialTheme.colors.primaryVariant)
         )
         CircleCheckbox(
             modifier = modifier,

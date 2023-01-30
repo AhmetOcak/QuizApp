@@ -18,8 +18,8 @@ fun OutBtnCustom(modifier: Modifier, onClick: () -> Unit, buttonText: String) {
         ),
         onClick = onClick,
         shape = RoundedCornerShape(20),
-        colors = ButtonDefaults.outlinedButtonColors(backgroundColor = MaterialTheme.colors.primary)
+        colors = ButtonDefaults.outlinedButtonColors(backgroundColor = MaterialTheme.colors.onPrimary)
     ) {
-        Text(text = buttonText, color = Color.White)
+        Text(text = buttonText, color = MaterialTheme.colors.primary)
     }
 }

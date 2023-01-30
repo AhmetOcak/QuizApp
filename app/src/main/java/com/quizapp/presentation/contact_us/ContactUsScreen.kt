@@ -14,7 +14,6 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.quizapp.core.ui.component.OtfCustom
 import com.quizapp.core.ui.component.OutBtnCustom
-import com.quizapp.core.ui.theme.WhiteSmoke
 
 @Composable
 fun ContactUsScreen(modifier: Modifier = Modifier) {
@@ -26,7 +25,6 @@ fun ContactUsScreen(modifier: Modifier = Modifier) {
 @Composable
 private fun ContactUsScreenContent(modifier: Modifier) {
     Scaffold(
-        backgroundColor = WhiteSmoke,
         topBar = {
             MyTopAppBar()
         }
@@ -56,13 +54,18 @@ private fun MyTopAppBar() {
     TopAppBar(
         navigationIcon = {
             IconButton(onClick = { /*TODO*/ }) {
-                Icon(imageVector = Icons.Rounded.ArrowBack, contentDescription = null)
+                Icon(
+                    imageVector = Icons.Rounded.ArrowBack,
+                    contentDescription = null,
+                    tint = MaterialTheme.colors.primaryVariant
+                )
             }
         },
         title = {
             Text(
                 text = "Contact Us!",
-                style = MaterialTheme.typography.h1.copy(fontWeight = FontWeight.SemiBold)
+                style = MaterialTheme.typography.h1.copy(fontWeight = FontWeight.SemiBold),
+                color = MaterialTheme.colors.primaryVariant
             )
         },
         elevation = 0.dp,
@@ -75,7 +78,8 @@ private fun DescriptionSection() {
     Text(
         text = "You can send an email to us whenever you want !!!",
         style = MaterialTheme.typography.h2.copy(fontWeight = FontWeight.Bold),
-        textAlign = TextAlign.Center
+        textAlign = TextAlign.Center,
+        color = MaterialTheme.colors.primaryVariant
     )
 }
 
@@ -107,15 +111,3 @@ private fun InputSection(modifier: Modifier) {
         )
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-

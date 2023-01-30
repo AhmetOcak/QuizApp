@@ -9,6 +9,9 @@ object NavRoutes {
     const val register_screen = "register_screen"
     const val forgot_password_screen = "forgot_password_screen"
     const val leaderboard_screen = "leaderboard_screen"
+    const val contact_us_screen = "contact_us_screen"
+    const val edit_profile_screen = "edit_profile_screen"
+    const val quiz_landing_screen = "quiz_landing_screen"
 }
 
 object BottomNavItems {

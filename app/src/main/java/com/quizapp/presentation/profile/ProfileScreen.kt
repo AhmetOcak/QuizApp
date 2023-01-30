@@ -21,6 +21,7 @@ import androidx.compose.ui.unit.dp
 import com.quizapp.R
 import com.quizapp.core.ui.component.CustomSlider
 import com.quizapp.core.ui.theme.*
+import com.quizapp.presentation.utils.Dimens
 
 @Composable
 fun ProfileScreen(modifier: Modifier = Modifier) {
@@ -35,8 +36,12 @@ private fun ProfileScreenContent(modifier: Modifier) {
         modifier = modifier
             .fillMaxSize()
             .verticalScroll(rememberScrollState())
-            // 56.dp ===> AppBar Default height
-            .padding(start = 16.dp, end = 16.dp, top = 16.dp, bottom = 32.dp + 56.dp),
+            .padding(
+                start = 16.dp,
+                end = 16.dp,
+                top = 16.dp,
+                bottom = 32.dp + Dimens.AppBarDefaultHeight
+            ),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         ProfileDetailSection(modifier = modifier)
@@ -85,11 +90,13 @@ private fun ProfileInfo(modifier: Modifier) {
 private fun UserNameAndLevel(modifier: Modifier) {
     Text(
         text = "Ahmet Ocak",
-        style = MaterialTheme.typography.h1.copy(fontWeight = FontWeight.Bold)
+        style = MaterialTheme.typography.h1.copy(fontWeight = FontWeight.Bold),
+        color = MaterialTheme.colors.primaryVariant
     )
     Text(
         text = "Bonus Booster, 24 lv",
-        style = MaterialTheme.typography.h5
+        style = MaterialTheme.typography.h5,
+        color = MaterialTheme.colors.primaryVariant
     )
 }
 
@@ -100,8 +107,7 @@ private fun UserLevelAndStatistics(modifier: Modifier) {
         modifier = modifier
             .fillMaxWidth()
             .padding(top = 16.dp)
-            .clip(shape = RoundedCornerShape(20)),
-        elevation = 16.dp
+            .clip(shape = RoundedCornerShape(20))
     ) {
         Column {
             LevelSlider(modifier = modifier)
@@ -122,7 +128,8 @@ private fun LevelSlider(modifier: Modifier) {
             modifier = modifier.fillMaxWidth(),
             text = "4000 / 10000 XP",
             style = MaterialTheme.typography.h6.copy(color = Color.Gray),
-            textAlign = TextAlign.End
+            textAlign = TextAlign.End,
+            color = MaterialTheme.colors.primaryVariant
         )
         CustomSlider(
             modifier = modifier.fillMaxWidth(),
@@ -188,9 +195,13 @@ private fun Statistics(modifier: Modifier, iconId: Int, value: Int, description:
         ) {
             Text(
                 text = "$value",
-                style = MaterialTheme.typography.h1.copy(fontWeight = FontWeight.Bold)
+                style = MaterialTheme.typography.h1.copy(fontWeight = FontWeight.Bold),
+                color = MaterialTheme.colors.primaryVariant
             )
-            Text(text = description, style = MaterialTheme.typography.h5)
+            Text(
+                text = description, style = MaterialTheme.typography.h5,
+                color = MaterialTheme.colors.primaryVariant
+            )
         }
     }
 }
@@ -201,13 +212,12 @@ private fun AchievementsSection(modifier: Modifier) {
         modifier = modifier
             .fillMaxWidth()
             .padding(top = 32.dp)
-            .clip(shape = RoundedCornerShape(20)),
-        elevation = 16.dp
+            .clip(shape = RoundedCornerShape(20))
     ) {
         Column(
             modifier = modifier
                 .fillMaxWidth()
-                .padding(bottom = 16.dp)
+                .padding(vertical = 16.dp)
         ) {
             TitleAndSlider(
                 modifier = modifier,
@@ -215,6 +225,31 @@ private fun AchievementsSection(modifier: Modifier) {
                 count = 8,
                 sliderDescr = "8/200",
                 value = 12f
+            )
+            UserItems(modifier = modifier)
+        }
+    }
+}
+
+@Composable
+private fun InventorySection(modifier: Modifier) {
+    Card(
+        modifier = modifier
+            .fillMaxWidth()
+            .padding(top = 32.dp)
+            .clip(shape = RoundedCornerShape(20))
+    ) {
+        Column(
+            modifier = modifier
+                .fillMaxWidth()
+                .padding(vertical = 16.dp)
+        ) {
+            TitleAndSlider(
+                modifier = modifier,
+                title = "Inventory",
+                count = 4,
+                sliderDescr = "4/10",
+                value = 40f
             )
             UserItems(modifier = modifier)
         }
@@ -250,18 +285,23 @@ private fun TitleAndCount(modifier: Modifier, title: String, count: Int) {
         Text(
             modifier = modifier.padding(end = 8.dp),
             text = title,
-            style = MaterialTheme.typography.h3.copy(fontWeight = FontWeight.Bold)
+            style = MaterialTheme.typography.h3.copy(fontWeight = FontWeight.Bold),
+            color = MaterialTheme.colors.primaryVariant
         )
         Box(
             modifier = modifier
                 .size(24.dp)
                 .clip(shape = RoundedCornerShape(20))
-                .background(color = Color.LightGray, shape = RoundedCornerShape(20)),
+                .background(
+                    color = MaterialTheme.colors.background,
+                    shape = RoundedCornerShape(20)
+                ),
             contentAlignment = Alignment.Center
         ) {
             Text(
                 text = "$count",
-                style = MaterialTheme.typography.h4.copy(fontWeight = FontWeight.Bold)
+                style = MaterialTheme.typography.h4.copy(fontWeight = FontWeight.Bold),
+                color = MaterialTheme.colors.primaryVariant
             )
         }
     }
@@ -317,7 +357,8 @@ private fun UserCard(modifier: Modifier, contentName: String, contentImage: Int)
         Text(
             modifier = modifier.padding(top = 24.dp),
             text = contentName,
-            style = MaterialTheme.typography.h4.copy(fontWeight = FontWeight.Bold)
+            style = MaterialTheme.typography.h4.copy(fontWeight = FontWeight.Bold),
+            color = MaterialTheme.colors.primaryVariant
         )
     }
 }
@@ -352,32 +393,6 @@ private fun RotatedCard(modifier: Modifier, contentImage: Int) {
                 contentDescription = null,
                 contentScale = ContentScale.Crop
             )
-        }
-    }
-}
-
-@Composable
-private fun InventorySection(modifier: Modifier) {
-    Card(
-        modifier = modifier
-            .fillMaxWidth()
-            .padding(top = 32.dp)
-            .clip(shape = RoundedCornerShape(20)),
-        elevation = 16.dp
-    ) {
-        Column(
-            modifier = modifier
-                .fillMaxWidth()
-                .padding(bottom = 16.dp)
-        ) {
-            TitleAndSlider(
-                modifier = modifier,
-                title = "Inventory",
-                count = 4,
-                sliderDescr = "4/10",
-                value = 40f
-            )
-            UserItems(modifier = modifier)
         }
     }
 }

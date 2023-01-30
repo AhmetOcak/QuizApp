@@ -7,6 +7,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Card
 import androidx.compose.material.MaterialTheme
+import androidx.compose.material.MaterialTheme.colors
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -14,11 +15,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.quizapp.R
-import com.quizapp.core.ui.component.OtfDefault
+import com.quizapp.core.ui.component.OtfCustom
 import com.quizapp.core.ui.theme.*
 import com.quizapp.presentation.utils.Dimens
 
@@ -46,7 +48,7 @@ private fun SearchScreenContent(modifier: Modifier) {
 
 @Composable
 private fun SearchFieldSection(modifier: Modifier) {
-    OtfDefault(
+    OtfCustom(
         modifier = modifier.fillMaxWidth(),
         onValueChanged = {},
         placeHolderText = "Search",
@@ -55,8 +57,8 @@ private fun SearchFieldSection(modifier: Modifier) {
 
 @Composable
 private fun SearchResultSection(modifier: Modifier) {
-    //EmptySearch(modifier = modifier)
-    QuizList(modifier = modifier)
+    EmptySearch(modifier = modifier)
+    //QuizList(modifier = modifier)
 }
 
 
@@ -76,7 +78,8 @@ private fun EmptySearch(modifier: Modifier) {
         Text(
             modifier = modifier.padding(top = 8.dp),
             text = "Sorry! No result found :(",
-            style = MaterialTheme.typography.h2.copy(fontWeight = FontWeight.SemiBold)
+            style = MaterialTheme.typography.h2.copy(fontWeight = FontWeight.SemiBold),
+            color = MaterialTheme.colors.primaryVariant
         )
     }
 }
@@ -87,7 +90,7 @@ private fun QuizList(modifier: Modifier) {
     LazyColumn(
         modifier = modifier.fillMaxSize(),
         contentPadding = PaddingValues(top = 32.dp, bottom = 32.dp + Dimens.AppBarDefaultHeight),
-        verticalArrangement = Arrangement.spacedBy(8.dp)
+        verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
         items(10) {
             Quiz(
@@ -115,17 +118,8 @@ private fun Quiz(
             .height(208.dp)
             .clickable(onClick = {}),
         shape = RoundedCornerShape(25)
-
     ) {
-        QuizCardBackground(
-            modifier = modifier,
-            colors = listOf(
-                LightPurple,
-                LightPink,
-                StrangeRed,
-                StrangeOrange
-            )
-        )
+        QuizCardBackground(modifier = modifier)
         QuizContent(
             modifier = modifier,
             quizName = quizName,
@@ -157,14 +151,14 @@ private fun QuizContent(
                 modifier = modifier.padding(start = 8.dp),
                 text = quizAuthor,
                 style = MaterialTheme.typography.h3.copy(fontWeight = FontWeight.SemiBold),
-                color = Color.White
+                color = MaterialTheme.colors.primaryVariant
             )
         }
         Text(
             modifier = modifier.padding(top = 16.dp),
             text = quizName,
             style = MaterialTheme.typography.h2,
-            color = Color.White
+            color = MaterialTheme.colors.primaryVariant
         )
         Text(
             modifier = modifier
@@ -172,7 +166,7 @@ private fun QuizContent(
                 .verticalScroll(rememberScrollState()),
             text = quizDescription,
             style = MaterialTheme.typography.h4,
-            color = Color.White,
+            color = MaterialTheme.colors.primaryVariant
         )
     }
 }
@@ -195,14 +189,13 @@ private fun AuthorImage(modifier: Modifier, authorImage: Int) {
 
 // Created for Quiz
 @Composable
-private fun QuizCardBackground(modifier: Modifier, colors: List<Color>) {
-    Box(
-        modifier = modifier
-            .fillMaxSize()
-            .background(
-                brush = Brush.horizontalGradient(
-                    colors = colors
-                )
-            )
-    )
+private fun QuizCardBackground(modifier: Modifier) {
+    Box(modifier = modifier.fillMaxSize()) {
+        Image(
+            modifier = modifier.fillMaxSize(),
+            painter = painterResource(id = R.drawable.quiz_back),
+            contentDescription = null,
+            contentScale = ContentScale.Crop
+        )
+    }
 }

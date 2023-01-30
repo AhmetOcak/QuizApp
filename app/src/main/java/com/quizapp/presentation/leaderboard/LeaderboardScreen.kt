@@ -3,6 +3,7 @@ package com.quizapp.presentation.leaderboard
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CircleShape
@@ -72,7 +73,8 @@ private fun LeaderboardScreenContent(modifier: Modifier) {
 private fun Title() {
     Text(
         text = "Leaderboard",
-        style = MaterialTheme.typography.h2.copy(fontWeight = FontWeight.Bold)
+        style = MaterialTheme.typography.h2.copy(fontWeight = FontWeight.Bold),
+        color = MaterialTheme.colors.primaryVariant
     )
 }
 
@@ -157,17 +159,20 @@ private fun Second(modifier: Modifier, userImage: Int, userName: String, userSco
         Text(
             modifier = modifier.padding(bottom = 8.dp),
             text = "2",
-            style = MaterialTheme.typography.h2.copy(fontWeight = FontWeight.Bold)
+            style = MaterialTheme.typography.h2.copy(fontWeight = FontWeight.Bold),
+            color = MaterialTheme.colors.primaryVariant
         )
         ProfileImage(modifier = modifier, userImage = userImage)
         Text(
             modifier = modifier.padding(top = 16.dp),
             text = userName,
-            style = MaterialTheme.typography.h3
+            style = MaterialTheme.typography.h3,
+            color = MaterialTheme.colors.primaryVariant
         )
         Text(
             text = "$userScore",
-            style = MaterialTheme.typography.h2.copy(fontWeight = FontWeight.Bold)
+            style = MaterialTheme.typography.h2.copy(fontWeight = FontWeight.Bold),
+            color = MaterialTheme.colors.primaryVariant
         )
     }
 }
@@ -184,17 +189,20 @@ private fun Third(modifier: Modifier, userImage: Int, userName: String, userScor
         Text(
             modifier = modifier.padding(bottom = 8.dp),
             text = "3",
-            style = MaterialTheme.typography.h2.copy(fontWeight = FontWeight.Bold)
+            style = MaterialTheme.typography.h2.copy(fontWeight = FontWeight.Bold),
+            color = MaterialTheme.colors.primaryVariant
         )
         ProfileImage(modifier = modifier, userImage = userImage)
         Text(
             modifier = modifier.padding(top = 16.dp),
             text = userName,
-            style = MaterialTheme.typography.h3
+            style = MaterialTheme.typography.h3,
+            color = MaterialTheme.colors.primaryVariant
         )
         Text(
             text = "$userScore",
-            style = MaterialTheme.typography.h2.copy(fontWeight = FontWeight.Bold)
+            style = MaterialTheme.typography.h2.copy(fontWeight = FontWeight.Bold),
+            color = MaterialTheme.colors.primaryVariant
         )
     }
 }
@@ -269,14 +277,18 @@ private fun Queue(
     ) {
         Text(
             text = "$position",
-            style = MaterialTheme.typography.h3.copy(fontWeight = FontWeight.Bold)
+            style = MaterialTheme.typography.h3.copy(fontWeight = FontWeight.Bold),
+            color = MaterialTheme.colors.primaryVariant
         )
         Row(
             modifier = modifier
                 .padding(start = 32.dp)
                 .height(80.dp)
                 .fillMaxWidth()
-                .background(color = Color.White, shape = RoundedCornerShape(50)),
+                .background(
+                    color = MaterialTheme.colors.primary,
+                    shape = RoundedCornerShape(50)
+                ),
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
@@ -308,12 +320,14 @@ private fun QueueContent(modifier: Modifier, userImage: Int, userName: String, u
         Text(
             modifier = modifier.padding(start = 16.dp),
             text = userName,
-            style = MaterialTheme.typography.h3
+            style = MaterialTheme.typography.h3,
+            color = MaterialTheme.colors.primaryVariant
         )
     }
     Text(
         modifier = modifier.padding(end = 32.dp),
         text = "$userScore",
-        style = MaterialTheme.typography.h3.copy(fontWeight = FontWeight.Bold)
+        style = MaterialTheme.typography.h3.copy(fontWeight = FontWeight.Bold),
+        color = MaterialTheme.colors.primaryVariant
     )
 }

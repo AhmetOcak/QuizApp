@@ -1,5 +1,6 @@
 package com.quizapp.presentation.register
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Scaffold
@@ -10,8 +11,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import com.quizapp.core.component.OtfDefault
-import com.quizapp.core.component.OutBtnDefault
+import com.quizapp.core.ui.component.OtfCustom
+import com.quizapp.core.ui.component.OutBtnCustom
 
 @Composable
 fun RegisterScreen(modifier: Modifier = Modifier) {
@@ -19,6 +20,7 @@ fun RegisterScreen(modifier: Modifier = Modifier) {
     RegisterScreenContent(modifier = modifier)
 }
 
+@SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
 private fun RegisterScreenContent(modifier: Modifier) {
     Scaffold(modifier = modifier) {
@@ -43,25 +45,26 @@ private fun TitleSection(modifier: Modifier) {
             .padding(bottom = 32.dp),
         text = "JOIN US",
         style = MaterialTheme.typography.h1.copy(fontWeight = FontWeight.Bold),
-        textAlign = TextAlign.Start
+        textAlign = TextAlign.Start,
+        color = MaterialTheme.colors.primaryVariant
     )
 }
 
 @Composable
 private fun InputSection(modifier: Modifier) {
-    OtfDefault(
+    OtfCustom(
         modifier = modifier.fillMaxWidth(),
         onValueChanged = {},
         placeHolderText = "Username"
     )
-    OtfDefault(
+    OtfCustom(
         modifier = modifier
             .fillMaxWidth()
             .padding(top = 16.dp),
         onValueChanged = {},
         placeHolderText = "Email"
     )
-    OtfDefault(
+    OtfCustom(
         modifier = modifier
             .fillMaxWidth()
             .padding(top = 16.dp),
@@ -69,7 +72,7 @@ private fun InputSection(modifier: Modifier) {
         placeHolderText = "Password",
         keyboardType = KeyboardType.Password
     )
-    OtfDefault(
+    OtfCustom(
         modifier = modifier
             .fillMaxWidth()
             .padding(top = 16.dp),
@@ -81,7 +84,7 @@ private fun InputSection(modifier: Modifier) {
 
 @Composable
 private fun RegisterButton(modifier: Modifier) {
-    OutBtnDefault(
+    OutBtnCustom(
         modifier = modifier.fillMaxWidth().padding(top = 32.dp),
         onClick = { /*TODO*/ },
         buttonText = "Register"

@@ -15,8 +15,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.quizapp.R
-import com.quizapp.core.ui.component.OutBtnDefault
-import com.quizapp.core.ui.theme.WhiteSmoke
+import com.quizapp.core.ui.component.OutBtnCustom
 
 const val description =
     "Prussia was a German state on the southeast coast of the Baltic Sea. It formed the German Empire under Prussian rule when it united the German states in 1871. It was de facto dissolved by an emergency decree transferring powers of the Prussian government to German Chancellor Franz von Papen in 1932 and de jure by an Allied decree in 1947."
@@ -30,7 +29,6 @@ fun QuizLandingScreen(modifier: Modifier = Modifier) {
 @Composable
 private fun QuizLandingScreenContent(modifier: Modifier) {
     Scaffold(
-        backgroundColor = WhiteSmoke,
         topBar = {
             MyTopAppBar()
         }
@@ -70,7 +68,8 @@ private fun QuizName(modifier: Modifier, quizName: String) {
             .padding(top = 64.dp, bottom = 32.dp),
         text = quizName,
         style = MaterialTheme.typography.h1.copy(fontWeight = FontWeight.Bold),
-        textAlign = TextAlign.Start
+        textAlign = TextAlign.Start,
+        color = MaterialTheme.colors.primaryVariant
     )
 }
 
@@ -80,13 +79,14 @@ private fun QuizDescription(modifier: Modifier, quizDescription: String) {
         modifier = modifier.fillMaxWidth(),
         text = quizDescription,
         style = MaterialTheme.typography.h3,
-        textAlign = TextAlign.Start
+        textAlign = TextAlign.Start,
+        color = MaterialTheme.colors.primaryVariant
     )
 }
 
 @Composable
 private fun StartQuiz(modifier: Modifier) {
-    OutBtnDefault(
+    OutBtnCustom(
         modifier = modifier
             .fillMaxWidth()
             .padding(top = 32.dp),
@@ -103,7 +103,8 @@ private fun MyTopAppBar() {
             IconButton(onClick = { /*TODO*/ }) {
                 Icon(
                     painter = painterResource(id = R.drawable.ic_outline_cancel),
-                    contentDescription = null
+                    contentDescription = null,
+                    tint = MaterialTheme.colors.primaryVariant
                 )
             }
         },

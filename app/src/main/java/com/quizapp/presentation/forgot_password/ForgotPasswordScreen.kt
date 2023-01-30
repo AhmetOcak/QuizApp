@@ -1,5 +1,6 @@
 package com.quizapp.presentation.forgot_password
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.MaterialTheme
@@ -14,8 +15,8 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.quizapp.R
-import com.quizapp.core.component.OtfDefault
-import com.quizapp.core.component.OutBtnDefault
+import com.quizapp.core.ui.component.OtfCustom
+import com.quizapp.core.ui.component.OutBtnCustom
 
 @Composable
 fun ForgotPasswordScreen(modifier: Modifier = Modifier) {
@@ -23,6 +24,7 @@ fun ForgotPasswordScreen(modifier: Modifier = Modifier) {
     ForgotPasswordScreenContent(modifier = modifier)
 }
 
+@SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
 private fun ForgotPasswordScreenContent(modifier: Modifier) {
     Scaffold(modifier = modifier) {
@@ -46,14 +48,14 @@ private fun EnterEmailSection(modifier: Modifier) {
             modifier = modifier,
             text = "Please enter your email address to receive a verification code"
         )
-        OtfDefault(
+        OtfCustom(
             modifier = modifier
                 .fillMaxWidth()
                 .padding(vertical = 16.dp),
             onValueChanged = {},
             placeHolderText = "Email"
         )
-        OutBtnDefault(
+        OutBtnCustom(
             modifier = modifier
                 .fillMaxWidth()
                 .padding(vertical = 16.dp),
@@ -77,7 +79,7 @@ private fun ChangePasswordSection(modifier: Modifier) {
             modifier = modifier,
             text = "Please enter your new password and the verification code we sent you. Your new password must be different from previously used password"
         )
-        OtfDefault(
+        OtfCustom(
             modifier = modifier
                 .fillMaxWidth()
                 .padding(vertical = 8.dp),
@@ -85,7 +87,7 @@ private fun ChangePasswordSection(modifier: Modifier) {
             placeHolderText = "Verification code",
             keyboardType = KeyboardType.Number
         )
-        OtfDefault(
+        OtfCustom(
             modifier = modifier
                 .fillMaxWidth()
                 .padding(vertical = 8.dp),
@@ -93,7 +95,7 @@ private fun ChangePasswordSection(modifier: Modifier) {
             placeHolderText = "News Password",
             keyboardType = KeyboardType.Password
         )
-        OtfDefault(
+        OtfCustom(
             modifier = modifier
                 .fillMaxWidth()
                 .padding(vertical = 8.dp),
@@ -101,7 +103,7 @@ private fun ChangePasswordSection(modifier: Modifier) {
             placeHolderText = "Confirm Password",
             keyboardType = KeyboardType.Password
         )
-        OutBtnDefault(
+        OutBtnCustom(
             modifier = modifier
                 .fillMaxWidth()
                 .padding(vertical = 16.dp),
@@ -122,7 +124,7 @@ private fun ChangePasswordSuccessSection(modifier: Modifier) {
     ) {
         DefaultImage(modifier = modifier, imageId = R.drawable.forgot_password_success)
         DefaultText(modifier = modifier.padding(horizontal = 8.dp), text = "Your password has been reset successfully")
-        OutBtnDefault(
+        OutBtnCustom(
             modifier = modifier.fillMaxWidth().padding(top = 16.dp),
             onClick = { /*TODO*/ },
             buttonText = "Return Login Page"
@@ -152,6 +154,7 @@ private fun DefaultText(modifier: Modifier, text: String) {
             .padding(vertical = 16.dp),
         text = text,
         style = MaterialTheme.typography.body1,
-        textAlign = TextAlign.Center
+        textAlign = TextAlign.Center,
+        color = MaterialTheme.colors.primaryVariant
     )
 }

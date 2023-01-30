@@ -1,8 +1,8 @@
 package com.quizapp.presentation.signin
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
 import androidx.compose.material.TextButton
 import androidx.compose.runtime.Composable
@@ -12,8 +12,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import com.quizapp.core.component.OtfDefault
-import com.quizapp.core.component.OutBtnDefault
+import com.quizapp.core.ui.component.OtfCustom
+import com.quizapp.core.ui.component.OutBtnCustom
 
 @Composable
 fun SignInScreen(modifier: Modifier = Modifier) {
@@ -21,20 +21,19 @@ fun SignInScreen(modifier: Modifier = Modifier) {
     SignInScreenContent(modifier = modifier)
 }
 
+@SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
 private fun SignInScreenContent(modifier: Modifier) {
-    Scaffold(modifier = modifier) {
-        Column(
-            modifier = modifier
-                .fillMaxSize()
-                .padding(start = 16.dp, end = 16.dp, top = 16.dp, bottom = 64.dp),
-            verticalArrangement = Arrangement.Center
-        ) {
-            TitleSection(modifier = modifier)
-            SignInSection(modifier = modifier)
-            SignInButton(modifier = modifier)
-            RegisterNow(modifier = modifier)
-        }
+    Column(
+        modifier = modifier
+            .fillMaxSize()
+            .padding(start = 16.dp, end = 16.dp, top = 16.dp, bottom = 64.dp),
+        verticalArrangement = Arrangement.Center
+    ) {
+        TitleSection(modifier = modifier)
+        SignInSection(modifier = modifier)
+        SignInButton(modifier = modifier)
+        RegisterNow(modifier = modifier)
     }
 }
 
@@ -47,13 +46,17 @@ private fun TitleSection(modifier: Modifier) {
     ) {
         Text(
             text = "Hello Again!",
-            style = MaterialTheme.typography.h1.copy(fontWeight = FontWeight.SemiBold)
+            style = MaterialTheme.typography.h1.copy(
+                fontWeight = FontWeight.SemiBold,
+                color = MaterialTheme.colors.primaryVariant
+            )
         )
         Text(
             modifier = modifier.padding(top = 16.dp, start = 54.dp, end = 54.dp),
             text = "Welcome back you've been missed",
             style = MaterialTheme.typography.h2,
-            textAlign = TextAlign.Center
+            textAlign = TextAlign.Center,
+            color = MaterialTheme.colors.primaryVariant
         )
     }
 }
@@ -72,13 +75,13 @@ private fun SignInInput(modifier: Modifier) {
             .padding(top = 32.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        OtfDefault(
+        OtfCustom(
             modifier = modifier.fillMaxWidth(),
             onValueChanged = {},
             placeHolderText = "Enter email",
             keyboardType = KeyboardType.Email
         )
-        OtfDefault(
+        OtfCustom(
             modifier = modifier
                 .fillMaxWidth()
                 .padding(top = 16.dp),
@@ -101,7 +104,8 @@ private fun ForgotPassword(modifier: Modifier) {
         TextButton(onClick = { /*TODO*/ }) {
             Text(
                 text = "Forgot Password ?",
-                style = MaterialTheme.typography.body2.copy(fontWeight = FontWeight.Bold)
+                style = MaterialTheme.typography.body2.copy(fontWeight = FontWeight.Bold),
+                color = MaterialTheme.colors.primaryVariant
             )
         }
     }
@@ -109,7 +113,7 @@ private fun ForgotPassword(modifier: Modifier) {
 
 @Composable
 private fun SignInButton(modifier: Modifier) {
-    OutBtnDefault(
+    OutBtnCustom(
         modifier = modifier
             .fillMaxWidth()
             .padding(top = 32.dp),
@@ -121,7 +125,9 @@ private fun SignInButton(modifier: Modifier) {
 @Composable
 private fun RegisterNow(modifier: Modifier) {
     Row(
-        modifier = modifier.fillMaxWidth().padding(top = 8.dp),
+        modifier = modifier
+            .fillMaxWidth()
+            .padding(top = 8.dp),
         horizontalArrangement = Arrangement.Center,
         verticalAlignment = Alignment.CenterVertically
     ) {
@@ -129,7 +135,8 @@ private fun RegisterNow(modifier: Modifier) {
         TextButton(modifier = modifier.padding(start = 1.dp), onClick = { /*TODO*/ }) {
             Text(
                 text = "Register now",
-                style = MaterialTheme.typography.body2.copy(fontWeight = FontWeight.Bold)
+                style = MaterialTheme.typography.body2.copy(fontWeight = FontWeight.Bold),
+                color = MaterialTheme.colors.primaryVariant
             )
         }
     }

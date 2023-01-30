@@ -1,4 +1,4 @@
-package com.quizapp.ui.theme
+package com.quizapp.core.ui.theme
 
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Shapes

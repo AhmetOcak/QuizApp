@@ -26,15 +26,19 @@ import com.google.accompanist.navigation.animation.AnimatedNavHost
 import com.google.accompanist.navigation.animation.rememberAnimatedNavController
 import com.quizapp.R
 import com.quizapp.core.ui.component.CustomScaffold
+import com.quizapp.core.ui.theme.Black
 import com.quizapp.core.ui.theme.StrangePurple
 import com.quizapp.core.ui.theme.TransparentWhite
 import com.quizapp.core.ui.theme.WhiteSmoke
+import com.quizapp.presentation.contact_us.ContactUsScreen
+import com.quizapp.presentation.edit_profile.EditProfileScreen
 import com.quizapp.presentation.search.SearchScreen
 import com.quizapp.presentation.forgot_password.ForgotPasswordScreen
 import com.quizapp.presentation.home.HomeScreen
 import com.quizapp.presentation.leaderboard.LeaderboardScreen
 import com.quizapp.presentation.profile.ProfileScreen
 import com.quizapp.presentation.quiz.QuizScreen
+import com.quizapp.presentation.quiz_landing.QuizLandingScreen
 import com.quizapp.presentation.register.RegisterScreen
 import com.quizapp.presentation.signin.SignInScreen
 
@@ -50,7 +54,6 @@ fun NavGraph(
 
     CustomScaffold(
         modifier = modifier.fillMaxSize(),
-        backgroundColor = WhiteSmoke,
         topBar = {
             if (currentRoute == NavScreen.ProfileScreen.route) {
                 MyTopAppBar()
@@ -98,6 +101,15 @@ fun NavGraph(
                 composable(route = NavScreen.LeaderboardScreen.route) {
                     LeaderboardScreen()
                 }
+                composable(route = NavScreen.QuizLandingScreen.route) {
+                    QuizLandingScreen()
+                }
+                composable(route = NavScreen.EditProfileScreen.route) {
+                    EditProfileScreen()
+                }
+                composable(route = NavScreen.ContactUsScreen.route){
+                    ContactUsScreen()
+                }
             }
             BottomAppBar(
                 modifier = modifier,
@@ -117,7 +129,7 @@ private fun MyTopAppBar() {
                 Icon(
                     painter = painterResource(id = R.drawable.ic_baseline_headphones),
                     contentDescription = null,
-                    tint = Color.Black
+                    tint = WhiteSmoke
                 )
             }
         },
@@ -126,12 +138,12 @@ private fun MyTopAppBar() {
                 Icon(
                     painter = painterResource(id = R.drawable.ic_baseline_edit),
                     contentDescription = null,
-                    tint = Color.Black
+                    tint = WhiteSmoke
                 )
             }
         },
         elevation = 0.dp,
-        backgroundColor = WhiteSmoke
+        backgroundColor = MaterialTheme.colors.background
     )
 }
 
@@ -146,7 +158,7 @@ private fun BottomAppBar(modifier: Modifier, currentRoute: String?, navControlle
                         .navigationBarsPadding()
                         .clip(shape = RoundedCornerShape(20))
                         .border(
-                            border = BorderStroke(width = 1.dp, color = StrangePurple),
+                            border = BorderStroke(width = 1.dp, color = Black),
                             shape = RoundedCornerShape(20)
                         ),
                     backgroundColor = TransparentWhite,
@@ -167,7 +179,7 @@ private fun RowScope.BottomAppBarContent(currentRoute: String?, navController: N
     BottomNavItems.items.forEachIndexed { index, screen ->
         BottomNavigationItem(
             selected = currentRoute == screen.route,
-            selectedContentColor = StrangePurple,
+            selectedContentColor = Black,
             unselectedContentColor = Color.Gray,
             onClick = {
                 if (currentRoute == screen.route) {
