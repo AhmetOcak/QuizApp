@@ -1,5 +1,6 @@
 package com.quizapp.core.ui.component
 
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
@@ -22,46 +23,50 @@ fun OtfCustom(
     value: String = "",
     onValueChanged: (String) -> Unit,
     placeHolderText: String,
-    keyboardType: KeyboardType = KeyboardType.Text
+    keyboardType: KeyboardType = KeyboardType.Text,
+    isError: Boolean = false
 ) {
     var showPassword by remember { mutableStateOf(false) }
 
-    OutlinedTextField(
-        modifier = modifier.size(
-            height = TextFieldDefaults.MinHeight + 8.dp,
-            width = TextFieldDefaults.MinWidth
-        ),
-        value = value,
-        onValueChange = onValueChanged,
-        keyboardOptions = KeyboardOptions(keyboardType = keyboardType),
-        maxLines = 1,
-        keyboardActions = KeyboardActions(onNext = {}),
-        placeholder = {
-            Text(
-                text = placeHolderText
-            )
-        },
-        visualTransformation = if (keyboardType == KeyboardType.Password && !showPassword) PasswordVisualTransformation(
-            mask = '*'
-        ) else VisualTransformation.None,
-        singleLine = true,
-        shape = RoundedCornerShape(20),
-        trailingIcon = {
-            if (keyboardType != KeyboardType.Password) null else {
-                IconButton(onClick = { showPassword = !showPassword }) {
-                    Icon(
-                        painter = painterResource(
-                            id = if (showPassword) R.drawable.show_password else R.drawable.hide_password
-                        ),
-                        contentDescription = null,
-                        tint = Color.Gray
-                    )
+    Column {
+        OutlinedTextField(
+            modifier = modifier.size(
+                height = TextFieldDefaults.MinHeight + 8.dp,
+                width = TextFieldDefaults.MinWidth
+            ),
+            value = value,
+            onValueChange = onValueChanged,
+            keyboardOptions = KeyboardOptions(keyboardType = keyboardType),
+            maxLines = 1,
+            keyboardActions = KeyboardActions(onNext = {}),
+            placeholder = {
+                Text(
+                    text = placeHolderText
+                )
+            },
+            visualTransformation = if (keyboardType == KeyboardType.Password && !showPassword) PasswordVisualTransformation(
+                mask = '*'
+            ) else VisualTransformation.None,
+            singleLine = true,
+            shape = RoundedCornerShape(20),
+            trailingIcon = {
+                if (keyboardType != KeyboardType.Password) null else {
+                    IconButton(onClick = { showPassword = !showPassword }) {
+                        Icon(
+                            painter = painterResource(
+                                id = if (showPassword) R.drawable.show_password else R.drawable.hide_password
+                            ),
+                            contentDescription = null,
+                            tint = Color.Gray
+                        )
+                    }
                 }
-            }
-        },
-        colors = TextFieldDefaults.outlinedTextFieldColors(
-            focusedBorderColor = MaterialTheme.colors.onPrimary,
-            cursorColor = MaterialTheme.colors.onPrimary
+            },
+            colors = TextFieldDefaults.outlinedTextFieldColors(
+                focusedBorderColor = MaterialTheme.colors.onPrimary,
+                cursorColor = MaterialTheme.colors.onPrimary
+            ),
+            isError = isError
         )
-    )
+    }
 }
