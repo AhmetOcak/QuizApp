@@ -1,0 +1,11 @@
+package com.quizapp.data.datasource.remote.auth
+
+import com.quizapp.data.datasource.remote.auth.api.AuthApi
+import com.quizapp.data.datasource.remote.auth.entity.UserDto
+import javax.inject.Inject
+
+class AuthRemoteDataSourceImpl @Inject constructor(private val api: AuthApi) : AuthRemoteDataSource {
+
+    override suspend fun createUser(userDto: UserDto) = api.createUser(userDto = userDto)
+
+}

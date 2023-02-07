@@ -10,7 +10,9 @@ import androidx.compose.ui.Modifier
 import com.quizapp.core.navigation.NavGraph
 import com.quizapp.core.navigation.NavScreen
 import com.quizapp.core.ui.theme.QuizAppTheme
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -21,7 +23,7 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colors.background
                 ) {
-                    NavGraph(startDestination = NavScreen.QuizScreen.route)
+                    NavGraph(startDestination = NavScreen.RegisterScreen.route)
                 }
             }
         }
