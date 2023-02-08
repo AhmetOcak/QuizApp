@@ -1,11 +1,7 @@
 package com.quizapp.data.mappers
 
-import com.quizapp.data.datasource.remote.auth.entity.AuthResponseDto
-import com.quizapp.data.datasource.remote.auth.entity.LoginDto
-import com.quizapp.data.datasource.remote.auth.entity.UserDto
-import com.quizapp.domain.model.auth.AuthResponse
-import com.quizapp.domain.model.auth.Login
-import com.quizapp.domain.model.auth.User
+import com.quizapp.data.datasource.remote.auth.entity.*
+import com.quizapp.domain.model.auth.*
 
 fun Login.toLoginDto(): LoginDto {
     return LoginDto(
@@ -23,7 +19,13 @@ fun User.toUserDto(): UserDto {
 }
 
 fun AuthResponseDto.toAuthResponse(): AuthResponse {
-    return  AuthResponse(
+    return AuthResponse(
         message = message
+    )
+}
+
+fun LoginResponseDto.toLoginResponse(): LoginResponse {
+    return LoginResponse(
+        token = LoginResponseBody(accessToken = token.accessToken)
     )
 }

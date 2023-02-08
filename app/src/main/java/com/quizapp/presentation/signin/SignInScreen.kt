@@ -1,39 +1,75 @@
 package com.quizapp.presentation.signin
 
 import android.annotation.SuppressLint
+import android.util.Log
+import android.widget.Toast
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.material.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
+import com.quizapp.core.ui.component.CustomLoadingSpinner
 import com.quizapp.core.ui.component.OtfCustom
 import com.quizapp.core.ui.component.OutBtnCustom
 
 @Composable
-fun SignInScreen(modifier: Modifier = Modifier) {
+fun SignInScreen(modifier: Modifier = Modifier, viewModel: SignInViewModel = hiltViewModel()) {
 
-    SignInScreenContent(modifier = modifier)
+    val signInState by viewModel.signInState.collectAsState()
+    val signInInputFieldState by viewModel.signInInputFieldState.collectAsState()
+
+    SignInScreenContent(
+        modifier = modifier,
+        viewModel = viewModel,
+        signInState = signInState,
+        signInInputFieldState = signInInputFieldState
+    )
 }
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
-private fun SignInScreenContent(modifier: Modifier) {
+private fun SignInScreenContent(
+    modifier: Modifier,
+    viewModel: SignInViewModel,
+    signInState: SignInState,
+    signInInputFieldState: SignInInputFieldState
+) {
     Column(
         modifier = modifier
             .fillMaxSize()
             .padding(start = 16.dp, end = 16.dp, top = 16.dp, bottom = 64.dp),
         verticalArrangement = Arrangement.Center
     ) {
-        TitleSection(modifier = modifier)
-        SignInSection(modifier = modifier)
-        SignInButton(modifier = modifier)
-        RegisterNow(modifier = modifier)
+        when (signInState) {
+            is SignInState.Nothing -> {
+                TitleSection(modifier = modifier)
+                SignInSection(modifier = modifier, viewModel = viewModel)
+                SignInButton(modifier = modifier, viewModel = viewModel)
+                RegisterNow(modifier = modifier)
+            }
+            is SignInState.Loading -> {
+                Box(modifier = modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
+                    CustomLoadingSpinner()
+                }
+            }
+            is SignInState.Success -> {
+                Log.e("sign in", "Success => " + signInState.data.token.accessToken)
+            }
+            is SignInState.Error -> {
+                Log.e("sign in", "Error => " + signInState.errorMessage)
+            }
+        }
+        ShowInputFieldErrors(signInInputFieldState = signInInputFieldState, viewModel = viewModel)
     }
 }
 
@@ -62,13 +98,13 @@ private fun TitleSection(modifier: Modifier) {
 }
 
 @Composable
-private fun SignInSection(modifier: Modifier) {
-    SignInInput(modifier = modifier)
+private fun SignInSection(modifier: Modifier, viewModel: SignInViewModel) {
+    SignInInput(modifier = modifier, viewModel = viewModel)
     ForgotPassword(modifier = modifier)
 }
 
 @Composable
-private fun SignInInput(modifier: Modifier) {
+private fun SignInInput(modifier: Modifier, viewModel: SignInViewModel) {
     Column(
         modifier = modifier
             .fillMaxWidth()
@@ -77,17 +113,21 @@ private fun SignInInput(modifier: Modifier) {
     ) {
         OtfCustom(
             modifier = modifier.fillMaxWidth(),
-            onValueChanged = {},
+            onValueChanged = { viewModel.updateEmailField(newValue = it) },
             placeHolderText = "Enter email",
-            keyboardType = KeyboardType.Email
+            keyboardType = KeyboardType.Email,
+            value = viewModel.email,
+            isError = viewModel.emailError
         )
         OtfCustom(
             modifier = modifier
                 .fillMaxWidth()
                 .padding(top = 16.dp),
-            onValueChanged = {},
+            onValueChanged = { viewModel.updatePasswordField(newValue = it) },
             placeHolderText = "Password",
-            keyboardType = KeyboardType.Password
+            keyboardType = KeyboardType.Password,
+            value = viewModel.password,
+            isError = viewModel.passwordError
         )
     }
 }
@@ -112,12 +152,15 @@ private fun ForgotPassword(modifier: Modifier) {
 }
 
 @Composable
-private fun SignInButton(modifier: Modifier) {
+private fun SignInButton(modifier: Modifier, viewModel: SignInViewModel) {
     OutBtnCustom(
         modifier = modifier
             .fillMaxWidth()
             .padding(top = 32.dp),
-        onClick = { /*TODO*/ },
+        onClick = {
+            viewModel.signIn()
+            viewModel.resetSignState()
+        },
         buttonText = "Sign In"
     )
 }
@@ -139,5 +182,23 @@ private fun RegisterNow(modifier: Modifier) {
                 color = MaterialTheme.colors.primaryVariant
             )
         }
+    }
+}
+
+@Composable
+private fun ShowInputFieldErrors(
+    signInInputFieldState: SignInInputFieldState,
+    viewModel: SignInViewModel
+) {
+    when (signInInputFieldState) {
+        is SignInInputFieldState.Error -> {
+            Toast.makeText(
+                LocalContext.current,
+                signInInputFieldState.errorMessage,
+                Toast.LENGTH_SHORT
+            ).show()
+            viewModel.resetSignState()
+        }
+        is SignInInputFieldState.Nothing -> {}
     }
 }
