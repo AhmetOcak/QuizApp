@@ -59,8 +59,8 @@ class RegisterViewModel @Inject constructor(
                     password = userPassword,
                     email = userEmail
                 )
-            ).collect() { result ->
-                when (result) {
+            ).collect() { response ->
+                when (response) {
                     is Response.Loading -> {
                         _createUserState.value = CreateUserState.Loading
                     }
@@ -68,7 +68,7 @@ class RegisterViewModel @Inject constructor(
                         _createUserState.value = CreateUserState.Success
                     }
                     is Response.Error -> {
-                        _createUserState.value = CreateUserState.Error(errorMessage = result.errorMessage)
+                        _createUserState.value = CreateUserState.Error(errorMessage = response.errorMessage)
                     }
                 }
             }
@@ -116,7 +116,7 @@ class RegisterViewModel @Inject constructor(
         }
 
     private fun checkUserPassword(): Boolean =
-        if (userPassword.length <= 6) {
+        if (userPassword.length < 6) {
             _registerInputFieldState.value = RegisterInputFieldState.Error(errorMessage = Messages.LENGTH_PASSWORD)
             userPasswordError = true
             false
@@ -126,7 +126,7 @@ class RegisterViewModel @Inject constructor(
         }
 
     private fun checkUserName(): Boolean =
-        if (userName.length <= 3) {
+        if (userName.length < 3) {
             _registerInputFieldState.value = RegisterInputFieldState.Error(errorMessage = Messages.USER_NAME_LENGTH)
             userNameError = true
             false
