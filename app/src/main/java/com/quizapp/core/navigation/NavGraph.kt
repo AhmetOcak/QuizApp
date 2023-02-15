@@ -8,8 +8,6 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.rounded.Menu
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
@@ -27,9 +25,9 @@ import com.google.accompanist.navigation.animation.rememberAnimatedNavController
 import com.quizapp.R
 import com.quizapp.core.ui.component.CustomScaffold
 import com.quizapp.core.ui.theme.Black
-import com.quizapp.core.ui.theme.StrangePurple
 import com.quizapp.core.ui.theme.TransparentWhite
 import com.quizapp.core.ui.theme.WhiteSmoke
+import com.quizapp.presentation.confirm_account.ConfirmAccountScreen
 import com.quizapp.presentation.contact_us.ContactUsScreen
 import com.quizapp.presentation.edit_profile.EditProfileScreen
 import com.quizapp.presentation.search.SearchScreen
@@ -107,8 +105,11 @@ fun NavGraph(
                 composable(route = NavScreen.EditProfileScreen.route) {
                     EditProfileScreen()
                 }
-                composable(route = NavScreen.ContactUsScreen.route){
+                composable(route = NavScreen.ContactUsScreen.route) {
                     ContactUsScreen()
+                }
+                composable(route = NavScreen.ConfirmAccountScreen.route) {
+                    ConfirmAccountScreen()
                 }
             }
             BottomAppBar(
