@@ -9,6 +9,8 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -18,8 +20,10 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.NavGraph.Companion.findStartDestination
+import androidx.navigation.NavType
 import com.google.accompanist.navigation.animation.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
+import androidx.navigation.navArgument
 import com.google.accompanist.navigation.animation.AnimatedNavHost
 import com.google.accompanist.navigation.animation.rememberAnimatedNavController
 import com.quizapp.R
@@ -44,11 +48,19 @@ import com.quizapp.presentation.signin.SignInScreen
 @Composable
 fun NavGraph(
     modifier: Modifier = Modifier,
-    startDestination: String
+    startDestination: String,
+    navigator: Navigator
 ) {
     val navController = rememberAnimatedNavController()
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = navBackStackEntry?.destination?.route
+    val destination by navigator.destination.collectAsState()
+
+    LaunchedEffect(destination) {
+        if (navController.currentDestination?.route != destination) {
+            navController.navigate(destination)
+        }
+    }
 
     CustomScaffold(
         modifier = modifier.fillMaxSize(),
@@ -108,7 +120,13 @@ fun NavGraph(
                 composable(route = NavScreen.ContactUsScreen.route) {
                     ContactUsScreen()
                 }
-                composable(route = NavScreen.ConfirmAccountScreen.route) {
+                composable(
+                    route = NavScreen.ConfirmAccountScreen.route,
+                    arguments = listOf(
+                        navArgument("email") { type = NavType.StringType },
+                        navArgument("token") { type = NavType.StringType }
+                    )
+                ) {
                     ConfirmAccountScreen()
                 }
             }

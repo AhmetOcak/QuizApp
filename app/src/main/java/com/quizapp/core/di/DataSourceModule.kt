@@ -2,6 +2,8 @@ package com.quizapp.core.di
 
 import com.quizapp.data.datasource.remote.auth.AuthRemoteDataSource
 import com.quizapp.data.datasource.remote.auth.AuthRemoteDataSourceImpl
+import com.quizapp.data.datasource.remote.confirm_account.ConfirmAccountRemoteDataSource
+import com.quizapp.data.datasource.remote.confirm_account.ConfirmAccountRemoteDataSourceImpl
 import com.quizapp.data.datasource.remote.quiz.QuizRemoteDataSource
 import com.quizapp.data.datasource.remote.quiz.QuizRemoteDataSourceImpl
 import dagger.Binds
@@ -21,4 +23,8 @@ abstract class DataSourceModule {
     @Binds
     @Singleton
     abstract fun bindAuthRemoteDataSource(authRemoteDataSourceImpl: AuthRemoteDataSourceImpl): AuthRemoteDataSource
+
+    @Binds
+    @Singleton
+    abstract fun bindConfirmAccountRemoteDataSource(confirmAccountRemoteDataSourceImpl: ConfirmAccountRemoteDataSourceImpl): ConfirmAccountRemoteDataSource
 }

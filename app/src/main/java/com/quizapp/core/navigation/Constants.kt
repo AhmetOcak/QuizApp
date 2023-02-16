@@ -12,6 +12,10 @@ object NavRoutes {
     const val contact_us_screen = "contact_us_screen"
     const val edit_profile_screen = "edit_profile_screen"
     const val quiz_landing_screen = "quiz_landing_screen"
+    const val confirm_account_screen = "${NavNames.confirm_account_screen}/{email}/{token}"
+}
+
+object NavNames {
     const val confirm_account_screen = "confirm_account_screen"
 }
 

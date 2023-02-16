@@ -1,8 +1,10 @@
 package com.quizapp.core.di
 
 import com.quizapp.data.repository.AuthRepositoryImpl
+import com.quizapp.data.repository.ConfirmAccountRepositoryImpl
 import com.quizapp.data.repository.QuizRepositoryImpl
 import com.quizapp.domain.repository.AuthRepository
+import com.quizapp.domain.repository.ConfirmAccountRepository
 import com.quizapp.domain.repository.QuizRepository
 import dagger.Binds
 import dagger.Module
@@ -21,4 +23,8 @@ abstract class RepositoryModule {
     @Binds
     @Singleton
     abstract fun bindAuthRepository(authRepositoryImpl: AuthRepositoryImpl): AuthRepository
+
+    @Binds
+    @Singleton
+    abstract fun bindConfirmAccountRepository(confirmAccountRepositoryImpl: ConfirmAccountRepositoryImpl): ConfirmAccountRepository
 }

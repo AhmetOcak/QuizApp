@@ -43,7 +43,7 @@ private fun ConfirmAccountScreenContent(modifier: Modifier, viewModel: ConfirmAc
         ) {
             ImageSection(modifier = modifier)
             ContentSection(modifier = modifier)
-            ActivateButtonSection(modifier = modifier)
+            ActivateButtonSection(modifier = modifier, onClick = { viewModel.confirmAccount() })
         }
     }
 }
@@ -92,12 +92,12 @@ private fun ContentSection(modifier: Modifier) {
 }
 
 @Composable
-private fun ActivateButtonSection(modifier: Modifier) {
+private fun ActivateButtonSection(modifier: Modifier, onClick: () -> Unit) {
     OutBtnCustom(
         modifier = modifier
             .fillMaxWidth()
             .padding(top = 32.dp),
-        onClick = { /*TODO*/ },
+        onClick = onClick,
         buttonText = "Activate Account"
     )
 }
