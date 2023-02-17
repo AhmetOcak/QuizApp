@@ -1,5 +1,6 @@
 package com.quizapp.presentation.signin
 
+import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -7,7 +8,9 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.quizapp.core.common.Response
 import com.quizapp.domain.model.auth.Login
+import com.quizapp.domain.model.reset_password.SendPasswordResetMail
 import com.quizapp.domain.usecase.auth.SignInUseCase
+import com.quizapp.domain.usecase.reset_password.SendPasswordResetMailUseCase
 import com.quizapp.presentation.utils.Messages
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -17,13 +20,26 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class SignInViewModel @Inject constructor(private val signInUseCase: SignInUseCase) : ViewModel() {
+class SignInViewModel @Inject constructor(
+    private val signInUseCase: SignInUseCase,
+    private val sendPasswordResetMailUseCase: SendPasswordResetMailUseCase
+) : ViewModel() {
 
     private val _signInState = MutableStateFlow<SignInState>(SignInState.Nothing)
     val signInState = _signInState.asStateFlow()
 
     private val _signInInputFieldState = MutableStateFlow<SignInInputFieldState>(SignInInputFieldState.Nothing)
     val signInInputFieldState = _signInInputFieldState.asStateFlow()
+
+    private val _forgotPasswordState = MutableStateFlow<ForgotPasswordState>(ForgotPasswordState.Nothing)
+    val forgotPasswordState = _forgotPasswordState.asStateFlow()
+
+    // if showForgotPasswordScreen is true then it will the show enter email ui
+    // if showForgotPasswordScreen is false then it will the show sign in ui
+    var showForgotPasswordScreen by mutableStateOf(false)
+        private set
+    var forgotPasswordEmail by mutableStateOf("")
+        private set
 
     var email by mutableStateOf("")
         private set
@@ -35,10 +51,29 @@ class SignInViewModel @Inject constructor(private val signInUseCase: SignInUseCa
     var passwordError by mutableStateOf(false)
         private set
 
+    fun forgotPassword() = viewModelScope.launch(Dispatchers.IO) {
+        sendPasswordResetMailUseCase(sendPasswordResetMail = SendPasswordResetMail(email = forgotPasswordEmail)).collect() { response ->
+            when (response) {
+                is Response.Loading -> {
+                    _forgotPasswordState.value = ForgotPasswordState.Loading
+                    Log.e("forgot password", "loading")
+                }
+                is Response.Success -> {
+                    _forgotPasswordState.value = ForgotPasswordState.Success
+                    Log.e("forgot password", "success")
+                }
+                is Response.Error -> {
+                    _forgotPasswordState.value = ForgotPasswordState.Error(errorMessage = response.errorMessage)
+                    Log.e("forgot password", "error")
+                }
+            }
+        }
+    }
+
     fun signIn() = viewModelScope.launch(Dispatchers.IO) {
         if (checkInputFields()) {
             signInUseCase(login = Login(email = email, password = password)).collect() { response ->
-                when(response) {
+                when (response) {
                     is Response.Loading -> {
                         _signInState.value = SignInState.Loading
                     }
@@ -54,9 +89,20 @@ class SignInViewModel @Inject constructor(private val signInUseCase: SignInUseCa
     }
 
     fun updateEmailField(newValue: String) { email = newValue }
+
     fun updatePasswordField(newValue: String) { password = newValue }
 
-    fun resetSignState() { _signInInputFieldState.value = SignInInputFieldState.Nothing }
+    fun updateForgotPasswordField(newValue: String) { forgotPasswordEmail = newValue }
+
+    fun resetSignInputState() { _signInInputFieldState.value = SignInInputFieldState.Nothing }
+
+    fun resetSignInState() { _signInState.value = SignInState.Nothing }
+
+    fun resetForgotPasswordState() { _forgotPasswordState.value = ForgotPasswordState.Nothing }
+
+    fun resetShowForgotPasScr() { showForgotPasswordScreen = false }
+
+    fun openForgotPasswordScreen() { showForgotPasswordScreen = true }
 
     private fun checkInputFields(): Boolean =
         if (email.isBlank() && password.isBlank()) {

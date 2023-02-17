@@ -5,7 +5,7 @@ import javax.inject.Inject
 
 class Navigator @Inject constructor(){
 
-    var destination: MutableStateFlow<String> = MutableStateFlow(NavScreen.RegisterScreen.route)
+    var destination: MutableStateFlow<String> = MutableStateFlow(NavScreen.SignInScreen.route)
 
     fun navigate(destination: String) {
         this.destination.value = destination

@@ -12,4 +12,5 @@ object Messages {
     const val LENGTH_PASSWORD = "Password length can't be less than 6"
     const val USER_NAME_LENGTH = "Username length can't be less than 3"
     const val PASSWORD_MATCH = "Passwords doesn't match"
+    const val RESET_PASS_MAIL = "We've sent you a password reset email. Please check your mail."
 }

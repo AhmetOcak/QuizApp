@@ -35,7 +35,7 @@ import com.quizapp.presentation.confirm_account.ConfirmAccountScreen
 import com.quizapp.presentation.contact_us.ContactUsScreen
 import com.quizapp.presentation.edit_profile.EditProfileScreen
 import com.quizapp.presentation.search.SearchScreen
-import com.quizapp.presentation.forgot_password.ForgotPasswordScreen
+import com.quizapp.presentation.reset_password.ForgotPasswordScreen
 import com.quizapp.presentation.home.HomeScreen
 import com.quizapp.presentation.leaderboard.LeaderboardScreen
 import com.quizapp.presentation.profile.ProfileScreen
@@ -102,7 +102,13 @@ fun NavGraph(
                 composable(route = NavScreen.RegisterScreen.route) {
                     RegisterScreen()
                 }
-                composable(route = NavScreen.ForgotPasswordScreen.route) {
+                composable(
+                    route = NavScreen.ForgotPasswordScreen.route,
+                    arguments = listOf(
+                        navArgument("email") { type = NavType.StringType },
+                        navArgument("token") { type = NavType.StringType }
+                    )
+                ) {
                     ForgotPasswordScreen()
                 }
                 composable(route = NavScreen.QuizScreen.route) {

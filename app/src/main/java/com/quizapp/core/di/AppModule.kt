@@ -3,6 +3,7 @@ package com.quizapp.core.di
 import com.quizapp.data.datasource.remote.auth.api.AuthApi
 import com.quizapp.data.datasource.remote.confirm_account.api.ConfirmAccountApi
 import com.quizapp.data.datasource.remote.quiz.api.QuizApi
+import com.quizapp.data.datasource.remote.reset_password.api.ResetPasswordApi
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -56,6 +57,17 @@ object AppModule {
             .client(getUnsafeOkHttpClient().build())
             .build()
             .create(ConfirmAccountApi::class.java)
+    }
+
+    @Provides
+    @Singleton
+    fun provideResetPasswordApi(): ResetPasswordApi {
+        return Retrofit.Builder()
+            .baseUrl(BASE_URL)
+            .addConverterFactory(GsonConverterFactory.create())
+            .client(getUnsafeOkHttpClient().build())
+            .build()
+            .create(ResetPasswordApi::class.java)
     }
 }
 

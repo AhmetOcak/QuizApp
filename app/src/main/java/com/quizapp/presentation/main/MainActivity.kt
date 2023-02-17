@@ -11,17 +11,13 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.lifecycleScope
-import androidx.navigation.NavHost
-import androidx.navigation.NavHostController
 import com.quizapp.core.navigation.NavGraph
 import com.quizapp.core.navigation.NavNames
 import com.quizapp.core.navigation.NavScreen
 import com.quizapp.core.navigation.Navigator
 import com.quizapp.core.ui.theme.QuizAppTheme
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import java.net.URLEncoder
 import java.nio.charset.StandardCharsets
 import javax.inject.Inject
@@ -59,27 +55,59 @@ class MainActivity : ComponentActivity() {
     private fun handleIntent(intent: Intent) {
         val appLinkData = intent.data
 
-        var email: String? = null
-        var token: String? = null
-
         appLinkData?.lastPathSegment?.also { recipeId ->
-            Uri.parse("https://localhost:7250/api/Auth/ConfirmMail")
-                .buildUpon()
-                .appendPath(recipeId)
-                .build().also {
-                    email = appLinkData.getQueryParameter("email")
-                    token = appLinkData.getQueryParameter("token")
-                    Log.e("email", email.toString())
-                    Log.e("token", token.toString())
+            Log.e("recipe id = ", recipeId)
 
-                    val encodedToken = URLEncoder.encode(token, StandardCharsets.UTF_8.toString())
-                    Log.e("encoded token", encodedToken)
-
-                    lifecycleScope.launch() {
-                        navigator.navigate("${NavNames.confirm_account_screen}/${email}/${encodedToken}")
-                    }
-                }
+            if (recipeId == "ConfirmMail") {
+                handleConfirmMailIntent(recipeId, appLinkData)
+            } else if (recipeId == "ResetPassword") {
+                handlePasswordResetMailIntent(recipeId, appLinkData)
+            }
         }
+    }
+
+    private fun handleConfirmMailIntent(recipeId: String, appLinkData: Uri) {
+        var email: String?
+        var token: String?
+
+        Uri.parse("https://localhost:7250/api/Auth/ConfirmMail")
+            .buildUpon()
+            .appendPath(recipeId)
+            .build().also {
+                email = appLinkData.getQueryParameter("email")
+                token = appLinkData.getQueryParameter("token")
+                Log.e("email", email.toString())
+                Log.e("token", token.toString())
+
+                val encodedToken = URLEncoder.encode(token, StandardCharsets.UTF_8.toString())
+                Log.e("encoded token", encodedToken)
+
+                lifecycleScope.launch() {
+                    navigator.navigate("${NavNames.confirm_account_screen}/${email}/${encodedToken}")
+                }
+            }
+    }
+
+    private fun handlePasswordResetMailIntent(recipeId: String, appLinkData: Uri) {
+        var token: String?
+        var email: String?
+
+        Uri.parse("https://localhost:7250/api/auth/ResetPassword")
+            .buildUpon()
+            .appendPath(recipeId)
+            .build().also {
+                token = appLinkData.getQueryParameter("token")
+                email = appLinkData.getQueryParameter("email")
+                Log.e(" password reset token", token.toString())
+                Log.e(" password reset email", email.toString())
+
+                val encodedToken = URLEncoder.encode(token, StandardCharsets.UTF_8.toString())
+                Log.e("encoded token", encodedToken)
+
+                lifecycleScope.launch() {
+                    navigator.navigate("${NavNames.forgot_password_screen}/${email}/${encodedToken}")
+                }
+            }
     }
 
 }

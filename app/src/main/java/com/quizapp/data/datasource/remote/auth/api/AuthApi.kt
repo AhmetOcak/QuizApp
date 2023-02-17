@@ -6,9 +6,9 @@ import retrofit2.http.POST
 
 interface AuthApi {
 
-    @POST("api/Users/Create")
+    @POST("/api/Users/Create")
     suspend fun createUser(@Body userDto: UserDto): AuthResponseDto
 
-    @POST("/api/Auth")
+    @POST("api/Auth/Login")
     suspend fun signIn(@Body loginDto: LoginDto): LoginResponseDto
 }
