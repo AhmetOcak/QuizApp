@@ -13,4 +13,8 @@ object Navigator {
         this.destination.value = destination
         this.navOptionsBuilder = navOptionsBuilder
     }
+
+    fun resetDestination() {
+        this.destination.value = ""
+    }
 }

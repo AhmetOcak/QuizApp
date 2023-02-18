@@ -1,6 +1,7 @@
 package com.quizapp.presentation.reset_password
 
 import android.annotation.SuppressLint
+import android.app.Activity
 import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.Image
@@ -21,6 +22,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.quizapp.R
+import com.quizapp.core.navigation.Navigator
 import com.quizapp.core.ui.component.CustomLoadingSpinner
 import com.quizapp.core.ui.component.OtfCustom
 import com.quizapp.core.ui.component.OutBtnCustom
@@ -34,11 +36,14 @@ fun ForgotPasswordScreen(
     val resetPasswordState by viewModel.resetPasswordState.collectAsState()
     val resetPasswordInputFieldState by viewModel.resetPasswordInputFieldState.collectAsState()
 
+    val activity = LocalContext.current as Activity
+
     ForgotPasswordScreenContent(
         modifier = modifier,
         viewModel = viewModel,
         resetPasswordState = resetPasswordState,
-        resetPasswordInputFieldState = resetPasswordInputFieldState
+        resetPasswordInputFieldState = resetPasswordInputFieldState,
+        activity = activity
     )
 }
 
@@ -48,7 +53,8 @@ private fun ForgotPasswordScreenContent(
     modifier: Modifier,
     viewModel: ResetPasswordViewModel,
     resetPasswordState: ResetPasswordState,
-    resetPasswordInputFieldState: ResetPasswordInputFieldState
+    resetPasswordInputFieldState: ResetPasswordInputFieldState,
+    activity: Activity
 ) {
     Scaffold(modifier = modifier) {
         when (resetPasswordState) {
@@ -61,7 +67,7 @@ private fun ForgotPasswordScreenContent(
                 }
             }
             is ResetPasswordState.Success -> {
-                ChangePasswordSuccessSection(modifier = modifier)
+                ChangePasswordSuccessSection(modifier = modifier, activity = activity)
             }
             is ResetPasswordState.Error -> {
                 Log.e("error forgot screen", resetPasswordState.errorMessage)
@@ -119,7 +125,7 @@ private fun ChangePasswordSection(modifier: Modifier, viewModel: ResetPasswordVi
 }
 
 @Composable
-private fun ChangePasswordSuccessSection(modifier: Modifier) {
+private fun ChangePasswordSuccessSection(modifier: Modifier, activity: Activity) {
     Column(
         modifier = modifier
             .fillMaxSize()
@@ -136,8 +142,11 @@ private fun ChangePasswordSuccessSection(modifier: Modifier) {
             modifier = modifier
                 .fillMaxWidth()
                 .padding(top = 16.dp),
-            onClick = { /*TODO*/ },
-            buttonText = "Return Login Page"
+            onClick = {
+                Navigator.resetDestination()
+                activity.finish()
+            },
+            buttonText = "Ok"
         )
     }
 }

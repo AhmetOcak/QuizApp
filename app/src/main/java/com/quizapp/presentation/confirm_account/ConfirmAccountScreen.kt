@@ -1,6 +1,8 @@
 package com.quizapp.presentation.confirm_account
 
 import android.annotation.SuppressLint
+import android.app.Activity
+import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
@@ -9,17 +11,24 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.quizapp.R
+import com.quizapp.core.navigation.Navigator
+import com.quizapp.core.ui.component.CustomLoadingSpinner
 import com.quizapp.core.ui.component.OutBtnCustom
+import com.quizapp.presentation.signin.SignInViewModel
+import com.quizapp.presentation.utils.Messages
 
 @Composable
 fun ConfirmAccountScreen(
@@ -27,12 +36,25 @@ fun ConfirmAccountScreen(
     viewModel: ConfirmAccountViewModel = hiltViewModel()
 ) {
 
-    ConfirmAccountScreenContent(modifier = modifier, viewModel = viewModel)
+    val confirmAccountState by viewModel.confirmAccountState.collectAsState()
+    val activity = LocalContext.current as Activity
+
+    ConfirmAccountScreenContent(
+        modifier = modifier,
+        onClick = { viewModel.confirmAccount() },
+        confirmAccountState = confirmAccountState,
+        activity = activity
+    )
 }
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
-private fun ConfirmAccountScreenContent(modifier: Modifier, viewModel: ConfirmAccountViewModel) {
+private fun ConfirmAccountScreenContent(
+    modifier: Modifier,
+    onClick: () -> Unit,
+    confirmAccountState: ConfirmAccountState,
+    activity: Activity
+) {
     Scaffold(modifier = modifier) {
         Column(
             modifier = modifier
@@ -41,9 +63,26 @@ private fun ConfirmAccountScreenContent(modifier: Modifier, viewModel: ConfirmAc
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ) {
-            ImageSection(modifier = modifier)
-            ContentSection(modifier = modifier)
-            ActivateButtonSection(modifier = modifier, onClick = { viewModel.confirmAccount() })
+            when(confirmAccountState) {
+                is ConfirmAccountState.Nothing -> {
+                    ImageSection(modifier = modifier)
+                    ContentSection(modifier = modifier)
+                    ActivateButtonSection(modifier = modifier, onClick = onClick)
+                }
+                is ConfirmAccountState.Loading -> {
+                    Box(modifier = modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
+                        CustomLoadingSpinner()
+                    }
+                }
+                is ConfirmAccountState.Success -> {
+                    ShowMessage(message = Messages.ACCOUNT_VERIFIED)
+                    Navigator.resetDestination()
+                    activity.finish()
+                }
+                is ConfirmAccountState.Error -> {
+                    ShowMessage(message = confirmAccountState.errorMessage)
+                }
+            }
         }
     }
 }
@@ -102,12 +141,11 @@ private fun ActivateButtonSection(modifier: Modifier, onClick: () -> Unit) {
     )
 }
 
-
-
-
-
-
-
-
-
-
+@Composable
+private fun ShowMessage(message: String) {
+    Toast.makeText(
+        LocalContext.current,
+        message,
+        Toast.LENGTH_LONG
+    ).show()
+}
