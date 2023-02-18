@@ -30,7 +30,10 @@ import com.quizapp.core.ui.component.OutBtnCustom
 import com.quizapp.presentation.utils.Messages
 
 @Composable
-fun SignInScreen(modifier: Modifier = Modifier, viewModel: SignInViewModel = hiltViewModel()) {
+fun SignInScreen(
+    modifier: Modifier = Modifier,
+    viewModel: SignInViewModel = hiltViewModel()
+) {
 
     val signInState by viewModel.signInState.collectAsState()
     val signInInputFieldState by viewModel.signInInputFieldState.collectAsState()
@@ -92,7 +95,7 @@ private fun SignIn(
             TitleSection(modifier = modifier)
             SignInSection(modifier = modifier, viewModel = viewModel)
             SignInButton(modifier = modifier, viewModel = viewModel)
-            RegisterNow(modifier = modifier)
+            RegisterNow(modifier = modifier, onNavigate = { viewModel.navigateRegisterScreen() })
         }
         is SignInState.Loading -> {
             Box(modifier = modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
@@ -138,6 +141,8 @@ private fun ForgotPassword(
                 viewModel = viewModel,
                 isSignInContent = false
             )
+            // we need show message to user
+            viewModel.resetShowForPas()
         }
         is ForgotPasswordState.Error -> {
             ShowMessage(
@@ -242,7 +247,7 @@ private fun SignInButton(modifier: Modifier, viewModel: SignInViewModel) {
 }
 
 @Composable
-private fun RegisterNow(modifier: Modifier) {
+private fun RegisterNow(modifier: Modifier, onNavigate: () -> Unit) {
     Row(
         modifier = modifier
             .fillMaxWidth()
@@ -251,7 +256,7 @@ private fun RegisterNow(modifier: Modifier) {
         verticalAlignment = Alignment.CenterVertically
     ) {
         Text(text = "Not a member ?", style = MaterialTheme.typography.body2)
-        TextButton(modifier = modifier.padding(start = 1.dp), onClick = { /*TODO*/ }) {
+        TextButton(modifier = modifier.padding(start = 1.dp), onClick = onNavigate) {
             Text(
                 text = "Register now",
                 style = MaterialTheme.typography.body2.copy(fontWeight = FontWeight.Bold),

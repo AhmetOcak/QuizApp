@@ -14,4 +14,5 @@ object Messages {
     const val PASSWORD_MATCH = "Passwords doesn't match"
     const val RESET_PASS_MAIL = "We've sent you a password reset email. Please check your mail."
     const val ACCOUNT_VERIFIED = "Your account has been confirmed. You can now login to your Account."
+    const val USER_CREATE_SUCCESS = "The user has been successfully created. We have sent you an activation email. Please check your mail."
 }

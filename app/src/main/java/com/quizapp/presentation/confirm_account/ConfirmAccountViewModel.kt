@@ -29,6 +29,7 @@ class ConfirmAccountViewModel @Inject constructor(
     fun confirmAccount() = viewModelScope.launch(Dispatchers.IO) {
         Log.e("email => ", email ?: "null")
         Log.e("token => ", token ?: "null")
+
         if (email != null && token != null) {
             confirmAccountUseCase(confirmAccount = ConfirmAccount(email = email, token = token)).collect() { response ->
                 when (response) {
@@ -42,8 +43,7 @@ class ConfirmAccountViewModel @Inject constructor(
                     }
                     is Response.Error -> {
                         Log.e("error", response.errorMessage)
-                        _confirmAccountState.value =
-                            ConfirmAccountState.Error(errorMessage = response.errorMessage)
+                        _confirmAccountState.value = ConfirmAccountState.Error(errorMessage = response.errorMessage)
                     }
                 }
             }

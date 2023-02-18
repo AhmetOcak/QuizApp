@@ -136,4 +136,11 @@ class SignInViewModel @Inject constructor(
             passwordError = false
             true
         }
+
+    fun navigateRegisterScreen() {
+        Navigator.navigate(NavScreen.RegisterScreen.route) {}
+    }
+
+    fun resetShowForPas() { showForgotPasswordScreen = false }
+
 }

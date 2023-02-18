@@ -1,6 +1,7 @@
 package com.quizapp.presentation.register
 
 import android.annotation.SuppressLint
+import android.app.Activity
 import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.layout.*
@@ -18,15 +19,20 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.quizapp.core.navigation.NavScreen
 import com.quizapp.core.ui.component.CustomLoadingSpinner
+import com.quizapp.core.ui.component.OnBackPressed
 import com.quizapp.core.ui.component.OtfCustom
 import com.quizapp.core.ui.component.OutBtnCustom
+import com.quizapp.presentation.utils.Messages
 
 @Composable
 fun RegisterScreen(modifier: Modifier = Modifier, viewModel: RegisterViewModel = hiltViewModel()) {
 
     val createUserState by viewModel.createUserState.collectAsState()
     val registerInputFieldState by viewModel.registerInputFieldState.collectAsState()
+
+    OnBackPressed(targetRoute = NavScreen.SignInScreen.route)
 
     RegisterScreenContent(
         modifier = modifier,
@@ -64,9 +70,11 @@ private fun RegisterScreenContent(
                 }
                 is CreateUserState.Success -> {
                     Log.e("register", "Success")
+                    ShowMessage(message = Messages.USER_CREATE_SUCCESS)
                 }
                 is CreateUserState.Error -> {
                     Log.e("register", "error => " + createUserState.errorMessage)
+                    ShowMessage(message = createUserState.errorMessage)
                 }
             }
             ShowInputFieldErrors(
@@ -162,4 +170,13 @@ private fun ShowInputFieldErrors(
         }
         is RegisterInputFieldState.Nothing -> {}
     }
+}
+
+@Composable
+private fun ShowMessage(message: String) {
+    Toast.makeText(
+        LocalContext.current,
+        message,
+        Toast.LENGTH_LONG
+    ).show()
 }

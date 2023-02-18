@@ -35,7 +35,7 @@ class ResetPasswordViewModel @Inject constructor(
     var confirmNewPassword by mutableStateOf("")
         private set
 
-    // Textrfield error trigger
+    // Text field error trigger
     var newPasswordError by mutableStateOf(false)
         private set
     var confirmNewPasswordError by mutableStateOf(false)
@@ -64,12 +64,15 @@ class ResetPasswordViewModel @Inject constructor(
                     when (response) {
                         is Response.Loading -> {
                             Log.e("reset password", "loading")
+                            _resetPasswordState.value = ResetPasswordState.Loading
                         }
                         is Response.Success -> {
                             Log.e("reset password", "success")
+                            _resetPasswordState.value = ResetPasswordState.Success
                         }
                         is Response.Error -> {
                             Log.e("reset password", response.errorMessage)
+                            _resetPasswordState.value = ResetPasswordState.Error(errorMessage = response.errorMessage)
                         }
                     }
                 }

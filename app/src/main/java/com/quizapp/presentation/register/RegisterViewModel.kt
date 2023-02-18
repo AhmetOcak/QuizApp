@@ -7,6 +7,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.quizapp.core.common.EmailController
 import com.quizapp.core.common.Response
+import com.quizapp.core.navigation.NavScreen
+import com.quizapp.core.navigation.Navigator
 import com.quizapp.domain.model.auth.User
 import com.quizapp.domain.usecase.auth.CreateUserUseCase
 import com.quizapp.presentation.utils.Messages
@@ -66,6 +68,9 @@ class RegisterViewModel @Inject constructor(
                     }
                     is Response.Success -> {
                         _createUserState.value = CreateUserState.Success
+                        Navigator.navigate(NavScreen.SignInScreen.route) {
+                            popUpTo(NavScreen.RegisterScreen.route)
+                        }
                     }
                     is Response.Error -> {
                         _createUserState.value = CreateUserState.Error(errorMessage = response.errorMessage)
@@ -152,10 +157,10 @@ class RegisterViewModel @Inject constructor(
 
     fun resetRegisterState() { _registerInputFieldState.value = RegisterInputFieldState.Nothing }
 
-    fun resetInputErrors() {
+/*    fun resetInputErrors() {
         userNameError = false
         userEmailError = false
         userPasswordError = false
         userConfirmPasswordError = false
-    }
+    }*/
 }

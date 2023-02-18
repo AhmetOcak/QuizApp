@@ -24,11 +24,12 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.quizapp.R
 import com.quizapp.core.navigation.Navigator
 import com.quizapp.core.ui.component.CustomLoadingSpinner
+import com.quizapp.core.ui.component.OnBackPressed
 import com.quizapp.core.ui.component.OtfCustom
 import com.quizapp.core.ui.component.OutBtnCustom
 
 @Composable
-fun ForgotPasswordScreen(
+fun ResetPasswordScreen(
     modifier: Modifier = Modifier,
     viewModel: ResetPasswordViewModel = hiltViewModel()
 ) {
@@ -37,6 +38,7 @@ fun ForgotPasswordScreen(
     val resetPasswordInputFieldState by viewModel.resetPasswordInputFieldState.collectAsState()
 
     val activity = LocalContext.current as Activity
+    OnBackPressed(activity = activity)
 
     ForgotPasswordScreenContent(
         modifier = modifier,
@@ -62,7 +64,7 @@ private fun ForgotPasswordScreenContent(
                 ChangePasswordSection(modifier = modifier, viewModel = viewModel)
             }
             is ResetPasswordState.Loading -> {
-                Box(modifier = modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
+                Box(modifier = modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
                     CustomLoadingSpinner()
                 }
             }
@@ -71,6 +73,8 @@ private fun ForgotPasswordScreenContent(
             }
             is ResetPasswordState.Error -> {
                 Log.e("error forgot screen", resetPasswordState.errorMessage)
+                ChangePasswordSection(modifier = modifier, viewModel = viewModel)
+                ShowMessage(message = resetPasswordState.errorMessage)
             }
         }
         ShowInputFieldErrors(
@@ -194,4 +198,13 @@ private fun ShowInputFieldErrors(
         }
         is ResetPasswordInputFieldState.Nothing -> {}
     }
+}
+
+@Composable
+private fun ShowMessage(message: String) {
+    Toast.makeText(
+        LocalContext.current,
+        message,
+        Toast.LENGTH_LONG
+    ).show()
 }
