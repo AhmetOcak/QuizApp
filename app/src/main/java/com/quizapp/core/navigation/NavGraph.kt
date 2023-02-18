@@ -1,5 +1,6 @@
 package com.quizapp.core.navigation
 
+import android.content.SharedPreferences
 import androidx.compose.animation.AnimatedContentScope
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.animation.core.tween
@@ -8,6 +9,8 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ExitToApp
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -27,6 +30,7 @@ import androidx.navigation.navArgument
 import com.google.accompanist.navigation.animation.AnimatedNavHost
 import com.google.accompanist.navigation.animation.rememberAnimatedNavController
 import com.quizapp.R
+import com.quizapp.core.common.removeToken
 import com.quizapp.core.ui.component.CustomScaffold
 import com.quizapp.core.ui.theme.Black
 import com.quizapp.core.ui.theme.TransparentWhite
@@ -48,17 +52,21 @@ import com.quizapp.presentation.signin.SignInScreen
 @Composable
 fun NavGraph(
     modifier: Modifier = Modifier,
-    startDestination: String,
-    navigator: Navigator
+    startDestination: String = NavScreen.SignInScreen.route,
+    sharedPreferences: SharedPreferences
 ) {
     val navController = rememberAnimatedNavController()
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = navBackStackEntry?.destination?.route
-    val destination by navigator.destination.collectAsState()
+    val destination by Navigator.destination.collectAsState()
 
     LaunchedEffect(destination) {
-        if (navController.currentDestination?.route != destination) {
-            navController.navigate(destination)
+        if (destination.isBlank()) {
+            navController.navigate(startDestination)
+        } else if (navController.currentDestination?.route != destination) {
+            navController.navigate(destination) {
+                Navigator.navOptionsBuilder
+            }
         }
     }
 
@@ -66,7 +74,16 @@ fun NavGraph(
         modifier = modifier.fillMaxSize(),
         topBar = {
             if (currentRoute == NavScreen.ProfileScreen.route) {
-                MyTopAppBar()
+                ProfileScreenTopAppBar(
+                    logOut = {
+                        with(sharedPreferences.edit()) {
+                            removeToken()
+                        }
+                        Navigator.navigate(NavScreen.SignInScreen.route) {
+                            popUpTo(0)
+                        }
+                    }
+                )
             }
         },
         content = {
@@ -146,7 +163,7 @@ fun NavGraph(
 }
 
 @Composable
-private fun MyTopAppBar() {
+private fun ProfileScreenTopAppBar(logOut: () -> Unit) {
     TopAppBar(
         title = {},
         navigationIcon = {
@@ -159,9 +176,9 @@ private fun MyTopAppBar() {
             }
         },
         actions = {
-            IconButton(onClick = { /*TODO*/ }) {
+            IconButton(onClick = logOut) {
                 Icon(
-                    painter = painterResource(id = R.drawable.ic_baseline_edit),
+                    imageVector = Icons.Default.ExitToApp,
                     contentDescription = null,
                     tint = WhiteSmoke
                 )

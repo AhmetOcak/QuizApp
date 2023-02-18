@@ -1,13 +1,16 @@
 package com.quizapp.core.navigation
 
+import androidx.navigation.NavOptionsBuilder
 import kotlinx.coroutines.flow.MutableStateFlow
 import javax.inject.Inject
 
-class Navigator @Inject constructor(){
+object Navigator {
 
-    var destination: MutableStateFlow<String> = MutableStateFlow(NavScreen.SignInScreen.route)
+    var destination: MutableStateFlow<String> = MutableStateFlow("")
+    var navOptionsBuilder: NavOptionsBuilder.() -> Unit = {}
 
-    fun navigate(destination: String) {
+    fun navigate(destination: String, navOptionsBuilder: NavOptionsBuilder.() -> Unit = {}) {
         this.destination.value = destination
+        this.navOptionsBuilder = navOptionsBuilder
     }
 }

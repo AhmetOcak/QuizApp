@@ -1,5 +1,6 @@
 package com.quizapp.presentation.signin
 
+import android.content.SharedPreferences
 import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -7,6 +8,9 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.quizapp.core.common.Response
+import com.quizapp.core.common.storeToken
+import com.quizapp.core.navigation.NavScreen
+import com.quizapp.core.navigation.Navigator
 import com.quizapp.domain.model.auth.Login
 import com.quizapp.domain.model.reset_password.SendPasswordResetMail
 import com.quizapp.domain.usecase.auth.SignInUseCase
@@ -22,7 +26,8 @@ import javax.inject.Inject
 @HiltViewModel
 class SignInViewModel @Inject constructor(
     private val signInUseCase: SignInUseCase,
-    private val sendPasswordResetMailUseCase: SendPasswordResetMailUseCase
+    private val sendPasswordResetMailUseCase: SendPasswordResetMailUseCase,
+    private val sharedPreferences: SharedPreferences
 ) : ViewModel() {
 
     private val _signInState = MutableStateFlow<SignInState>(SignInState.Nothing)
@@ -79,6 +84,12 @@ class SignInViewModel @Inject constructor(
                     }
                     is Response.Success -> {
                         _signInState.value = SignInState.Success(data = response.data)
+
+                        with(sharedPreferences.edit()) {
+                            storeToken(token = response.data.token.accessToken)
+                        }
+
+                        Navigator.navigate(NavScreen.HomeScreen.route) {}
                     }
                     is Response.Error -> {
                         _signInState.value = SignInState.Error(errorMessage = response.errorMessage)
