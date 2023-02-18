@@ -1,6 +1,7 @@
 package com.quizapp.presentation.profile
 
 import android.annotation.SuppressLint
+import android.app.Activity
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyRow
@@ -14,24 +15,30 @@ import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.quizapp.R
 import com.quizapp.core.ui.component.CustomSlider
+import com.quizapp.core.ui.component.OnBackPressed
 import com.quizapp.core.ui.theme.*
 import com.quizapp.presentation.utils.Dimens
 
 @Composable
-fun ProfileScreen(modifier: Modifier = Modifier) {
+fun ProfileScreen(modifier: Modifier = Modifier, viewModel: ProfileViewModel = hiltViewModel()) {
 
-    ProfileScreenContent(modifier = modifier)
+    val activity = LocalContext.current as Activity
+    OnBackPressed(activity = activity)
+
+    ProfileScreenContent(modifier = modifier, viewModel = viewModel)
 }
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
-private fun ProfileScreenContent(modifier: Modifier) {
+private fun ProfileScreenContent(modifier: Modifier, viewModel: ProfileViewModel) {
     Column(
         modifier = modifier
             .fillMaxSize()

@@ -1,5 +1,6 @@
 package com.quizapp.presentation.search
 
+import android.app.Activity
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -16,10 +17,12 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.quizapp.R
+import com.quizapp.core.ui.component.OnBackPressed
 import com.quizapp.core.ui.component.OtfCustom
 import com.quizapp.core.ui.theme.*
 import com.quizapp.presentation.utils.Dimens
@@ -29,6 +32,9 @@ const val description =
 
 @Composable
 fun SearchScreen(modifier: Modifier = Modifier) {
+    
+    val activity = LocalContext.current as Activity
+    OnBackPressed(activity = activity)
 
     SearchScreenContent(modifier = modifier)
 }
@@ -130,7 +136,7 @@ private fun Quiz(
     }
 }
 
-// Created for Quiz
+// Created for CreateQuizDto
 @Composable
 private fun QuizContent(
     modifier: Modifier,
@@ -187,7 +193,7 @@ private fun AuthorImage(modifier: Modifier, authorImage: Int) {
     )
 }
 
-// Created for Quiz
+// Created for CreateQuizDto
 @Composable
 private fun QuizCardBackground(modifier: Modifier) {
     Box(modifier = modifier.fillMaxSize()) {

@@ -1,6 +1,7 @@
 package com.quizapp.presentation.home
 
 import android.annotation.SuppressLint
+import android.app.Activity
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -15,15 +16,23 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.quizapp.R
+import com.quizapp.core.ui.component.OnBackPressed
 import com.quizapp.core.ui.theme.*
+import com.quizapp.presentation.signin.SignInViewModel
 import com.quizapp.presentation.utils.Dimens
+import retrofit2.http.GET
 
 @Composable
-fun HomeScreen(modifier: Modifier = Modifier) {
+fun HomeScreen(modifier: Modifier = Modifier, homeViewModel: HomeViewModel = hiltViewModel())  {
+
+    val activity = LocalContext.current as Activity
+    OnBackPressed(activity = activity)
 
     HomeScreenContent(modifier = modifier)
 }
