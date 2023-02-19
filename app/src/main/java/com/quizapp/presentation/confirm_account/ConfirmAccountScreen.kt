@@ -26,6 +26,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.quizapp.R
 import com.quizapp.core.navigation.Navigator
 import com.quizapp.core.ui.component.CustomLoadingSpinner
+import com.quizapp.core.ui.component.OnBackPressed
 import com.quizapp.core.ui.component.OutBtnCustom
 import com.quizapp.presentation.signin.SignInViewModel
 import com.quizapp.presentation.utils.Messages
@@ -39,11 +40,14 @@ fun ConfirmAccountScreen(
     val confirmAccountState by viewModel.confirmAccountState.collectAsState()
     val activity = LocalContext.current as Activity
 
+    OnBackPressed(activity = activity)
+
     ConfirmAccountScreenContent(
         modifier = modifier,
         onClick = { viewModel.confirmAccount() },
         confirmAccountState = confirmAccountState,
-        activity = activity
+        activity = activity,
+        onReset = { viewModel.resetConfirmAccountState() }
     )
 }
 
@@ -53,7 +57,8 @@ private fun ConfirmAccountScreenContent(
     modifier: Modifier,
     onClick: () -> Unit,
     confirmAccountState: ConfirmAccountState,
-    activity: Activity
+    activity: Activity,
+    onReset: () -> Unit
 ) {
     Scaffold(modifier = modifier) {
         Column(
@@ -63,7 +68,7 @@ private fun ConfirmAccountScreenContent(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ) {
-            when(confirmAccountState) {
+            when (confirmAccountState) {
                 is ConfirmAccountState.Nothing -> {
                     ImageSection(modifier = modifier)
                     ContentSection(modifier = modifier)
@@ -80,7 +85,11 @@ private fun ConfirmAccountScreenContent(
                     activity.finish()
                 }
                 is ConfirmAccountState.Error -> {
-                    ShowMessage(message = confirmAccountState.errorMessage)
+                    ShowMessage(
+                        message = confirmAccountState.errorMessage,
+                        confirmAccountState = confirmAccountState,
+                        onReset = onReset
+                    )
                 }
             }
         }
@@ -142,10 +151,17 @@ private fun ActivateButtonSection(modifier: Modifier, onClick: () -> Unit) {
 }
 
 @Composable
-private fun ShowMessage(message: String) {
+private fun ShowMessage(
+    message: String,
+    confirmAccountState: ConfirmAccountState = ConfirmAccountState.Nothing,
+    onReset: () -> Unit = {}
+) {
     Toast.makeText(
         LocalContext.current,
         message,
         Toast.LENGTH_LONG
     ).show()
+    if (confirmAccountState is ConfirmAccountState.Error) {
+        onReset()
+    }
 }

@@ -74,7 +74,7 @@ private fun ForgotPasswordScreenContent(
             is ResetPasswordState.Error -> {
                 Log.e("error forgot screen", resetPasswordState.errorMessage)
                 ChangePasswordSection(modifier = modifier, viewModel = viewModel)
-                ShowMessage(message = resetPasswordState.errorMessage)
+                ShowMessage(message = resetPasswordState.errorMessage, onReset = { viewModel.resetPasswordState() })
             }
         }
         ShowInputFieldErrors(
@@ -201,10 +201,15 @@ private fun ShowInputFieldErrors(
 }
 
 @Composable
-private fun ShowMessage(message: String) {
+private fun ShowMessage(
+    message: String,
+    onReset: () -> Unit
+) {
     Toast.makeText(
         LocalContext.current,
         message,
         Toast.LENGTH_LONG
     ).show()
+
+    onReset()
 }

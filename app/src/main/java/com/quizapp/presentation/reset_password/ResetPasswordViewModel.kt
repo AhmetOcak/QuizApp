@@ -83,9 +83,9 @@ class ResetPasswordViewModel @Inject constructor(
         }
     }
 
-    fun resetForgotPasswordInputState() {
-        _resetPasswordInputFieldState.value = ResetPasswordInputFieldState.Nothing
-    }
+    fun resetForgotPasswordInputState() { _resetPasswordInputFieldState.value = ResetPasswordInputFieldState.Nothing }
+
+    fun resetPasswordState() { _resetPasswordState.value = ResetPasswordState.Nothing }
 
     private fun checkNewPassword(): Boolean {
         return if (newPassword.length < 6) {

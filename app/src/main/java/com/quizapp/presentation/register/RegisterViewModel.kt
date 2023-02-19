@@ -112,7 +112,6 @@ class RegisterViewModel @Inject constructor(
     private fun checkUserEmail(): Boolean =
         if (EmailController.isEmailType(userEmail)) {
             userEmailError = false
-
             true
         } else {
             _registerInputFieldState.value = RegisterInputFieldState.Error(errorMessage = Messages.VALID_EMAIL)
@@ -155,7 +154,9 @@ class RegisterViewModel @Inject constructor(
             false
         }
 
-    fun resetRegisterState() { _registerInputFieldState.value = RegisterInputFieldState.Nothing }
+    fun resetRegisterInpFieldState() { _registerInputFieldState.value = RegisterInputFieldState.Nothing }
+
+    fun resetCreateUserState() { _createUserState.value = CreateUserState.Nothing }
 
 /*    fun resetInputErrors() {
         userNameError = false

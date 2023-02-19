@@ -1,7 +1,6 @@
 package com.quizapp.presentation.register
 
 import android.annotation.SuppressLint
-import android.app.Activity
 import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.layout.*
@@ -64,7 +63,7 @@ private fun RegisterScreenContent(
                     RegisterButton(modifier = modifier, viewModel = viewModel)
                 }
                 is CreateUserState.Loading -> {
-                    Box(modifier = modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
+                    Box(modifier = modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
                         CustomLoadingSpinner()
                     }
                 }
@@ -74,7 +73,10 @@ private fun RegisterScreenContent(
                 }
                 is CreateUserState.Error -> {
                     Log.e("register", "error => " + createUserState.errorMessage)
-                    ShowMessage(message = createUserState.errorMessage)
+                    ShowMessage(
+                        message = createUserState.errorMessage,
+                        createUserState = createUserState,
+                        onReset = { viewModel.resetCreateUserState() })
                 }
             }
             ShowInputFieldErrors(
@@ -165,7 +167,7 @@ private fun ShowInputFieldErrors(
                 registerInputFieldState.errorMessage,
                 Toast.LENGTH_SHORT
             ).show()
-            viewModel.resetRegisterState()
+            viewModel.resetRegisterInpFieldState()
             //viewModel.resetInputErrors()
         }
         is RegisterInputFieldState.Nothing -> {}
@@ -173,10 +175,17 @@ private fun ShowInputFieldErrors(
 }
 
 @Composable
-private fun ShowMessage(message: String) {
+private fun ShowMessage(
+    message: String,
+    createUserState: CreateUserState = CreateUserState.Nothing,
+    onReset: () -> Unit = {}
+) {
     Toast.makeText(
         LocalContext.current,
         message,
         Toast.LENGTH_LONG
     ).show()
+    if (createUserState is CreateUserState.Error) {
+        onReset()
+    }
 }

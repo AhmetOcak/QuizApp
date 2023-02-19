@@ -52,4 +52,6 @@ class ConfirmAccountViewModel @Inject constructor(
             Log.e("email or token null", ":/")
         }
     }
+
+    fun resetConfirmAccountState() { _confirmAccountState.value = ConfirmAccountState.Nothing }
 }
