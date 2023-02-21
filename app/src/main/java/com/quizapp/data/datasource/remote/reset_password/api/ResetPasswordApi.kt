@@ -1,7 +1,6 @@
 package com.quizapp.data.datasource.remote.reset_password.api
 
-import com.quizapp.data.datasource.remote.reset_password.entity.ResetPasswordDto
-import com.quizapp.data.datasource.remote.reset_password.entity.SendPasswordResetMailDto
+import com.quizapp.data.datasource.remote.reset_password.entity.ResetPasswordBodyDto
 import retrofit2.http.*
 
 interface ResetPasswordApi {
@@ -12,5 +11,9 @@ interface ResetPasswordApi {
     )
 
     @POST("api/Auth/ResetPassword")
-    suspend fun resetPassword(@Body resetPasswordDto: ResetPasswordDto)
+    suspend fun resetPassword(
+        @Query("email") email: String,
+        @Query("token") token: String,
+        @Body newPassword: ResetPasswordBodyDto
+    )
 }

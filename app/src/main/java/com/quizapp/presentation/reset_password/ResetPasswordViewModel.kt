@@ -9,6 +9,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.quizapp.core.common.Response
 import com.quizapp.domain.model.reset_password.ResetPassword
+import com.quizapp.domain.model.reset_password.ResetPasswordBody
 import com.quizapp.domain.usecase.reset_password.ResetPasswordUseCase
 import com.quizapp.presentation.utils.Messages
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -57,9 +58,9 @@ class ResetPasswordViewModel @Inject constructor(
                 resetPasswordUseCase(
                     resetPassword = ResetPassword(
                         email = email,
-                        token = token,
-                        newPassword = newPassword
-                    )
+                        token = token
+                    ),
+                    resetPasswordBody = ResetPasswordBody(newPassword = newPassword)
                 ).collect() { response ->
                     when (response) {
                         is Response.Loading -> {
