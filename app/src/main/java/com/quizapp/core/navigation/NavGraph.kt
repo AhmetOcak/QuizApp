@@ -37,9 +37,10 @@ import com.quizapp.core.ui.theme.TransparentWhite
 import com.quizapp.core.ui.theme.WhiteSmoke
 import com.quizapp.presentation.confirm_account.ConfirmAccountScreen
 import com.quizapp.presentation.contact_us.ContactUsScreen
+import com.quizapp.presentation.create_quiz.CreateQuizScreen
 import com.quizapp.presentation.edit_profile.EditProfileScreen
 import com.quizapp.presentation.search.SearchScreen
-import com.quizapp.presentation.reset_password.ForgotPasswordScreen
+import com.quizapp.presentation.reset_password.ResetPasswordScreen
 import com.quizapp.presentation.home.HomeScreen
 import com.quizapp.presentation.leaderboard.LeaderboardScreen
 import com.quizapp.presentation.profile.ProfileScreen
@@ -52,7 +53,7 @@ import com.quizapp.presentation.signin.SignInScreen
 @Composable
 fun NavGraph(
     modifier: Modifier = Modifier,
-    startDestination: String = NavScreen.SignInScreen.route,
+    startDestination: String = NavScreen.CreateQuizScreen.route,
     sharedPreferences: SharedPreferences
 ) {
     val navController = rememberAnimatedNavController()
@@ -64,9 +65,7 @@ fun NavGraph(
         if (destination.isBlank()) {
             navController.navigate(startDestination)
         } else if (navController.currentDestination?.route != destination) {
-            navController.navigate(destination) {
-                Navigator.navOptionsBuilder
-            }
+            navController.navigate(destination)
         }
     }
 
@@ -126,7 +125,7 @@ fun NavGraph(
                         navArgument("token") { type = NavType.StringType }
                     )
                 ) {
-                    ForgotPasswordScreen()
+                    ResetPasswordScreen()
                 }
                 composable(route = NavScreen.QuizScreen.route) {
                     QuizScreen()
@@ -151,6 +150,9 @@ fun NavGraph(
                     )
                 ) {
                     ConfirmAccountScreen()
+                }
+                composable(route = NavScreen.CreateQuizScreen.route) {
+                    CreateQuizScreen()
                 }
             }
             BottomAppBar(

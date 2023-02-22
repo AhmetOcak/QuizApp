@@ -7,13 +7,11 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import com.quizapp.core.common.getToken
-import com.quizapp.domain.usecase.quiz.GetAllQuizzesUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(
-    private val getAllQuizzesUseCase: GetAllQuizzesUseCase,
     private val sharedPreferences: SharedPreferences
 ) : ViewModel() {
 

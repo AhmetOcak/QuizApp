@@ -15,4 +15,9 @@ object Messages {
     const val RESET_PASS_MAIL = "We've sent you a password reset email. Please check your mail."
     const val ACCOUNT_VERIFIED = "Your account has been confirmed. You can now login to your Account."
     const val USER_CREATE_SUCCESS = "The user has been successfully created. We have sent you an activation email. Please check your mail."
+    const val CREATE_QUIZ_SUCCESS = "Successfully created."
+    const val CREATE_QUEST_SUCCESS = "Successfully created."
+    const val FILL_ANSWERS = "Please fill all answer fields"
+    const val SELECT_TRUE_ANSWER = "Please select a true answer"
+    const val SELECT_CATEGORY = "Please select a category"
 }
