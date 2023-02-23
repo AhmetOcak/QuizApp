@@ -12,18 +12,19 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.quizapp.core.ui.component.OtfCustom
 import com.quizapp.core.ui.component.OutBtnCustom
 
 @Composable
-fun ContactUsScreen(modifier: Modifier = Modifier) {
+fun ContactUsScreen(modifier: Modifier = Modifier, viewModel: ContactUsViewModel = hiltViewModel()) {
 
-    ContactUsScreenContent(modifier = modifier)
+    ContactUsScreenContent(modifier = modifier, viewModel = viewModel)
 }
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
-private fun ContactUsScreenContent(modifier: Modifier) {
+private fun ContactUsScreenContent(modifier: Modifier, viewModel: ContactUsViewModel) {
     Scaffold(
         topBar = {
             MyTopAppBar()
@@ -42,7 +43,7 @@ private fun ContactUsScreenContent(modifier: Modifier) {
                 modifier = modifier
                     .fillMaxWidth()
                     .padding(top = 32.dp),
-                onClick = { /*TODO*/ },
+                onClick = {  },
                 buttonText = "Send"
             )
         }
