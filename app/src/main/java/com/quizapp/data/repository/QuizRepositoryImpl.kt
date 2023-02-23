@@ -19,11 +19,11 @@ class QuizRepositoryImpl @Inject constructor(
     override suspend fun createQuiz(createQuiz: CreateQuiz, token: String) =
         remoteDataSource.createQuiz(createQuizDto = createQuiz.toCreateQuizDto(), token = token)
 
-    override suspend fun createQuestion(questionBody: QuestionBody) =
-        remoteDataSource.createQuestion(questionBodyDto = questionBody.toQuestionBodyDto())
+    override suspend fun createQuestion(questionBody: QuestionBody, token: String) =
+        remoteDataSource.createQuestion(questionBodyDto = questionBody.toQuestionBodyDto(), token = token)
 
-    override suspend fun createOptions(optionsBody: OptionsBody) =
-        remoteDataSource.createOptions(optionsBodyDto = optionsBody.toOptionsBodyDto())
+    override suspend fun createOptions(optionsBody: OptionsBody, token: String) =
+        remoteDataSource.createOptions(optionsBodyDto = optionsBody.toOptionsBodyDto(), token = token)
 
     override suspend fun getAllCategories(): Categories =
         remoteDataSource.getAllCategories().toCategories()

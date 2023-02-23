@@ -14,11 +14,11 @@ import javax.inject.Inject
 
 class CreateQuestionUseCase @Inject constructor(private val repository: QuizRepository) {
 
-    suspend operator fun invoke(questionBody: QuestionBody) : Flow<Response<Unit>> = flow {
+    suspend operator fun invoke(questionBody: QuestionBody, token: String) : Flow<Response<Unit>> = flow {
         try {
             emit(Response.Loading)
 
-            emit(Response.Success(data = repository.createQuestion(questionBody)))
+            emit(Response.Success(data = repository.createQuestion(questionBody, token)))
         } catch (e: IOException) {
             emit(Response.Error(errorMessage = Messages.INTERNET))
             Log.e("create question error", e.stackTraceToString())

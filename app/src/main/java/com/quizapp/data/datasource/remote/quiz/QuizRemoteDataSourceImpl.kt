@@ -15,11 +15,11 @@ class QuizRemoteDataSourceImpl @Inject constructor(private val api: QuizApi) : Q
     override suspend fun createQuiz(createQuizDto: CreateQuizDto, token: String) =
         api.createQuiz(createQuizDto = createQuizDto, token = token)
 
-    override suspend fun createQuestion(questionBodyDto: QuestionBodyDto) =
-        api.createQuestion(questionBodyDto = questionBodyDto)
+    override suspend fun createQuestion(questionBodyDto: QuestionBodyDto, token: String) =
+        api.createQuestion(questionBodyDto = questionBodyDto, token = token)
 
-    override suspend fun createOptions(optionsBodyDto: OptionsBodyDto) =
-        api.createOptions(optionsBodyDto = optionsBodyDto)
+    override suspend fun createOptions(optionsBodyDto: OptionsBodyDto, token: String) =
+        api.createOptions(optionsBodyDto = optionsBodyDto, token = token)
 
     override suspend fun getAllCategories(): CategoriesDto = api.getAllCategories()
 

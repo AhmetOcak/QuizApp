@@ -24,12 +24,14 @@ interface QuizApi {
 
     @POST("api/Questions/Create")
     suspend fun createQuestion(
-        @Body questionBodyDto: QuestionBodyDto
+        @Body questionBodyDto: QuestionBodyDto,
+        @Header("Authorization") token: String
     )
 
     @POST("api/Options/Create")
     suspend fun createOptions(
-        @Body optionsBodyDto: OptionsBodyDto
+        @Body optionsBodyDto: OptionsBodyDto,
+        @Header("Authorization") token: String
     )
 
     @GET("api/Category/GetAll")

@@ -44,7 +44,7 @@ class CreateQuizViewModel @Inject constructor(
     private val _createQuestionState = MutableStateFlow<CreateQuestionState>(CreateQuestionState.Nothing)
     val createQuestionState = _createQuestionState.asStateFlow()
 
-    private val _createOptionsState =MutableStateFlow<CreateOptionsState>(CreateOptionsState.Loading)
+    private val _createOptionsState = MutableStateFlow<CreateOptionsState>(CreateOptionsState.Loading)
     val createOptionsState = _createOptionsState.asStateFlow()
 
     private val _getQuizValuesState = MutableStateFlow<GetQuizValuesState>(GetQuizValuesState.Loading)
@@ -83,7 +83,7 @@ class CreateQuizViewModel @Inject constructor(
     private var answer4 by mutableStateOf("")
 
     private var categoryId: String = ""
-    private var quizId: String = "848aa68b-a70a-482a-befd-49fce1d44a38"
+    private var quizId: String = "e07ae0f9-8f0c-4d14-9b16-d0a80e203ac1"
     private var questionId: String = ""
     private var options: ArrayList<OpBody> = arrayListOf()
 
@@ -93,7 +93,7 @@ class CreateQuizViewModel @Inject constructor(
         Log.e("token -> ", token)
     }
 
-    fun setCategoryId(id: String){ categoryId = id }
+    fun setCategoryId(id: String) { categoryId = id }
 
     fun setTrueAnswer(index: Int) { answerIndex = index }
 
@@ -177,7 +177,8 @@ class CreateQuizViewModel @Inject constructor(
                     quizId = quizId,
                     description = question,
                     title = questionTitle
-                )
+                ),
+                token = "Bearer $token"
             ).collect() { response ->
                 when (response) {
                     is Response.Loading -> {
@@ -208,7 +209,7 @@ class CreateQuizViewModel @Inject constructor(
                 is Response.Success -> {
                     _getQuizValuesState.value = GetQuizValuesState.Success(data = response.data)
                     Log.e("get quiz values", "success")
-                    questionId = response.data.questions.first { it.title == "soru5" }.id
+                    questionId = response.data.questions.first { it.title == "soru1" }.id
                     options = setOptions()
                     createOptions()
                 }
@@ -221,7 +222,10 @@ class CreateQuizViewModel @Inject constructor(
     }
 
     private fun createOptions() = viewModelScope.launch(Dispatchers.IO) {
-        createOptionsUseCase(optionsBody = OptionsBody(options = options)).collect() { response ->
+        createOptionsUseCase(
+            optionsBody = OptionsBody(questionId = questionId, options = options),
+            token = "Bearer $token"
+        ).collect() { response ->
             when (response) {
                 is Response.Loading -> {
                     _createOptionsState.value = CreateOptionsState.Loading
@@ -240,24 +244,20 @@ class CreateQuizViewModel @Inject constructor(
         }
     }
 
-    private fun setOptions() : ArrayList<OpBody> = arrayListOf(
+    private fun setOptions(): ArrayList<OpBody> = arrayListOf(
         OpBody(
-            questionId = questionId,
             description = answer1,
             isAnswer = answerIndex == 0
         ),
         OpBody(
-            questionId = questionId,
             description = answer2,
             isAnswer = answerIndex == 1
         ),
         OpBody(
-            questionId = questionId,
             description = answer3,
             isAnswer = answerIndex == 2
         ),
         OpBody(
-            questionId = questionId,
             description = answer4,
             isAnswer = answerIndex == 3
         ),
@@ -298,7 +298,7 @@ class CreateQuizViewModel @Inject constructor(
     }
 
     private fun checkQuestionInputFields(): Boolean {
-        return if(question.isBlank() && questionTitle.isBlank()) {
+        return if (question.isBlank() && questionTitle.isBlank()) {
             _createQuestionInputFieldState.value = CreateQuestionInputFieldState.Error(errorMessage = Messages.FILL)
             questionError = true
             questionTitleError = true
@@ -341,21 +341,13 @@ class CreateQuizViewModel @Inject constructor(
         }
     }
 
-    fun resetCreateQuizInFieState() {
-        _createQuizInputFieldState.value = CreateQuizInputFieldState.Nothing
-    }
+    fun resetCreateQuizInFieState() { _createQuizInputFieldState.value = CreateQuizInputFieldState.Nothing }
 
-    fun resetCreateQuizState() {
-        _createQuizState.value = CreateQuizState.Nothing
-    }
+    fun resetCreateQuizState() { _createQuizState.value = CreateQuizState.Nothing }
 
-    fun resetCreateQuestionState() {
-        _createQuestionState.value = CreateQuestionState.Nothing
-    }
+    fun resetCreateQuestionState() { _createQuestionState.value = CreateQuestionState.Nothing }
 
-    fun resetCreateQuestionInpFieState() {
-        _createQuestionInputFieldState.value = CreateQuestionInputFieldState.Nothing
-    }
+    fun resetCreateQuestionInpFieState() { _createQuestionInputFieldState.value = CreateQuestionInputFieldState.Nothing }
 
     private fun resetQuestionInputs() {
         questionTitle = ""

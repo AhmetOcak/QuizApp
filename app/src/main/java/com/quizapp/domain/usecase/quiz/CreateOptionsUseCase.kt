@@ -14,11 +14,11 @@ import javax.inject.Inject
 
 class CreateOptionsUseCase @Inject constructor(private val repository: QuizRepository) {
 
-    suspend operator fun invoke(optionsBody: OptionsBody) : Flow<Response<Unit>> = flow {
+    suspend operator fun invoke(optionsBody: OptionsBody, token: String) : Flow<Response<Unit>> = flow {
         try {
             emit(Response.Loading)
 
-            emit(Response.Success(data = repository.createOptions(optionsBody)))
+            emit(Response.Success(data = repository.createOptions(optionsBody, token)))
         } catch (e: IOException) {
             emit(Response.Error(errorMessage = Messages.INTERNET))
             Log.e("create options error", e.stackTraceToString())

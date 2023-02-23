@@ -79,9 +79,9 @@ fun QuestionBody.toQuestionBodyDto() : QuestionBodyDto {
 
 fun OptionsBody.toOptionsBodyDto() : OptionsBodyDto {
     return OptionsBodyDto(
-        options.map {
+        questionId = questionId,
+        options = options.map {
             OpBodyDto(
-                questionId = it.questionId,
                 description = it.description,
                 isAnswer = it.isAnswer
             )
