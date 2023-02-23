@@ -8,6 +8,8 @@ import com.quizapp.data.datasource.remote.quiz.QuizRemoteDataSource
 import com.quizapp.data.datasource.remote.quiz.QuizRemoteDataSourceImpl
 import com.quizapp.data.datasource.remote.reset_password.ResetPasswordRemoteDataSource
 import com.quizapp.data.datasource.remote.reset_password.ResetPasswordRemoteDataSourceImpl
+import com.quizapp.data.datasource.remote.user.UserRemoteDataSource
+import com.quizapp.data.datasource.remote.user.UserRemoteDataSourceImpl
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -33,4 +35,8 @@ abstract class DataSourceModule {
     @Binds
     @Singleton
     abstract fun bindResetPasswordRemoteDataSource(resetPasswordRemoteDataSourceImpl: ResetPasswordRemoteDataSourceImpl): ResetPasswordRemoteDataSource
+
+    @Binds
+    @Singleton
+    abstract fun bindUserRemoteDataSource(userRemoteDataSourceImpl: UserRemoteDataSourceImpl): UserRemoteDataSource
 }

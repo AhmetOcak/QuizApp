@@ -4,6 +4,7 @@ import com.quizapp.data.datasource.remote.auth.api.AuthApi
 import com.quizapp.data.datasource.remote.confirm_account.api.ConfirmAccountApi
 import com.quizapp.data.datasource.remote.quiz.api.QuizApi
 import com.quizapp.data.datasource.remote.reset_password.api.ResetPasswordApi
+import com.quizapp.data.datasource.remote.user.api.UserApi
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -11,6 +12,7 @@ import dagger.hilt.components.SingletonComponent
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import retrofit2.create
 import java.security.SecureRandom
 import java.security.cert.CertificateException
 import java.security.cert.X509Certificate
@@ -68,6 +70,17 @@ object AppModule {
             .client(getUnsafeOkHttpClient().build())
             .build()
             .create(ResetPasswordApi::class.java)
+    }
+
+    @Provides
+    @Singleton
+    fun provideUserApi(): UserApi {
+        return Retrofit.Builder()
+            .baseUrl(BASE_URL)
+            .addConverterFactory(GsonConverterFactory.create())
+            .client(getUnsafeOkHttpClient().build())
+            .build()
+            .create(UserApi::class.java)
     }
 }
 

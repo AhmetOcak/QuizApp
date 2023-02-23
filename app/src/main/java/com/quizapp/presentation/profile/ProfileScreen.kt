@@ -8,6 +8,8 @@ import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -22,6 +24,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.quizapp.R
+import com.quizapp.core.ui.component.CustomLoadingSpinner
 import com.quizapp.core.ui.component.CustomSlider
 import com.quizapp.core.ui.component.OnBackPressed
 import com.quizapp.core.ui.theme.*
@@ -30,15 +33,23 @@ import com.quizapp.presentation.utils.Dimens
 @Composable
 fun ProfileScreen(modifier: Modifier = Modifier, viewModel: ProfileViewModel = hiltViewModel()) {
 
+    val getUserProfileState by viewModel.getUserProfileState.collectAsState()
+
     val activity = LocalContext.current as Activity
     OnBackPressed(activity = activity)
 
-    ProfileScreenContent(modifier = modifier, viewModel = viewModel)
+    ProfileScreenContent(
+        modifier = modifier,
+        getUserProfileState = getUserProfileState
+    )
 }
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
-private fun ProfileScreenContent(modifier: Modifier, viewModel: ProfileViewModel) {
+private fun ProfileScreenContent(
+    modifier: Modifier,
+    getUserProfileState: GetUserProfileState
+) {
     Column(
         modifier = modifier
             .fillMaxSize()
@@ -51,17 +62,39 @@ private fun ProfileScreenContent(modifier: Modifier, viewModel: ProfileViewModel
             ),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        ProfileDetailSection(modifier = modifier)
-        AchievementsSection(modifier = modifier)
-        InventorySection(modifier = modifier)
+        when (getUserProfileState) {
+            is GetUserProfileState.Loading -> {
+                Box(modifier = modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                    CustomLoadingSpinner()
+                }
+            }
+            is GetUserProfileState.Success -> {
+                ProfileDetailSection(
+                    modifier = modifier,
+                    userName = getUserProfileState.data.userName,
+                    biography = getUserProfileState.data.biography ?: "",
+                    score = getUserProfileState.data.score
+                )
+                AchievementsSection(modifier = modifier)
+                InventorySection(modifier = modifier)
+            }
+            is GetUserProfileState.Error -> {
+
+            }
+        }
     }
 }
 
 @Composable
-private fun ProfileDetailSection(modifier: Modifier) {
+private fun ProfileDetailSection(
+    modifier: Modifier,
+    userName: String,
+    biography: String,
+    score: Int
+) {
     Column(modifier = modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally) {
         ProfileImage(modifier = modifier)
-        ProfileInfo(modifier = modifier)
+        ProfileInfo(modifier = modifier, userName = userName, biography = biography, score = score)
     }
 }
 
@@ -72,7 +105,7 @@ private fun ProfileImage(modifier: Modifier) {
         modifier = modifier
             .size(144.dp)
             .clip(shape = RoundedCornerShape(20)),
-        painter = painterResource(id = R.drawable.me),
+        painter = painterResource(id = R.drawable.no_profile_img),
         contentDescription = null,
         contentScale = ContentScale.Crop
     )
@@ -80,28 +113,28 @@ private fun ProfileImage(modifier: Modifier) {
 
 // Created for Profile Detail Section
 @Composable
-private fun ProfileInfo(modifier: Modifier) {
+private fun ProfileInfo(modifier: Modifier, userName: String, biography: String, score: Int) {
     Column(
         modifier = modifier
             .fillMaxWidth()
             .padding(top = 16.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        UserNameAndLevel(modifier = modifier)
-        UserLevelAndStatistics(modifier = modifier)
+        UserNameAndBiography(userName = userName, biography = biography)
+        UserLevelAndStatistics(modifier = modifier, score = score)
     }
 }
 
 // Created for Profile Info
 @Composable
-private fun UserNameAndLevel(modifier: Modifier) {
+private fun UserNameAndBiography(userName: String, biography: String) {
     Text(
-        text = "Ahmet Ocak",
+        text = userName,
         style = MaterialTheme.typography.h1.copy(fontWeight = FontWeight.Bold),
         color = MaterialTheme.colors.primaryVariant
     )
     Text(
-        text = "Bonus Booster, 24 lv",
+        text = biography,
         style = MaterialTheme.typography.h5,
         color = MaterialTheme.colors.primaryVariant
     )
@@ -109,7 +142,7 @@ private fun UserNameAndLevel(modifier: Modifier) {
 
 // Created for Profile Info
 @Composable
-private fun UserLevelAndStatistics(modifier: Modifier) {
+private fun UserLevelAndStatistics(modifier: Modifier, score: Int) {
     Card(
         modifier = modifier
             .fillMaxWidth()
@@ -118,7 +151,7 @@ private fun UserLevelAndStatistics(modifier: Modifier) {
     ) {
         Column {
             LevelSlider(modifier = modifier)
-            UserStatistics(modifier = modifier)
+            UserStatistics(modifier = modifier, score = score)
         }
     }
 }
@@ -149,7 +182,7 @@ private fun LevelSlider(modifier: Modifier) {
 
 // Created for UserLevelAndStatistics
 @Composable
-private fun UserStatistics(modifier: Modifier) {
+private fun UserStatistics(modifier: Modifier, score: Int) {
     Row(
         modifier = modifier
             .fillMaxWidth()
@@ -160,8 +193,8 @@ private fun UserStatistics(modifier: Modifier) {
         Statistics(
             modifier = modifier.padding(start = 4.dp),
             iconId = R.drawable.ic_baseline_arrow_circle_up,
-            value = 910,
-            description = "Highest Score"
+            value = score,
+            description = "Score"
         )
         Statistics(
             modifier = modifier.padding(start = 4.dp),

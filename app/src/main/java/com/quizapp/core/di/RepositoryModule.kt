@@ -1,13 +1,7 @@
 package com.quizapp.core.di
 
-import com.quizapp.data.repository.AuthRepositoryImpl
-import com.quizapp.data.repository.ConfirmAccountRepositoryImpl
-import com.quizapp.data.repository.QuizRepositoryImpl
-import com.quizapp.data.repository.ResetPasswordRepositoryImpl
-import com.quizapp.domain.repository.AuthRepository
-import com.quizapp.domain.repository.ConfirmAccountRepository
-import com.quizapp.domain.repository.QuizRepository
-import com.quizapp.domain.repository.ResetPasswordRepository
+import com.quizapp.data.repository.*
+import com.quizapp.domain.repository.*
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -32,5 +26,9 @@ abstract class RepositoryModule {
 
     @Binds
     @Singleton
-    abstract fun bindResetPasswordRepository(reserPasswordRepositoryImpl: ResetPasswordRepositoryImpl): ResetPasswordRepository
+    abstract fun bindResetPasswordRepository(resetPasswordRepositoryImpl: ResetPasswordRepositoryImpl): ResetPasswordRepository
+
+    @Binds
+    @Singleton
+    abstract fun bindUserRepository(userRepositoryImpl: UserRepositoryImpl): UserRepository
 }
