@@ -81,9 +81,9 @@ dependencies {
     implementation "com.squareup.retrofit2:converter-gson:2.3.0"
 
     // Dependency Injection
-    implementation 'com.google.dagger:hilt-android:2.44'
+    implementation 'com.google.dagger:hilt-android:2.45'
     implementation "androidx.hilt:hilt-navigation-compose:1.0.0"
-    kapt 'com.google.dagger:hilt-compiler:2.44'
+    kapt 'com.google.dagger:hilt-compiler:2.45'
 
     // Okhttp
     implementation "com.squareup.okhttp3:okhttp:4.10.0"
@@ -94,4 +94,8 @@ dependencies {
     implementation("androidx.security:security-identity-credential:1.0.0-alpha03")
     // For App Authentication APIs
     implementation("androidx.security:security-app-authenticator:1.0.0-alpha02")
+
+    // Paging 3
+    implementation "androidx.paging:paging-runtime:3.1.1"
+    implementation "androidx.paging:paging-compose:1.0.0-alpha18"
 }
