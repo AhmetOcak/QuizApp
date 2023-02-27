@@ -23,4 +23,10 @@ class QuizRemoteDataSourceImpl @Inject constructor(private val api: QuizApi) : Q
 
     override suspend fun getAllCategories(): CategoriesDto = api.getAllCategories()
 
+    override suspend fun searchQuiz(searchKeyword: String, page: Int): SearchQuizResultDto =
+        api.searchQuiz(
+            search = searchKeyword,
+            page = page
+        )
+
 }

@@ -1,6 +1,9 @@
 package com.quizapp.domain.repository
 
+import androidx.paging.PagingData
+import com.quizapp.data.datasource.remote.quiz.entity.RecordsDto
 import com.quizapp.domain.model.quiz.*
+import kotlinx.coroutines.flow.Flow
 
 interface QuizRepository {
 
@@ -15,4 +18,6 @@ interface QuizRepository {
     suspend fun createOptions(optionsBody: OptionsBody, token: String)
 
     suspend fun getAllCategories() : Categories
+
+    fun searchQuiz(searchKeyword: String) : Flow<PagingData<RecordsDto>>
 }

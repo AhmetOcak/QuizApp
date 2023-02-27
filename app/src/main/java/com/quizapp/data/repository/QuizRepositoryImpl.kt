@@ -1,9 +1,15 @@
 package com.quizapp.data.repository
 
+import androidx.paging.Pager
+import androidx.paging.PagingConfig
+import androidx.paging.PagingData
 import com.quizapp.data.datasource.remote.quiz.QuizRemoteDataSource
+import com.quizapp.data.datasource.remote.quiz.SearchResultsPagingSource
+import com.quizapp.data.datasource.remote.quiz.entity.RecordsDto
 import com.quizapp.data.mappers.*
 import com.quizapp.domain.model.quiz.*
 import com.quizapp.domain.repository.QuizRepository
+import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
 class QuizRepositoryImpl @Inject constructor(
@@ -27,4 +33,15 @@ class QuizRepositoryImpl @Inject constructor(
 
     override suspend fun getAllCategories(): Categories =
         remoteDataSource.getAllCategories().toCategories()
+
+    override fun searchQuiz(searchKeyword: String): Flow<PagingData<RecordsDto>> {
+        return Pager(
+            config = PagingConfig(
+                pageSize = 10
+            ),
+            pagingSourceFactory = {
+                SearchResultsPagingSource(remoteDataSource, searchKeyword)
+            }
+        ).flow
+    }
 }

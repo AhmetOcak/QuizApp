@@ -37,4 +37,11 @@ interface QuizApi {
     @GET("api/Category/GetAll")
     suspend fun getAllCategories(): CategoriesDto
 
+    @GET("api/Quizzes/SearchQuiz")
+    suspend fun searchQuiz(
+        @Query("search") search: String,
+        @Query("Page") page: Int,
+        //@Query("PageSize") pageSize: Int = 10
+    ): SearchQuizResultDto
+
 }

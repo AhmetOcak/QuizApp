@@ -89,7 +89,19 @@ fun OptionsBody.toOptionsBodyDto() : OptionsBodyDto {
     )
 }
 
-
-
-
-
+fun SearchQuizResultDto.toSearchResults(): SearchQuizResults {
+    return SearchQuizResults(
+        results = Results(
+            page = results.page,
+            pageSize = results.pageSize,
+            totalPages = results.totalPages,
+            records = results.records.map {
+                Records(
+                    quizId = it.quizId,
+                    title = it.title,
+                    description = it.description
+                )
+            } as ArrayList<Records>
+        )
+    )
+}

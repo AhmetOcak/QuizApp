@@ -4,73 +4,127 @@ import android.app.Activity
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Card
 import androidx.compose.material.MaterialTheme
-import androidx.compose.material.MaterialTheme.colors
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Brush
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.paging.LoadState
+import androidx.paging.compose.LazyPagingItems
+import androidx.paging.compose.collectAsLazyPagingItems
+import androidx.paging.compose.items
 import com.quizapp.R
+import com.quizapp.core.ui.component.CustomLoadingSpinner
 import com.quizapp.core.ui.component.OnBackPressed
 import com.quizapp.core.ui.component.OtfCustom
 import com.quizapp.core.ui.theme.*
+import com.quizapp.data.datasource.remote.quiz.entity.RecordsDto
 import com.quizapp.presentation.utils.Dimens
 
-const val description =
-    "Prussia was a German state on the southeast coast of the Baltic Sea. It formed the German Empire under Prussian rule when it united the German states in 1871"
-
 @Composable
-fun SearchScreen(modifier: Modifier = Modifier) {
-    
+fun SearchScreen(modifier: Modifier = Modifier, viewModel: SearchViewModel = hiltViewModel()) {
+
     val activity = LocalContext.current as Activity
     OnBackPressed(activity = activity)
 
-    SearchScreenContent(modifier = modifier)
+    SearchScreenContent(
+        modifier = modifier,
+        searchFieldValue = viewModel.searchKeyword,
+        searchOnValChanged = { viewModel.updateSearchField(it) },
+        viewModel = viewModel
+    )
 }
 
 @Composable
-private fun SearchScreenContent(modifier: Modifier) {
+private fun SearchScreenContent(
+    modifier: Modifier,
+    searchFieldValue: String,
+    searchOnValChanged: (String) -> Unit,
+    viewModel: SearchViewModel
+) {
     Column(
         modifier = modifier
             .fillMaxSize()
             .padding(top = 16.dp, start = 16.dp, end = 16.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        SearchFieldSection(modifier = modifier)
-        SearchResultSection(modifier = modifier)
+        SearchFieldSection(
+            modifier = modifier,
+            searchFieldValue = searchFieldValue,
+            searchOnValChanged = searchOnValChanged
+        )
+        SearchResultSection(modifier = modifier, viewModel = viewModel)
     }
 }
 
 @Composable
-private fun SearchFieldSection(modifier: Modifier) {
+private fun SearchFieldSection(
+    modifier: Modifier,
+    searchFieldValue: String,
+    searchOnValChanged: (String) -> Unit
+) {
     OtfCustom(
         modifier = modifier.fillMaxWidth(),
-        onValueChanged = {},
+        onValueChanged = searchOnValChanged,
         placeHolderText = "Search",
+        value = searchFieldValue
     )
 }
 
 @Composable
-private fun SearchResultSection(modifier: Modifier) {
-    EmptySearch(modifier = modifier)
-    //QuizList(modifier = modifier)
+private fun SearchResultSection(modifier: Modifier, viewModel: SearchViewModel) {
+    QuizList(modifier = modifier, viewModel = viewModel)
 }
-
 
 // Created for SearchResultSection
 @Composable
-private fun EmptySearch(modifier: Modifier) {
+private fun QuizList(modifier: Modifier, viewModel: SearchViewModel) {
+    if (!viewModel.isSearchKeywordBlank()) {
+        val quizzes = viewModel.getSearchResults().collectAsLazyPagingItems()
+
+        LazyColumn(
+            contentPadding = PaddingValues(
+                top = 32.dp,
+                bottom = 32.dp + Dimens.AppBarDefaultHeight
+            ),
+            verticalArrangement = Arrangement.spacedBy(16.dp),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            items(
+                items = quizzes,
+                key = { it.quizId }
+            ) { quiz ->
+                if (quiz != null) {
+                    Quiz(
+                        modifier = modifier,
+                        quizName = quiz.title,
+                        quizDescription = quiz.description
+                    )
+                }
+            }
+
+            loadStateRefresh(modifier = modifier, quizzes = quizzes, viewModel = viewModel)
+            loadStateAppend(modifier = modifier, quizzes = quizzes, viewModel = viewModel)
+        }
+    } else {
+        EmptySearch(modifier = modifier, message = "Search something")
+    }
+}
+
+@Composable
+private fun EmptySearch(modifier: Modifier, message: String) {
     Column(
         modifier = modifier.fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -83,30 +137,92 @@ private fun EmptySearch(modifier: Modifier) {
         )
         Text(
             modifier = modifier.padding(top = 8.dp),
-            text = "Sorry! No result found :(",
+            text = message,
             style = MaterialTheme.typography.h2.copy(fontWeight = FontWeight.SemiBold),
-            color = MaterialTheme.colors.primaryVariant
+            color = MaterialTheme.colors.primaryVariant,
+            textAlign = TextAlign.Center
         )
     }
 }
 
-// Created for SearchResultSection
 @Composable
-private fun QuizList(modifier: Modifier) {
-    LazyColumn(
+private fun ErrorSearch(modifier: Modifier, message: String) {
+    Column(
         modifier = modifier.fillMaxSize(),
-        contentPadding = PaddingValues(top = 32.dp, bottom = 32.dp + Dimens.AppBarDefaultHeight),
-        verticalArrangement = Arrangement.spacedBy(16.dp)
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center
     ) {
-        items(10) {
-            Quiz(
-                modifier = modifier,
-                quizName = "Prussia History",
-                quizDescription = description,
-                quizAuthor = "Ahmet Ocak",
-                quizAuthorImage = R.drawable.me
-            )
+        Image(
+            modifier = modifier.size(96.dp),
+            painter = painterResource(id = R.drawable.error_image),
+            contentDescription = null
+        )
+        Text(
+            modifier = modifier.padding(top = 8.dp),
+            text = message,
+            style = MaterialTheme.typography.h2.copy(fontWeight = FontWeight.SemiBold),
+            color = MaterialTheme.colors.primaryVariant,
+            textAlign = TextAlign.Center
+        )
+    }
+}
+
+private fun LazyListScope.loadStateRefresh(
+    modifier: Modifier,
+    quizzes: LazyPagingItems<RecordsDto>,
+    viewModel: SearchViewModel
+) {
+    when (quizzes.loadState.refresh) {
+        is LoadState.Error -> {
+            item {
+                ErrorSearch(
+                    modifier = modifier,
+                    message = viewModel.setErrorMessage((quizzes.loadState.refresh as LoadState.Error).error)
+                )
+            }
         }
+        is LoadState.Loading -> {
+            item {
+                Box(
+                    modifier = modifier.fillMaxSize(), contentAlignment = Alignment.Center
+                ) {
+                    CustomLoadingSpinner()
+                }
+            }
+        }
+        else -> {
+            if (quizzes.itemSnapshotList.isEmpty() && quizzes.loadState.refresh != LoadState.Loading && quizzes.loadState.append != LoadState.Loading) {
+                item { EmptySearch(modifier = modifier, message = "No Result Found :(") }
+            }
+        }
+    }
+}
+
+private fun LazyListScope.loadStateAppend(
+    modifier: Modifier,
+    quizzes: LazyPagingItems<RecordsDto>,
+    viewModel: SearchViewModel
+) {
+    when (quizzes.loadState.append) {
+        is LoadState.Error -> {
+            item {
+                ErrorSearch(
+                    modifier = modifier,
+                    message = viewModel.setErrorMessage((quizzes.loadState.append as LoadState.Error).error)
+                )
+            }
+        }
+        is LoadState.Loading -> {
+            item {
+                Box(
+                    modifier = modifier.fillMaxSize(),
+                    contentAlignment = Alignment.Center
+                ) {
+                    CustomLoadingSpinner()
+                }
+            }
+        }
+        else -> {}
     }
 }
 
@@ -115,8 +231,6 @@ private fun Quiz(
     modifier: Modifier,
     quizName: String,
     quizDescription: String,
-    quizAuthor: String,
-    quizAuthorImage: Int
 ) {
     Card(
         modifier = modifier
@@ -130,8 +244,6 @@ private fun Quiz(
             modifier = modifier,
             quizName = quizName,
             quizDescription = quizDescription,
-            quizAuthor = quizAuthor,
-            quizAuthorImage = quizAuthorImage
         )
     }
 }
@@ -142,8 +254,6 @@ private fun QuizContent(
     modifier: Modifier,
     quizName: String,
     quizDescription: String,
-    quizAuthor: String,
-    quizAuthorImage: Int
 ) {
     Column(
         modifier = modifier
@@ -151,7 +261,7 @@ private fun QuizContent(
             .padding(horizontal = 16.dp, vertical = 24.dp),
         verticalArrangement = Arrangement.SpaceBetween
     ) {
-        Row(modifier = modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
+        /*Row(modifier = modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
             AuthorImage(modifier = modifier, authorImage = quizAuthorImage)
             Text(
                 modifier = modifier.padding(start = 8.dp),
@@ -159,7 +269,7 @@ private fun QuizContent(
                 style = MaterialTheme.typography.h3.copy(fontWeight = FontWeight.SemiBold),
                 color = MaterialTheme.colors.primaryVariant
             )
-        }
+        }*/
         Text(
             modifier = modifier.padding(top = 16.dp),
             text = quizName,
