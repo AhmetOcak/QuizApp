@@ -4,6 +4,7 @@ import android.util.Log
 import com.quizapp.core.common.Response
 import com.quizapp.core.common.getErrorMessage
 import com.quizapp.domain.model.quiz.CreateQuiz
+import com.quizapp.domain.model.quiz.CreateQuizResponse
 import com.quizapp.domain.repository.QuizRepository
 import com.quizapp.domain.utils.Messages
 import kotlinx.coroutines.flow.Flow
@@ -14,7 +15,7 @@ import javax.inject.Inject
 
 class CreateQuizUseCase @Inject constructor(private val repository: QuizRepository) {
 
-    suspend operator fun invoke(createQuiz: CreateQuiz, token: String): Flow<Response<Unit>> = flow {
+    suspend operator fun invoke(createQuiz: CreateQuiz, token: String): Flow<Response<CreateQuizResponse>> = flow {
         try {
             emit(Response.Loading)
 

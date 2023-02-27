@@ -9,11 +9,9 @@ interface QuizRepository {
 
     suspend fun getQuizList(quizzesQuery: QuizzesQuery) : Quizzes
 
-    suspend fun getQuizValues(quizId: String) : QuizValues
+    suspend fun createQuiz(createQuiz: CreateQuiz, token: String) : CreateQuizResponse
 
-    suspend fun createQuiz(createQuiz: CreateQuiz, token: String)
-
-    suspend fun createQuestion(questionBody: QuestionBody, token: String)
+    suspend fun createQuestion(questionBody: QuestionBody, token: String) : CreateQuestionResponse
 
     suspend fun createOptions(optionsBody: OptionsBody, token: String)
 

@@ -26,7 +26,6 @@ import javax.inject.Inject
 class CreateQuizViewModel @Inject constructor(
     private val createQuizUseCase: CreateQuizUseCase,
     private val getAllCategoriesUseCase: GetAllCategoriesUseCase,
-    private val getQuizValuesUseCase: GetQuizValuesUseCase,
     private val createQuestionUseCase: CreateQuestionUseCase,
     private val createOptionsUseCase: CreateOptionsUseCase,
     sharedPreferences: SharedPreferences
@@ -46,9 +45,6 @@ class CreateQuizViewModel @Inject constructor(
 
     private val _createOptionsState = MutableStateFlow<CreateOptionsState>(CreateOptionsState.Loading)
     val createOptionsState = _createOptionsState.asStateFlow()
-
-    private val _getQuizValuesState = MutableStateFlow<GetQuizValuesState>(GetQuizValuesState.Loading)
-    val getQuizValuesState = _getQuizValuesState.asStateFlow()
 
     private val _createQuestionInputFieldState = MutableStateFlow<CreateQuestionInputFieldState>(CreateQuestionInputFieldState.Nothing)
     val createQuestionInputFieldState = _createQuestionInputFieldState.asStateFlow()
@@ -83,7 +79,7 @@ class CreateQuizViewModel @Inject constructor(
     private var answer4 by mutableStateOf("")
 
     private var categoryId: String = ""
-    private var quizId: String = "e07ae0f9-8f0c-4d14-9b16-d0a80e203ac1"
+    private var quizId: String = ""
     private var questionId: String = ""
     private var options: ArrayList<OpBody> = arrayListOf()
 
@@ -160,6 +156,7 @@ class CreateQuizViewModel @Inject constructor(
                     is Response.Success -> {
                         _createQuizState.value = CreateQuizState.Success
                         Log.e("create quiz", "success")
+                        quizId = response.data.quizId
                     }
                     is Response.Error -> {
                         _createQuizState.value = CreateQuizState.Error(errorMessage = response.errorMessage)
@@ -188,34 +185,14 @@ class CreateQuizViewModel @Inject constructor(
                     is Response.Success -> {
                         _createQuestionState.value = CreateQuestionState.Success
                         Log.e("create question", "success")
-                        getQuizValues()
+                        questionId = response.data.questionId
+                        options = setOptions()
+                        createOptions()
                     }
                     is Response.Error -> {
                         _createQuestionState.value = CreateQuestionState.Error(errorMessage = response.errorMessage)
                         Log.e("create question", response.errorMessage)
                     }
-                }
-            }
-        }
-    }
-
-    private fun getQuizValues() = viewModelScope.launch(Dispatchers.IO) {
-        getQuizValuesUseCase(quizId = quizId).collect() { response ->
-            when (response) {
-                is Response.Loading -> {
-                    _getQuizValuesState.value = GetQuizValuesState.Loading
-                    Log.e("get quiz values", "loading")
-                }
-                is Response.Success -> {
-                    _getQuizValuesState.value = GetQuizValuesState.Success(data = response.data)
-                    Log.e("get quiz values", "success")
-                    questionId = response.data.questions.first { it.title == "soru1" }.id
-                    options = setOptions()
-                    createOptions()
-                }
-                is Response.Error -> {
-                    _getQuizValuesState.value = GetQuizValuesState.Error(errorMessage = response.errorMessage)
-                    Log.e("get quiz values", response.errorMessage)
                 }
             }
         }

@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -28,6 +29,9 @@ import com.quizapp.core.ui.component.OtfCustom
 import com.quizapp.core.ui.component.OutBtnCustom
 import com.quizapp.presentation.utils.Messages
 
+private const val CATEGORY_WIDTH = 160
+private const val CATEGORY_HEIGHT = 112
+
 @Composable
 fun CreateQuizScreen(
     modifier: Modifier = Modifier,
@@ -38,7 +42,6 @@ fun CreateQuizScreen(
     val categoriesState by viewModel.categoriesState.collectAsState()
     val createQuestionState by viewModel.createQuestionState.collectAsState()
     val createOptionsState by viewModel.createOptionsState.collectAsState()
-    val getQuizValuesState by viewModel.getQuizValuesState.collectAsState()
     val createQuestionInputFieldState by viewModel.createQuestionInputFieldState.collectAsState()
 
     var selectedCategory by remember { mutableStateOf(-1) }
@@ -72,7 +75,6 @@ fun CreateQuizScreen(
         createQuestionState = createQuestionState,
         onResetQuestionState = { viewModel.resetCreateQuestionState() },
         createOptionsState = createOptionsState,
-        getQuizValuesState = getQuizValuesState,
         resetCreateQuestionState = {
             viewModel.resetCreateQuestionState()
             isTrueAnswer = -1
@@ -105,7 +107,6 @@ private fun CreateQuizScreenContent(
     onCreateQuestionClick: () -> Unit,
     createQuestionState: CreateQuestionState,
     onResetQuestionState: () -> Unit,
-    getQuizValuesState: GetQuizValuesState,
     createOptionsState: CreateOptionsState,
     resetCreateQuestionState: () -> Unit,
     onResetState: () -> Unit,
@@ -155,7 +156,6 @@ private fun CreateQuizScreenContent(
                         createQuestionState = createQuestionState,
                         onResetQuestionState = onResetQuestionState,
                         createOptionsState = createOptionsState,
-                        getQuizValuesState = getQuizValuesState,
                         resetCreateQuestionState = resetCreateQuestionState,
                         createQuestionInputFieldState = createQuestionInputFieldState,
                         onResetState = onResetState,
@@ -236,7 +236,38 @@ private fun CategoriesSection(
             }
         }
         is CategoriesState.Error -> {
+            Box(modifier = modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
+                CategoryError(modifier = modifier, message = categoriesState.errorMessage)
+            }
+        }
+    }
+}
 
+@Composable
+private fun CategoryError(modifier: Modifier, message: String) {
+    Card(
+        modifier = modifier
+            .width(CATEGORY_WIDTH.dp + 64.dp)
+            .height(CATEGORY_HEIGHT.dp + 64.dp),
+        shape = RoundedCornerShape(20)
+    ) {
+        Column(
+            modifier = modifier.fillMaxSize(),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center
+        ) {
+            Image(
+                modifier = modifier.size(64.dp),
+                painter = painterResource(id = R.drawable.error_image),
+                contentDescription = null
+            )
+            Text(
+                modifier = modifier.padding(top = 8.dp, start = 8.dp, end = 8.dp),
+                text = message,
+                style = MaterialTheme.typography.h4.copy(fontWeight = FontWeight.SemiBold),
+                color = MaterialTheme.colors.primaryVariant,
+                textAlign = TextAlign.Center
+            )
         }
     }
 }
@@ -340,7 +371,7 @@ private fun Category(
         verticalArrangement = Arrangement.Center
     ) {
         Card(
-            modifier = modifier.size(width = 160.dp, height = 112.dp),
+            modifier = modifier.size(width = CATEGORY_WIDTH.dp, height = CATEGORY_HEIGHT.dp),
             onClick = {
                 onClick(index, categoryId)
             },
@@ -385,7 +416,6 @@ private fun CreateQuestionSection(
     onCreateQuestionClick: () -> Unit,
     createQuestionState: CreateQuestionState,
     onResetQuestionState: () -> Unit,
-    getQuizValuesState: GetQuizValuesState,
     createOptionsState: CreateOptionsState,
     resetCreateQuestionState: () -> Unit,
     createQuestionInputFieldState: CreateQuestionInputFieldState,
@@ -430,11 +460,10 @@ private fun CreateQuestionSection(
                 }
             }
             is CreateQuestionState.Success -> {
-                QuizValuesContent(
+                CreateOptionsContent(
                     modifier = modifier,
-                    getQuizValuesState = getQuizValuesState,
-                    createOptionsState = createOptionsState,
-                    resetCreateQuestionState = resetCreateQuestionState
+                    resetCreateQuestionState = resetCreateQuestionState,
+                    createOptionsState = createOptionsState
                 )
             }
             is CreateQuestionState.Error -> {
@@ -449,32 +478,6 @@ private fun CreateQuestionSection(
             createQuestionInputFieldState = createQuestionInputFieldState,
             onResetState = onResetState
         )
-    }
-}
-
-@Composable
-private fun QuizValuesContent(
-    modifier: Modifier,
-    getQuizValuesState: GetQuizValuesState,
-    createOptionsState: CreateOptionsState,
-    resetCreateQuestionState: () -> Unit
-) {
-    when (getQuizValuesState) {
-        is GetQuizValuesState.Loading -> {
-            Box(modifier = modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                CustomLoadingSpinner()
-            }
-        }
-        is GetQuizValuesState.Success -> {
-            CreateOptionsContent(
-                modifier = modifier,
-                createOptionsState = createOptionsState,
-                resetCreateQuestionState = resetCreateQuestionState
-            )
-        }
-        is GetQuizValuesState.Error -> {
-            ShowMessage(message = getQuizValuesState.errorMessage)
-        }
     }
 }
 

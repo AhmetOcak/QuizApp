@@ -3,6 +3,7 @@ package com.quizapp.domain.usecase.quiz
 import android.util.Log
 import com.quizapp.core.common.Response
 import com.quizapp.core.common.getErrorMessage
+import com.quizapp.domain.model.quiz.CreateQuestionResponse
 import com.quizapp.domain.model.quiz.QuestionBody
 import com.quizapp.domain.repository.QuizRepository
 import com.quizapp.domain.utils.Messages
@@ -14,7 +15,7 @@ import javax.inject.Inject
 
 class CreateQuestionUseCase @Inject constructor(private val repository: QuizRepository) {
 
-    suspend operator fun invoke(questionBody: QuestionBody, token: String) : Flow<Response<Unit>> = flow {
+    suspend operator fun invoke(questionBody: QuestionBody, token: String) : Flow<Response<CreateQuestionResponse>> = flow {
         try {
             emit(Response.Loading)
 

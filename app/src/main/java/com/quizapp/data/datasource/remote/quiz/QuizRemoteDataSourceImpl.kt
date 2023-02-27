@@ -9,9 +9,6 @@ class QuizRemoteDataSourceImpl @Inject constructor(private val api: QuizApi) : Q
     override suspend fun getQuizList(quizzesQueryDto: QuizzesQueryDto): QuizzesDto =
         api.getQuizList(page = quizzesQueryDto.page, pageSize = quizzesQueryDto.pageSize)
 
-    override suspend fun getQuizValues(quizId: String): QuizValuesDto =
-        api.getQuizValues(quizId = quizId)
-
     override suspend fun createQuiz(createQuizDto: CreateQuizDto, token: String) =
         api.createQuiz(createQuizDto = createQuizDto, token = token)
 

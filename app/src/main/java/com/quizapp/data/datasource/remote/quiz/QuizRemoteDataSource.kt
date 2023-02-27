@@ -6,11 +6,9 @@ interface QuizRemoteDataSource {
 
     suspend fun getQuizList(quizzesQueryDto: QuizzesQueryDto) : QuizzesDto
 
-    suspend fun getQuizValues(quizId: String) : QuizValuesDto
+    suspend fun createQuiz(createQuizDto: CreateQuizDto, token: String) : CreateQuizResponseDto
 
-    suspend fun createQuiz(createQuizDto: CreateQuizDto, token: String)
-
-    suspend fun createQuestion(questionBodyDto: QuestionBodyDto, token: String)
+    suspend fun createQuestion(questionBodyDto: QuestionBodyDto, token: String) : CreateQuestionResponseDto
 
     suspend fun createOptions(optionsBodyDto: OptionsBodyDto, token: String)
 

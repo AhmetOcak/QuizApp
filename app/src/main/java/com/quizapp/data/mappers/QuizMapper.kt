@@ -43,32 +43,6 @@ fun QuizzesQuery.toQuizzesQueryDto(): QuizzesQueryDto {
     )
 }
 
-fun QuizValuesDto.toQuizValues(): QuizValues {
-    return QuizValues(
-        title = title,
-        description = description,
-        userId = userId,
-        score = score,
-        categoryId = categoryId,
-        category = category,
-        isVisible = isVisible,
-        questions = questions.map {
-            Question(
-                quizId = it.quizId,
-                id = it.id,
-                description = it.description,
-                title = it.title,
-                createdDate = it.createdDate,
-                options = it.options.map { options ->
-                    options.toOptions()
-                } as ArrayList<Options>
-            )
-        } as ArrayList<Question>,
-        createdDate = createdDate,
-        id = id
-    )
-}
-
 fun QuestionBody.toQuestionBodyDto() : QuestionBodyDto {
     return QuestionBodyDto(
         quizId = quizId,
@@ -89,7 +63,7 @@ fun OptionsBody.toOptionsBodyDto() : OptionsBodyDto {
     )
 }
 
-fun SearchQuizResultDto.toSearchResults(): SearchQuizResults {
+/*fun SearchQuizResultDto.toSearchResults(): SearchQuizResults {
     return SearchQuizResults(
         results = Results(
             page = results.page,
@@ -103,5 +77,19 @@ fun SearchQuizResultDto.toSearchResults(): SearchQuizResults {
                 )
             } as ArrayList<Records>
         )
+    )
+}*/
+
+fun CreateQuizResponseDto.toCreateQuizResponse(): CreateQuizResponse {
+    return CreateQuizResponse(
+        message = message,
+        quizId = quizId
+    )
+}
+
+fun CreateQuestionResponseDto.toCreateQuestionResponse(): CreateQuestionResponse {
+    return CreateQuestionResponse(
+        message = message,
+        questionId = questionId
     )
 }

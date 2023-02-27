@@ -11,22 +11,17 @@ interface QuizApi {
         @Query("PageSize") pageSize: Int
     ): QuizzesDto
 
-    @GET("api/Quizzes/GetQuizValuesFromDb")
-    suspend fun getQuizValues(
-        @Query("id") quizId: String
-    ) : QuizValuesDto
-
     @POST("api/Quizzes/Create")
     suspend fun createQuiz(
         @Body createQuizDto: CreateQuizDto,
         @Header("Authorization") token: String
-    )
+    ) : CreateQuizResponseDto
 
     @POST("api/Questions/Create")
     suspend fun createQuestion(
         @Body questionBodyDto: QuestionBodyDto,
         @Header("Authorization") token: String
-    )
+    ) : CreateQuestionResponseDto
 
     @POST("api/Options/Create")
     suspend fun createOptions(
