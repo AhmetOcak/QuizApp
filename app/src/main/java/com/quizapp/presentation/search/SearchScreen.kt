@@ -1,6 +1,7 @@
 package com.quizapp.presentation.search
 
 import android.app.Activity
+import android.util.Log
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -14,24 +15,54 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.paging.LoadState
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.items
+import coil.compose.AsyncImage
+import coil.imageLoader
 import com.quizapp.R
+import com.quizapp.core.common.encodeForSafe
+import com.quizapp.core.common.loadImage
 import com.quizapp.core.ui.component.CustomLoadingSpinner
 import com.quizapp.core.ui.component.OnBackPressed
 import com.quizapp.core.ui.component.OtfCustom
 import com.quizapp.core.ui.theme.*
 import com.quizapp.data.datasource.remote.quiz.entity.RecordsDto
 import com.quizapp.presentation.utils.Dimens
+
+private val quizCardBackColors = listOf(
+    listOf(Black, DarkPink),
+    listOf(Black, StrangeGreen),
+    listOf(Black, Cream),
+    listOf(Black, Amazon),
+    listOf(Black, DeepWater),
+    listOf(Black, WitchPurple),
+    listOf(Black, StrangeDarkOrange),
+    listOf(Black, FormulaRed),
+    listOf(Black, Wood),
+)
+
+private val quizAuthorBorderColor = listOf(
+    DarkPink,
+    StrangeGreen,
+    Cream,
+    Amazon,
+    DeepWater,
+    WitchPurple,
+    StrangeDarkOrange,
+    FormulaRed,
+    Wood,
+)
 
 @Composable
 fun SearchScreen(modifier: Modifier = Modifier, viewModel: SearchViewModel = hiltViewModel()) {
@@ -102,15 +133,35 @@ private fun QuizList(modifier: Modifier, viewModel: SearchViewModel) {
             verticalArrangement = Arrangement.spacedBy(16.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
+
             items(
                 items = quizzes,
                 key = { it.quizId }
             ) { quiz ->
                 if (quiz != null) {
+
+                    val colorIndex = viewModel.produceRandomNumber()
+
                     Quiz(
                         modifier = modifier,
                         quizName = quiz.title,
-                        quizDescription = quiz.description
+                        quizDescription = quiz.description,
+                        quizAuthorUserName = quiz.authorUserName,
+                        onNavigate = {
+                            viewModel.navigateQuizLandingScreen(
+                                quizId = quiz.quizId,
+                                quizTitle = quiz.title,
+                                quizDescription = quiz.description,
+                                quizAuthorUserName = quiz.authorUserName,
+                                quizCreatedDate = encodeForSafe(
+                                    quiz.quizCreatedDate.substring(0, 10)
+                                ),
+                                quizAuthorUserImage = encodeForSafe(quiz.authorUserImage),
+                                categoryName = quiz.categoryName
+                            )
+                        },
+                        quizAuthorUserImage = quiz.authorUserImage,
+                        colorIndex = colorIndex
                     )
                 }
             }
@@ -231,19 +282,26 @@ private fun Quiz(
     modifier: Modifier,
     quizName: String,
     quizDescription: String,
+    quizAuthorUserName: String,
+    onNavigate: () -> Unit,
+    quizAuthorUserImage: String,
+    colorIndex: Int
 ) {
     Card(
         modifier = modifier
             .fillMaxWidth()
             .height(208.dp)
-            .clickable(onClick = {}),
-        shape = RoundedCornerShape(25)
+            .clickable(onClick = onNavigate),
+        shape = RoundedCornerShape(10)
     ) {
-        QuizCardBackground(modifier = modifier)
+        QuizCardBackground(modifier = modifier, backgColorIndex = colorIndex)
         QuizContent(
             modifier = modifier,
             quizName = quizName,
             quizDescription = quizDescription,
+            quizAuthorUserName = quizAuthorUserName,
+            quizAuthorUserImage = quizAuthorUserImage,
+            borderColorIndex = colorIndex
         )
     }
 }
@@ -254,6 +312,9 @@ private fun QuizContent(
     modifier: Modifier,
     quizName: String,
     quizDescription: String,
+    quizAuthorUserName: String,
+    quizAuthorUserImage: String,
+    borderColorIndex: Int
 ) {
     Column(
         modifier = modifier
@@ -261,15 +322,19 @@ private fun QuizContent(
             .padding(horizontal = 16.dp, vertical = 24.dp),
         verticalArrangement = Arrangement.SpaceBetween
     ) {
-        /*Row(modifier = modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
-            AuthorImage(modifier = modifier, authorImage = quizAuthorImage)
+        Row(modifier = modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
+            AuthorImage(
+                modifier = modifier,
+                quizAuthorUserImage = quizAuthorUserImage,
+                borderColorIndex = borderColorIndex
+            )
             Text(
                 modifier = modifier.padding(start = 8.dp),
-                text = quizAuthor,
+                text = quizAuthorUserName,
                 style = MaterialTheme.typography.h3.copy(fontWeight = FontWeight.SemiBold),
                 color = MaterialTheme.colors.primaryVariant
             )
-        }*/
+        }
         Text(
             modifier = modifier.padding(top = 16.dp),
             text = quizName,
@@ -277,41 +342,43 @@ private fun QuizContent(
             color = MaterialTheme.colors.primaryVariant
         )
         Text(
-            modifier = modifier
-                .padding(top = 8.dp)
-                .verticalScroll(rememberScrollState()),
+            modifier = modifier.padding(top = 8.dp),
             text = quizDescription,
             style = MaterialTheme.typography.h4,
-            color = MaterialTheme.colors.primaryVariant
+            color = MaterialTheme.colors.primaryVariant,
+            maxLines = 5,
+            overflow = TextOverflow.Ellipsis
         )
     }
 }
 
 // Created for QuizContent
 @Composable
-private fun AuthorImage(modifier: Modifier, authorImage: Int) {
-    Image(
+private fun AuthorImage(modifier: Modifier, quizAuthorUserImage: String, borderColorIndex: Int) {
+    AsyncImage(
         modifier = modifier
-            .size(48.dp)
+            .size(32.dp)
             .clip(CircleShape)
             .border(
-                border = BorderStroke(width = 1.dp, color = StrangeOrange),
+                border = BorderStroke(width = 1.dp, color = quizAuthorBorderColor[borderColorIndex]),
                 shape = CircleShape
             ),
-        painter = painterResource(id = authorImage),
-        contentDescription = null
+        model = loadImage(context = LocalContext.current, imageUrl = quizAuthorUserImage),
+        imageLoader = LocalContext.current.imageLoader,
+        contentDescription = null,
+        contentScale = ContentScale.Crop
     )
 }
 
 // Created for CreateQuizDto
 @Composable
-private fun QuizCardBackground(modifier: Modifier) {
-    Box(modifier = modifier.fillMaxSize()) {
-        Image(
-            modifier = modifier.fillMaxSize(),
-            painter = painterResource(id = R.drawable.quiz_back),
-            contentDescription = null,
-            contentScale = ContentScale.Crop
-        )
-    }
+private fun QuizCardBackground(modifier: Modifier, backgColorIndex: Int) {
+    Box(
+        modifier = modifier
+            .fillMaxSize()
+            .background(
+                brush = Brush.horizontalGradient(colors = quizCardBackColors[backgColorIndex]),
+                shape = RoundedCornerShape(10)
+            )
+    )
 }

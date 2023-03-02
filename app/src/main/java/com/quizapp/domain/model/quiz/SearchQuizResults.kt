@@ -14,5 +14,9 @@ data class Results(
 data class Records(
     val quizId: String,
     val title: String,
-    val description: String
+    val description: String,
+    val authorUserName: String,
+    val authorUserImage: String,
+    val categoryName: String,
+    val quizCreatedDate: String
 )

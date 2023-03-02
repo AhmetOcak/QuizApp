@@ -16,5 +16,9 @@ data class ResultsDto(
 data class RecordsDto(
     @SerializedName("quizId") val quizId: String,
     @SerializedName("title") val title: String,
-    @SerializedName("description") val description: String
+    @SerializedName("description") val description: String,
+    @SerializedName("userName") val authorUserName: String,
+    @SerializedName("userPhotoUrl") val authorUserImage: String,
+    @SerializedName("categoryName") val categoryName: String,
+    @SerializedName("quizCreatedDate") val quizCreatedDate: String
 )
