@@ -12,6 +12,7 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.lifecycleScope
+import com.quizapp.core.common.ImageLoader
 import com.quizapp.core.common.getToken
 import com.quizapp.core.navigation.NavGraph
 import com.quizapp.core.navigation.NavNames
@@ -32,6 +33,9 @@ class MainActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        ImageLoader.load(context = applicationContext)
+
         setContent {
             QuizAppTheme {
                 // A surface container using the 'background' color from the theme
@@ -39,14 +43,15 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colors.background
                 ) {
-                    if (sharedPreferences.getToken().isNullOrEmpty()) {
+                    /*if (sharedPreferences.getToken().isNullOrEmpty()) {
                         NavGraph(sharedPreferences = sharedPreferences)
                     } else {
                         NavGraph(
                             startDestination = NavScreen.HomeScreen.route,
                             sharedPreferences = sharedPreferences
                         )
-                    }
+                    }*/
+                    NavGraph(sharedPreferences = sharedPreferences)
                 }
             }
         }
