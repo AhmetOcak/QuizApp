@@ -53,7 +53,7 @@ import com.quizapp.presentation.signin.SignInScreen
 @Composable
 fun NavGraph(
     modifier: Modifier = Modifier,
-    startDestination: String = NavScreen.CreateQuizScreen.route,
+    startDestination: String = NavScreen.SearchScreen.route,
     sharedPreferences: SharedPreferences
 ) {
     val navController = rememberAnimatedNavController()
@@ -127,13 +127,29 @@ fun NavGraph(
                 ) {
                     ResetPasswordScreen()
                 }
-                composable(route = NavScreen.QuizScreen.route) {
+                composable(
+                    route = NavScreen.QuizScreen.route,
+                    arguments = listOf(
+                        navArgument("quizId") { type = NavType.StringType }
+                    )
+                ) {
                     QuizScreen()
                 }
                 composable(route = NavScreen.LeaderboardScreen.route) {
                     LeaderboardScreen()
                 }
-                composable(route = NavScreen.QuizLandingScreen.route) {
+                composable(
+                    route = NavScreen.QuizLandingScreen.route,
+                    arguments = listOf(
+                        navArgument("quizId") { type = NavType.StringType },
+                        navArgument("quizTitle") { type = NavType.StringType },
+                        navArgument("quizDescription") { type = NavType.StringType },
+                        navArgument("quizAuthorUserName") { type = NavType.StringType },
+                        navArgument("quizCreatedDate") { type = NavType.StringType },
+                        navArgument("quizAuthorUserImage") { type = NavType.StringType },
+                        navArgument("categoryName") { type = NavType.StringType }
+                    )
+                ) {
                     QuizLandingScreen()
                 }
                 composable(route = NavScreen.EditProfileScreen.route) {
@@ -169,9 +185,13 @@ private fun ProfileScreenTopAppBar(logOut: () -> Unit) {
     TopAppBar(
         title = {},
         navigationIcon = {
-            IconButton(onClick = { /*TODO*/ }) {
+            IconButton(
+                onClick = {
+                    Navigator.navigate(NavScreen.EditProfileScreen.route) {}
+                }
+            ) {
                 Icon(
-                    painter = painterResource(id = R.drawable.ic_baseline_headphones),
+                    painter = painterResource(id = R.drawable.ic_baseline_edit),
                     contentDescription = null,
                     tint = WhiteSmoke
                 )
