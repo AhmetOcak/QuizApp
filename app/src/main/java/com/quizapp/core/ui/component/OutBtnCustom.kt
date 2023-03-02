@@ -11,25 +11,39 @@ import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.composed
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.unit.dp
 
 // Default OutlinedButton
 @Composable
-fun OutBtnCustom(modifier: Modifier, onClick: () -> Unit, buttonText: String) {
+fun OutBtnCustom(
+    modifier: Modifier,
+    onClick: () -> Unit,
+    buttonText: String,
+    enabled: Boolean = true
+) {
     OutlinedButton(
-        modifier = modifier
+        modifier = if (enabled) modifier
             .size(
                 height = TextFieldDefaults.MinHeight + 8.dp,
                 width = TextFieldDefaults.MinWidth
             )
-            .bounceClick(),
+            .bounceClick()
+        else
+            modifier
+                .size(
+                    height = TextFieldDefaults.MinHeight + 8.dp,
+                    width = TextFieldDefaults.MinWidth
+                )
+                .alpha(0.5f),
         onClick = onClick,
         shape = RoundedCornerShape(20),
         colors = ButtonDefaults.outlinedButtonColors(
             backgroundColor = MaterialTheme.colors.onPrimary
-        )
+        ),
+        enabled = enabled
     ) {
         Text(text = buttonText, color = MaterialTheme.colors.primary)
     }
