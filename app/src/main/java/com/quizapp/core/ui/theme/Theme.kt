@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.darkColors
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.graphics.Color
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 
 @SuppressLint("ConflictingOnColor")
@@ -13,7 +14,8 @@ private val DarkColorPalette = darkColors(
     secondary = Teal200,
     background = Black,
     surface = BlackSmoke, // Card background color
-    onPrimary = WhiteSmoke
+    onPrimary = WhiteSmoke,
+    error = Color.Red
 )
 
 @Composable
