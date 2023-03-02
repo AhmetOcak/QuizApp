@@ -4,33 +4,61 @@ import android.annotation.SuppressLint
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
+import coil.compose.AsyncImage
+import coil.imageLoader
 import com.quizapp.R
+import com.quizapp.core.common.loadImage
 import com.quizapp.core.ui.component.OutBtnCustom
 
-const val description =
-    "Prussia was a German state on the southeast coast of the Baltic Sea. It formed the German Empire under Prussian rule when it united the German states in 1871. It was de facto dissolved by an emergency decree transferring powers of the Prussian government to German Chancellor Franz von Papen in 1932 and de jure by an Allied decree in 1947."
-
 @Composable
-fun QuizLandingScreen(modifier: Modifier = Modifier) {
-    QuizLandingScreenContent(modifier = modifier)
+fun QuizLandingScreen(
+    modifier: Modifier = Modifier,
+    viewModel: QuizLandingViewModel = hiltViewModel()
+) {
+    QuizLandingScreenContent(
+        modifier = modifier,
+        quizTitle = viewModel.quizTitle,
+        quizDescription = viewModel.quizDescription,
+        quizAuthorUserName = viewModel.quizAuthorUserName,
+        quizCreatedDate = viewModel.quizCreatedDate,
+        startQuiz = { viewModel.navigateQuizScreen() },
+        categoryName = viewModel.categoryName,
+        authorUserImage = viewModel.quizAuthorUserImage,
+        navigateBack = { viewModel.navigateBackScreen() }
+    )
 }
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
-private fun QuizLandingScreenContent(modifier: Modifier) {
+private fun QuizLandingScreenContent(
+    modifier: Modifier,
+    quizTitle: String,
+    quizDescription: String,
+    quizAuthorUserName: String,
+    quizCreatedDate: String,
+    startQuiz: () -> Unit,
+    categoryName: String,
+    authorUserImage: String,
+    navigateBack: () -> Unit
+) {
     Scaffold(
         topBar = {
-            MyTopAppBar()
+            MyTopAppBar(navigateBack = navigateBack)
         }
     ) {
         Column(
@@ -42,9 +70,16 @@ private fun QuizLandingScreenContent(modifier: Modifier) {
             verticalArrangement = Arrangement.Center
         ) {
             LandingImage(modifier = modifier)
-            QuizName(modifier = modifier, quizName = "Prussia History")
-            QuizDescription(modifier = modifier, quizDescription = description)
-            StartQuiz(modifier = modifier)
+            QuizName(modifier = modifier, quizName = quizTitle)
+            QuizAuthorNameAndCreatedDate(
+                modifier = modifier,
+                authorName = quizAuthorUserName,
+                createdDate = quizCreatedDate,
+                authorUserImage = authorUserImage
+            )
+            QuizCategoryName(modifier = modifier, categoryName = categoryName)
+            QuizDescription(modifier = modifier, quizDescription = quizDescription)
+            StartQuiz(modifier = modifier, startQuiz = startQuiz)
         }
     }
 }
@@ -65,12 +100,86 @@ private fun QuizName(modifier: Modifier, quizName: String) {
     Text(
         modifier = modifier
             .fillMaxWidth()
-            .padding(top = 64.dp, bottom = 32.dp),
+            .padding(top = 64.dp),
         text = quizName,
         style = MaterialTheme.typography.h1.copy(fontWeight = FontWeight.Bold),
         textAlign = TextAlign.Start,
         color = MaterialTheme.colors.primaryVariant
     )
+}
+
+@Composable
+private fun QuizAuthorNameAndCreatedDate(
+    modifier: Modifier,
+    authorName: String,
+    createdDate: String,
+    authorUserImage: String
+) {
+    Row(
+        modifier = modifier
+            .fillMaxWidth()
+            .padding(vertical = 16.dp),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        AsyncImage(
+            modifier = Modifier.size(48.dp).clip(CircleShape),
+            model = loadImage(context = LocalContext.current, imageUrl = authorUserImage),
+            imageLoader = LocalContext.current.imageLoader,
+            contentDescription = null,
+            contentScale = ContentScale.Crop
+        )
+        Text(
+            modifier = modifier.padding(start = 8.dp),
+            text = authorName,
+            style = MaterialTheme.typography.h3.copy(fontWeight = FontWeight.Normal),
+            textAlign = TextAlign.Start,
+            color = MaterialTheme.colors.primaryVariant
+        )
+        Text(
+            modifier = modifier.padding(horizontal = 16.dp),
+            text = "-",
+            style = MaterialTheme.typography.h2.copy(fontWeight = FontWeight.SemiBold),
+            color = MaterialTheme.colors.primaryVariant
+        )
+        Icon(
+            painter = painterResource(id = R.drawable.ic_baseline_calendar_month),
+            contentDescription = null,
+            tint = MaterialTheme.colors.primaryVariant
+        )
+        Text(
+            modifier = modifier.padding(start = 8.dp),
+            text = createdDate,
+            style = MaterialTheme.typography.h3.copy(fontWeight = FontWeight.Normal),
+            textAlign = TextAlign.Start,
+            color = MaterialTheme.colors.primaryVariant
+        )
+    }
+}
+
+@Composable
+private fun QuizCategoryName(
+    modifier: Modifier,
+    categoryName: String
+) {
+    Row(
+        modifier = modifier
+            .fillMaxWidth()
+            .padding(top = 8.dp, bottom = 16.dp),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Icon(
+            painter = painterResource(id = R.drawable.ic_baseline_collections_bookmark),
+            contentDescription = null,
+            tint = MaterialTheme.colors.primaryVariant
+        )
+        Text(
+            modifier = modifier.padding(start = 8.dp),
+            text = categoryName,
+            style = MaterialTheme.typography.h3.copy(fontWeight = FontWeight.Normal),
+            textAlign = TextAlign.Start,
+            color = MaterialTheme.colors.primaryVariant
+        )
+    }
 }
 
 @Composable
@@ -85,22 +194,22 @@ private fun QuizDescription(modifier: Modifier, quizDescription: String) {
 }
 
 @Composable
-private fun StartQuiz(modifier: Modifier) {
+private fun StartQuiz(modifier: Modifier, startQuiz: () -> Unit) {
     OutBtnCustom(
         modifier = modifier
             .fillMaxWidth()
             .padding(top = 32.dp),
-        onClick = { /*TODO*/ },
+        onClick = startQuiz,
         buttonText = "Start"
     )
 }
 
 @Composable
-private fun MyTopAppBar() {
+private fun MyTopAppBar(navigateBack: () -> Unit) {
     TopAppBar(
         title = {},
         navigationIcon = {
-            IconButton(onClick = { /*TODO*/ }) {
+            IconButton(onClick = navigateBack) {
                 Icon(
                     painter = painterResource(id = R.drawable.ic_outline_cancel),
                     contentDescription = null,
