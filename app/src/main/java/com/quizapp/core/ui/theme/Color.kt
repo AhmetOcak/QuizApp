@@ -32,3 +32,6 @@ val FormulaRed = Color(0xFFB82E1F)
 val Wood = Color(0xFF756213)
 
 val BlackSmoke = Color(0xFF1E1E1E)
+
+val SuccessGreen = Color(0xFF4BB543)
+val FailRed = Color(0xFFCC0000)

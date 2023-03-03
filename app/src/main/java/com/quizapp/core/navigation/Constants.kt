@@ -14,6 +14,7 @@ object NavRoutes {
     const val quiz_landing_screen = "${NavNames.quiz_landing_screen}/{quizId}/{quizTitle}/{quizDescription}/{quizAuthorUserName}/{quizCreatedDate}/{quizAuthorUserImage}/{categoryName}"
     const val confirm_account_screen = "${NavNames.confirm_account_screen}/{email}/{token}"
     const val create_quiz_screen = "create_quiz_screen"
+    const val quiz_result_screen = "${NavNames.quiz_result_screen}/{quizResult}"
 }
 
 object NavNames {
@@ -21,6 +22,7 @@ object NavNames {
     const val forgot_password_screen = "forgot_password_screen"
     const val quiz_landing_screen = "quiz_landing_screen"
     const val quiz_screen = "quiz_screen"
+    const val quiz_result_screen = "quiz_result_screen"
 }
 
 object BottomNavItems {

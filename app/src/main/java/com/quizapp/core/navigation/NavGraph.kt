@@ -29,12 +29,14 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.navArgument
 import com.google.accompanist.navigation.animation.AnimatedNavHost
 import com.google.accompanist.navigation.animation.rememberAnimatedNavController
+import com.google.gson.Gson
 import com.quizapp.R
 import com.quizapp.core.common.removeToken
 import com.quizapp.core.ui.component.CustomScaffold
 import com.quizapp.core.ui.theme.Black
 import com.quizapp.core.ui.theme.TransparentWhite
 import com.quizapp.core.ui.theme.WhiteSmoke
+import com.quizapp.domain.model.quiz.QuizResult
 import com.quizapp.presentation.confirm_account.ConfirmAccountScreen
 import com.quizapp.presentation.contact_us.ContactUsScreen
 import com.quizapp.presentation.create_quiz.CreateQuizScreen
@@ -46,6 +48,7 @@ import com.quizapp.presentation.leaderboard.LeaderboardScreen
 import com.quizapp.presentation.profile.ProfileScreen
 import com.quizapp.presentation.quiz.QuizScreen
 import com.quizapp.presentation.quiz_landing.QuizLandingScreen
+import com.quizapp.presentation.quiz_result.QuizResultScreen
 import com.quizapp.presentation.register.RegisterScreen
 import com.quizapp.presentation.signin.SignInScreen
 
@@ -169,6 +172,15 @@ fun NavGraph(
                 }
                 composable(route = NavScreen.CreateQuizScreen.route) {
                     CreateQuizScreen()
+                }
+                composable(
+                    route = NavScreen.QuizResultScreen.route,
+                    arguments = listOf(
+                        navArgument("quizResult") { type = QuizResultArgType() }
+                    )
+                ) { navBackStackEntry ->
+                    val quizResult = navBackStackEntry.arguments?.getString("quizResult")?.let { Gson().fromJson( it, QuizResult::class.java) }
+                    QuizResultScreen(quizResult = quizResult)
                 }
             }
             BottomAppBar(

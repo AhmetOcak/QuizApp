@@ -13,5 +13,6 @@ sealed class NavScreen(val route: String) {
     object EditProfileScreen : NavScreen(route = NavRoutes.edit_profile_screen)
     object QuizLandingScreen : NavScreen(route = NavRoutes.quiz_landing_screen)
     object ConfirmAccountScreen : NavScreen(route = NavRoutes.confirm_account_screen)
-    object CreateQuizScreen: NavScreen(route = NavRoutes.create_quiz_screen)
+    object CreateQuizScreen : NavScreen(route = NavRoutes.create_quiz_screen)
+    object QuizResultScreen : NavScreen(route = NavRoutes.quiz_result_screen)
 }
