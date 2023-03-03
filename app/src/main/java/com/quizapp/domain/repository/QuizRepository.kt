@@ -18,4 +18,8 @@ interface QuizRepository {
     suspend fun getAllCategories() : Categories
 
     fun searchQuiz(searchKeyword: String) : Flow<PagingData<RecordsDto>>
+
+    suspend fun startQuiz(quizId: String, token: String) : StartQuiz
+
+    suspend fun finishQuiz(answers: FinishQuizBody, token: String) : QuizResult
 }

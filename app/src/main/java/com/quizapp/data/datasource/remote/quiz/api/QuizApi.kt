@@ -39,4 +39,15 @@ interface QuizApi {
         //@Query("PageSize") pageSize: Int = 10
     ): SearchQuizResultDto
 
+    @POST("api/Quizzes/StartQuiz")
+    suspend fun startQuiz(
+        @Query("quizId") quizId: String,
+        @Header("Authorization") token: String
+    ): StartQuizDto
+
+    @POST("api/Quizzes/FinishQuiz")
+    suspend fun finishQuiz(
+        @Body answers: FinishQuizBodyDto,
+        @Header("Authorization") token: String
+    ): FinishQuizResponseDto
 }

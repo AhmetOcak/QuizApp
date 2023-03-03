@@ -15,4 +15,8 @@ interface QuizRemoteDataSource {
     suspend fun getAllCategories() : CategoriesDto
 
     suspend fun searchQuiz(searchKeyword: String, page: Int) : SearchQuizResultDto
+
+    suspend fun startQuiz(quizId: String, token: String) : StartQuizDto
+
+    suspend fun finishQuiz(answers: FinishQuizBodyDto, token: String) : FinishQuizResponseDto
 }

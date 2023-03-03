@@ -93,3 +93,66 @@ fun CreateQuestionResponseDto.toCreateQuestionResponse(): CreateQuestionResponse
         questionId = questionId
     )
 }
+
+fun StartQuizDto.toStartQuiz(): StartQuiz {
+    return StartQuiz(
+        startedQuiz = StartedQuiz(
+            quizId = startedQuiz.quizId,
+            title = startedQuiz.title,
+            description = startedQuiz.description,
+            categoryName = startedQuiz.categoryName,
+            questions = startedQuiz.questions.map {
+                StartedQuizQuestions(
+                    questionId = it.questionId,
+                    title = it.title,
+                    description = it.description,
+                    options = it.options.map { options ->
+                        StartedQuizOptions(
+                            optionId = options.optionId,
+                            description = options.description
+                        )
+                    } as ArrayList<StartedQuizOptions>
+                )
+            } as ArrayList<StartedQuizQuestions>
+        )
+    )
+}
+
+fun FinishQuizBody.toFinishQuizDto(): FinishQuizBodyDto {
+    return FinishQuizBodyDto(
+        quiz = FinishedQuizBodyDto(
+            quizId = quiz.quizId,
+            title = quiz.title,
+            description = quiz.description,
+            questions = quiz.questions.map {
+                AnswersBodyDto(
+                    questionId = it.questionId,
+                    title = it.title,
+                    description = it.description,
+                    selectedOptionId = it.selectedOptionId,
+                    selectedOptionDescription = it.selectedOptionDescription
+                )
+            } as ArrayList<AnswersBodyDto>
+        )
+    )
+}
+
+fun FinishQuizResponseDto.toQuizResult(): QuizResult {
+    return QuizResult(
+        quizResult = QuizResultDetail(
+            quizId = quizResult.quizId,
+            title = quizResult.title,
+            description = quizResult.description,
+            correctAnswerCount = quizResult.correctAnswerCount,
+            score = quizResult.score,
+            questions = quizResult.questions.map {
+                QuestionsResultDetail(
+                    title = it.title,
+                    description = it.description,
+                    selectedOptionDescription = it.selectedOptionDescription,
+                    isCorrect = it.isCorrect
+                )
+            } as ArrayList<QuestionsResultDetail>
+        )
+    )
+}

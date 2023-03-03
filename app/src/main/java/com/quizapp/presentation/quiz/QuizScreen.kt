@@ -1,6 +1,7 @@
 package com.quizapp.presentation.quiz
 
 import android.annotation.SuppressLint
+import android.widget.Toast
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -8,20 +9,25 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.quizapp.R
 import com.quizapp.core.ui.component.CircleCheckbox
+import com.quizapp.core.ui.component.CustomLoadingSpinner
 import com.quizapp.core.ui.component.CustomSlider
 import com.quizapp.core.ui.component.OutBtnCustom
 import com.quizapp.core.ui.theme.*
+import com.quizapp.domain.model.quiz.*
 
 private val gradientColors = listOf(
     LightPurple,
@@ -33,15 +39,55 @@ private val gradientColors = listOf(
 )
 
 @Composable
-fun QuizScreen(modifier: Modifier = Modifier) {
+fun QuizScreen(modifier: Modifier = Modifier, viewModel: QuizViewModel = hiltViewModel()) {
 
-    QuizScreenContent(modifier = modifier)
+    val startQuizState by viewModel.startQuizState.collectAsState()
+
+    var selectedOptionId by rememberSaveable { mutableStateOf("") }
+
+    QuizScreenContent(
+        modifier = modifier,
+        viewModel = viewModel,
+        startQuizState = startQuizState,
+        questionIndex = viewModel.questionIndex,
+        onChecked = { selectedOptionId = it },
+        onPreviousClicked = { viewModel.goPreviousQuestion() },
+        onNextClicked = {
+            if (selectedOptionId.isNotBlank()) {
+                viewModel.addSelectedAnswer(
+                    answer = AnswersBody(
+                        questionId = it.questions[viewModel.questionIndex].questionId,
+                        title = it.questions[viewModel.questionIndex].title,
+                        description = it.questions[viewModel.questionIndex].description,
+                        selectedOptionId = it.questions[viewModel.questionIndex].options.find { it2 ->
+                            it2.optionId == selectedOptionId
+                        }?.optionId!!,
+                        selectedOptionDescription = it.questions[viewModel.questionIndex].options.find { it2 ->
+                            it2.optionId == selectedOptionId
+                        }?.description!!
+                    )
+                )
+                selectedOptionId = ""
+            }
+            viewModel.goNextQuestion()
+        },
+        selectedOptionId = selectedOptionId
+    )
 }
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
-private fun QuizScreenContent(modifier: Modifier) {
-    Scaffold() {
+private fun QuizScreenContent(
+    modifier: Modifier,
+    viewModel: QuizViewModel,
+    startQuizState: StartQuizState,
+    questionIndex: Int,
+    onChecked: (String) -> Unit,
+    onPreviousClicked: () -> Unit,
+    onNextClicked: (StartedQuiz) -> Unit,
+    selectedOptionId: String
+) {
+    Scaffold {
         Column(
             modifier = modifier
                 .fillMaxSize()
@@ -49,17 +95,87 @@ private fun QuizScreenContent(modifier: Modifier) {
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.SpaceAround
         ) {
-            TimerSection(modifier = modifier)
-            QuestionSection(modifier = modifier)
-            AnswersSection(modifier = modifier)
-            OutBtnCustom(
-                modifier = modifier
-                    .fillMaxWidth()
-                    .padding(top = 32.dp),
-                onClick = { /*TODO*/ },
-                buttonText = "Next"
-            )
+            when (startQuizState) {
+                is StartQuizState.Loading -> {
+                    Box(modifier = modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                        CustomLoadingSpinner()
+                    }
+                }
+                is StartQuizState.Success -> {
+                    QuizSection(
+                        modifier = modifier,
+                        questionIndex = questionIndex,
+                        quizData = startQuizState.data,
+                        viewModel = viewModel,
+                        selectedOptionId = selectedOptionId,
+                        onChecked = onChecked,
+                        onPreviousClicked = onPreviousClicked,
+                        onNextClicked = onNextClicked
+                    )
+                }
+                is StartQuizState.Error -> {
+                    Toast.makeText(
+                        LocalContext.current,
+                        startQuizState.errorMessage,
+                        Toast.LENGTH_LONG
+                    ).show()
+                }
+            }
         }
+    }
+}
+
+@Composable
+private fun QuizSection(
+    modifier: Modifier,
+    questionIndex: Int,
+    quizData: StartQuiz,
+    viewModel: QuizViewModel,
+    selectedOptionId: String,
+    onChecked: (String) -> Unit,
+    onPreviousClicked: () -> Unit,
+    onNextClicked: (StartedQuiz) -> Unit
+) {
+    TimerSection(modifier = modifier)
+    QuestionSection(
+        modifier = modifier,
+        questionTitle = quizData.startedQuiz.questions[questionIndex].title,
+        questionDescription = quizData.startedQuiz.questions[questionIndex].description
+    )
+    AnswersSection(
+        modifier = modifier,
+        options = quizData.startedQuiz.questions[questionIndex].options,
+        onChecked = onChecked,
+        checked = {
+            if (selectedOptionId.isBlank()) {
+                return@AnswersSection viewModel.returnSelectedOptionId(quizData.startedQuiz.questions[questionIndex].questionId) == it
+            } else return@AnswersSection selectedOptionId == it
+        }
+    )
+    Row(
+        modifier = modifier
+            .fillMaxWidth()
+            .padding(top = 32.dp),
+        horizontalArrangement = Arrangement.spacedBy(16.dp)
+    ) {
+        OutBtnCustom(
+            modifier = modifier.weight(1f),
+            onClick = onPreviousClicked,
+            buttonText = "Previous",
+            enabled = !viewModel.isQuestionIndexZero()
+        )
+        OutBtnCustom(
+            modifier = modifier.weight(1f),
+            onClick = {
+                if (viewModel.isQuestionIndexLast()) {
+                    onNextClicked(quizData.startedQuiz)
+                    viewModel.finishQuiz()
+                } else {
+                    onNextClicked(quizData.startedQuiz)
+                }
+            },
+            buttonText = if (viewModel.isQuestionIndexLast()) "Finish" else "Next"
+        )
     }
 }
 
@@ -106,9 +222,13 @@ private fun TimerSection(modifier: Modifier) {
 }
 
 @Composable
-private fun QuestionSection(modifier: Modifier) {
+private fun QuestionSection(
+    modifier: Modifier,
+    questionTitle: String,
+    questionDescription: String
+) {
     Column {
-        QuestionTracker(modifier = modifier)
+        QuestionTitle(modifier = modifier, questionTitle = questionTitle)
         Divider(
             modifier = modifier
                 .fillMaxWidth()
@@ -116,17 +236,17 @@ private fun QuestionSection(modifier: Modifier) {
             thickness = 2.dp,
             color = Color.Gray
         )
-        Question(modifier = modifier)
+        Question(modifier = modifier, questionDescription = questionDescription)
     }
 }
 
 @Composable
-private fun QuestionTracker(modifier: Modifier) {
+private fun QuestionTitle(modifier: Modifier, questionTitle: String) {
     Text(
         modifier = modifier
             .fillMaxWidth()
             .padding(top = 32.dp),
-        text = "Question 1/10",
+        text = questionTitle,
         style = MaterialTheme.typography.h1.copy(fontWeight = FontWeight.SemiBold),
         textAlign = TextAlign.Start,
         color = MaterialTheme.colors.primaryVariant
@@ -134,42 +254,34 @@ private fun QuestionTracker(modifier: Modifier) {
 }
 
 @Composable
-private fun Question(modifier: Modifier) {
+private fun Question(modifier: Modifier, questionDescription: String) {
     Text(
         modifier = modifier.fillMaxWidth(),
-        text = "What attraction in Montreal is one of the largest in the world",
+        text = questionDescription,
         style = MaterialTheme.typography.h2.copy(color = Color.Black, fontWeight = FontWeight.Bold),
         color = MaterialTheme.colors.primaryVariant
     )
 }
 
 @Composable
-private fun AnswersSection(modifier: Modifier) {
+private fun AnswersSection(
+    modifier: Modifier,
+    options: ArrayList<StartedQuizOptions>,
+    onChecked: (String) -> Unit,
+    checked: (String) -> Boolean
+) {
     Column(
         modifier = modifier.padding(top = 64.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Answer(
-            modifier = modifier.padding(vertical = 8.dp),
-            answerText = "The Botanical Gardens",
-            onChecked = {}
-        )
-        Answer(
-            modifier = modifier.padding(vertical = 8.dp),
-            answerText = "The Botanical Gardens",
-            onChecked = {},
-            checked = true
-        )
-        Answer(
-            modifier = modifier.padding(vertical = 8.dp),
-            answerText = "The Science Museum",
-            onChecked = {}
-        )
-        Answer(
-            modifier = modifier.padding(vertical = 8.dp),
-            answerText = "The Olympic Stadium",
-            onChecked = {}
-        )
+        options.forEach {
+            Answer(
+                modifier = modifier.padding(vertical = 8.dp),
+                answerText = it.description,
+                onChecked = { onChecked(it.optionId) },
+                checked = checked(it.optionId)
+            )
+        }
     }
 }
 
@@ -180,7 +292,7 @@ private fun Answer(
     modifier: Modifier,
     answerText: String,
     onChecked: () -> Unit,
-    checked: Boolean = false
+    checked: Boolean
 ) {
     Row(
         modifier = modifier

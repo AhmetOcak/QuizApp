@@ -41,4 +41,10 @@ class QuizRepositoryImpl @Inject constructor(
             }
         ).flow
     }
+
+    override suspend fun startQuiz(quizId: String, token: String): StartQuiz =
+        remoteDataSource.startQuiz(quizId = quizId, token = token).toStartQuiz()
+
+    override suspend fun finishQuiz(answers: FinishQuizBody, token: String) =
+        remoteDataSource.finishQuiz(answers = answers.toFinishQuizDto(), token = token).toQuizResult()
 }
