@@ -23,7 +23,9 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import coil.compose.AsyncImage
 import com.quizapp.R
+import com.quizapp.core.common.loadImage
 import com.quizapp.core.ui.component.CustomLoadingSpinner
 import com.quizapp.core.ui.component.CustomSlider
 import com.quizapp.core.ui.component.OnBackPressed
@@ -73,7 +75,8 @@ private fun ProfileScreenContent(
                     modifier = modifier,
                     userName = getUserProfileState.data.userName,
                     biography = getUserProfileState.data.biography ?: "",
-                    score = getUserProfileState.data.score
+                    score = getUserProfileState.data.score,
+                    userProfileImg = getUserProfileState.data.profilePictureUrl
                 )
                 AchievementsSection(modifier = modifier)
                 InventorySection(modifier = modifier)
@@ -90,22 +93,29 @@ private fun ProfileDetailSection(
     modifier: Modifier,
     userName: String,
     biography: String,
-    score: Int
+    score: Int,
+    userProfileImg: String
 ) {
     Column(modifier = modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally) {
-        ProfileImage(modifier = modifier)
+        ProfileImage(modifier = modifier, userProfileImg = userProfileImg)
         ProfileInfo(modifier = modifier, userName = userName, biography = biography, score = score)
     }
 }
 
 // Created for Profile Detail Section
 @Composable
-private fun ProfileImage(modifier: Modifier) {
-    Image(
+private fun ProfileImage(modifier: Modifier, userProfileImg: String) {
+    AsyncImage(
         modifier = modifier
             .size(144.dp)
-            .clip(shape = RoundedCornerShape(20)),
-        painter = painterResource(id = R.drawable.no_profile_img),
+            .clip(shape = RoundedCornerShape(20))
+            .border(
+                border = BorderStroke(
+                    width = 1.dp,
+                    color = MaterialTheme.colors.primaryVariant
+                ), shape = RoundedCornerShape(20)
+            ),
+        model = loadImage(context = LocalContext.current, imageUrl = userProfileImg),
         contentDescription = null,
         contentScale = ContentScale.Crop
     )
