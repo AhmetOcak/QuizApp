@@ -81,7 +81,7 @@ private fun ProfileImage(modifier: Modifier) {
                 ),
                 shape = CircleShape
             ),
-        painter = painterResource(id = R.drawable.me),
+        painter = painterResource(id = R.drawable.no_profile_img),
         contentDescription = null,
         contentScale = ContentScale.Crop
     )

@@ -4,7 +4,6 @@ import android.app.Activity
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CircleShape
@@ -95,19 +94,19 @@ private fun TopThreeSection(modifier: Modifier) {
     ) {
         Second(
             modifier = modifier,
-            userImage = R.drawable.me,
+            userImage = R.drawable.no_profile_img,
             userName = "Micheal",
             userScore = 1021
         )
         First(
             modifier = modifier,
-            userImage = R.drawable.me,
+            userImage = R.drawable.no_profile_img,
             userName = "Lale",
             userScore = 1453
         )
         Third(
             modifier = modifier,
-            userImage = R.drawable.me,
+            userImage = R.drawable.no_profile_img,
             userName = "Jackson",
             userScore = 1000
         )
@@ -260,7 +259,7 @@ private fun QueueSection(modifier: Modifier) {
         items(10) {
             Queue(
                 modifier = Modifier,
-                userImage = R.drawable.me,
+                userImage = R.drawable.no_profile_img,
                 userName = "Ahmet",
                 userScore = 999,
                 position = 99
