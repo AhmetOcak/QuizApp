@@ -9,7 +9,6 @@ object NavRoutes {
     const val register_screen = "register_screen"
     const val forgot_password_screen = "${NavNames.forgot_password_screen}/{email}/{token}"
     const val leaderboard_screen = "leaderboard_screen"
-    const val contact_us_screen = "contact_us_screen"
     const val edit_profile_screen = "edit_profile_screen"
     const val quiz_landing_screen = "${NavNames.quiz_landing_screen}/{quizId}/{quizTitle}/{quizDescription}/{quizAuthorUserName}/{quizCreatedDate}/{quizAuthorUserImage}/{categoryName}"
     const val confirm_account_screen = "${NavNames.confirm_account_screen}/{email}/{token}"
