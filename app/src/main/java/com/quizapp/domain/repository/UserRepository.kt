@@ -11,4 +11,6 @@ interface UserRepository {
     suspend fun updatePassword(token: String, updatePasswordBody: UpdatePasswordBody)
 
     suspend fun updateProfile(token: String, updateProfileBody: UpdateProfileBody)
+
+    suspend fun uploadProfilePicture(token: String, picture: String)
 }

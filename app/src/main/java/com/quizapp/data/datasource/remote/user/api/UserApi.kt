@@ -22,4 +22,9 @@ interface UserApi {
         @Body updateProfileBodyDto: UpdateProfileBodyDto
     )
 
+    @POST("api/Users/UploadProfilePicture")
+    suspend fun uploadProfilePicture(
+        @Header("Authorization") token: String,
+        @Body picture: String
+    )
 }

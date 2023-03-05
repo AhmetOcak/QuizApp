@@ -5,6 +5,6 @@ data class UserProfile(
     val firstName: String?,
     val lastName: String?,
     val score: Int,
-    val profilePictureUrl: String?,
+    val profilePictureUrl: String,
     val biography: String?
 )

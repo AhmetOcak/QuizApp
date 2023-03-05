@@ -11,4 +11,6 @@ interface UserRemoteDataSource {
     suspend fun updatePassword(token: String, updatePasswordBodyDto: UpdatePasswordBodyDto)
 
     suspend fun updateProfile(token: String, updateProfileBodyDto: UpdateProfileBodyDto)
+
+    suspend fun uploadProfilePicture(token: String, picture: String)
 }

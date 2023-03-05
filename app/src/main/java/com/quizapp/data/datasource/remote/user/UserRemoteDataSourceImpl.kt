@@ -18,4 +18,6 @@ class UserRemoteDataSourceImpl @Inject constructor(private val api: UserApi) : U
     override suspend fun updateProfile(token: String, updateProfileBodyDto: UpdateProfileBodyDto) =
         api.updateProfile(token = token, updateProfileBodyDto = updateProfileBodyDto)
 
+    override suspend fun uploadProfilePicture(token: String, picture: String) =
+        api.uploadProfilePicture(token = token, picture = picture)
 }
