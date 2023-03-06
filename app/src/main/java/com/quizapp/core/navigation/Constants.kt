@@ -14,6 +14,7 @@ object NavRoutes {
     const val confirm_account_screen = "${NavNames.confirm_account_screen}/{email}/{token}"
     const val create_quiz_screen = "create_quiz_screen"
     const val quiz_result_screen = "${NavNames.quiz_result_screen}/{quizResult}"
+    const val update_password_screen = "update_password_screen"
 }
 
 object NavNames {

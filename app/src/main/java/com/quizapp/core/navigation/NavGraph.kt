@@ -1,6 +1,6 @@
 package com.quizapp.core.navigation
 
-import android.content.SharedPreferences
+import android.util.Log
 import androidx.compose.animation.AnimatedContentScope
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.animation.core.tween
@@ -9,8 +9,6 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ExitToApp
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -31,7 +29,6 @@ import com.google.accompanist.navigation.animation.AnimatedNavHost
 import com.google.accompanist.navigation.animation.rememberAnimatedNavController
 import com.google.gson.Gson
 import com.quizapp.R
-import com.quizapp.core.common.removeToken
 import com.quizapp.core.ui.component.CustomScaffold
 import com.quizapp.core.ui.theme.Black
 import com.quizapp.core.ui.theme.TransparentWhite
@@ -50,13 +47,13 @@ import com.quizapp.presentation.quiz_landing.QuizLandingScreen
 import com.quizapp.presentation.quiz_result.QuizResultScreen
 import com.quizapp.presentation.register.RegisterScreen
 import com.quizapp.presentation.signin.SignInScreen
+import com.quizapp.presentation.update_password.UpdatePasswordScreen
 
 @OptIn(ExperimentalAnimationApi::class)
 @Composable
 fun NavGraph(
     modifier: Modifier = Modifier,
-    startDestination: String = NavScreen.EditProfileScreen.route,
-    sharedPreferences: SharedPreferences
+    startDestination: String = NavScreen.SignInScreen.route
 ) {
     val navController = rememberAnimatedNavController()
     val navBackStackEntry by navController.currentBackStackEntryAsState()
@@ -75,16 +72,7 @@ fun NavGraph(
         modifier = modifier.fillMaxSize(),
         topBar = {
             if (currentRoute == NavScreen.ProfileScreen.route) {
-                ProfileScreenTopAppBar(
-                    logOut = {
-                        with(sharedPreferences.edit()) {
-                            removeToken()
-                        }
-                        Navigator.navigate(NavScreen.SignInScreen.route) {
-                            popUpTo(0)
-                        }
-                    }
-                )
+                ProfileScreenTopAppBar()
             }
         },
         content = {
@@ -178,6 +166,11 @@ fun NavGraph(
                     val quizResult = navBackStackEntry.arguments?.getString("quizResult")?.let { Gson().fromJson( it, QuizResult::class.java) }
                     QuizResultScreen(quizResult = quizResult)
                 }
+                composable(
+                    route = NavScreen.UpdatePasswordScreen.route
+                ) {
+                    UpdatePasswordScreen()
+                }
             }
             BottomAppBar(
                 modifier = modifier,
@@ -189,7 +182,7 @@ fun NavGraph(
 }
 
 @Composable
-private fun ProfileScreenTopAppBar(logOut: () -> Unit) {
+private fun ProfileScreenTopAppBar() {
     TopAppBar(
         title = {},
         navigationIcon = {
@@ -205,15 +198,7 @@ private fun ProfileScreenTopAppBar(logOut: () -> Unit) {
                 )
             }
         },
-        actions = {
-            IconButton(onClick = logOut) {
-                Icon(
-                    imageVector = Icons.Default.ExitToApp,
-                    contentDescription = null,
-                    tint = WhiteSmoke
-                )
-            }
-        },
+        actions = {},
         elevation = 0.dp,
         backgroundColor = MaterialTheme.colors.background
     )
