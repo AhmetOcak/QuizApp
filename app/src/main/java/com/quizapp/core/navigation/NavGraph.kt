@@ -57,7 +57,7 @@ import com.quizapp.presentation.update_profile.UpdateProfileScreen
 @Composable
 fun NavGraph(
     modifier: Modifier = Modifier,
-    startDestination: String = NavScreen.EditProfileScreen.route
+    startDestination: String = NavScreen.SignInScreen.route
 ) {
     val navController = rememberAnimatedNavController()
     val navBackStackEntry by navController.currentBackStackEntryAsState()
@@ -175,6 +175,9 @@ fun NavGraph(
                 }
                 composable(route = NavScreen.UpdateProfileScreen.route) {
                     UpdateProfileScreen()
+                }
+                composable(route = NavScreen.DeleteAccountScreen.route) {
+                    DeleteAccountScreen()
                 }
             }
             BottomAppBar(

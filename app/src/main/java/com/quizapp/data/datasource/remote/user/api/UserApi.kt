@@ -29,4 +29,9 @@ interface UserApi {
         @Header("Authorization") token: String,
         @Part file: MultipartBody.Part
     )
+
+    @DELETE("api/Users/DeleteUser")
+    suspend fun deleteAccount(
+        @Query("userId") userId: String
+    )
 }

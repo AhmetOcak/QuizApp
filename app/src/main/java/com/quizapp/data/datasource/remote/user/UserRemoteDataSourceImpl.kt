@@ -22,4 +22,5 @@ class UserRemoteDataSourceImpl @Inject constructor(private val api: UserApi) : U
     override suspend fun uploadProfilePicture(token: String, file: MultipartBody.Part) =
         api.uploadProfilePicture(token = token, file = file)
 
+    override suspend fun deleteAccount(userId: String) = api.deleteAccount(userId = userId)
 }

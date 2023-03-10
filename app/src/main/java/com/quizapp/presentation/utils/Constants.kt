@@ -39,3 +39,7 @@ object UpdateProfileBottomSheetSubTitles {
     const val REAL_NAME = "Real Name"
     const val BIOGRAPHY = "Biography"
 }
+
+object DeleteAccountWarningMessage {
+    const val WARNING_MESSAGE = "Are you sure you want to delete your whole account ? You'll lose everything. This action cannot be undone."
+}

@@ -15,4 +15,5 @@ interface UserRepository {
 
     suspend fun uploadProfilePicture(token: String, file: MultipartBody.Part)
 
+    suspend fun deleteAccount(userId: String)
 }
