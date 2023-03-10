@@ -3,6 +3,7 @@ package com.quizapp.data.datasource.remote.user.api
 import com.quizapp.data.datasource.remote.user.entity.UpdatePasswordBodyDto
 import com.quizapp.data.datasource.remote.user.entity.UpdateProfileBodyDto
 import com.quizapp.data.datasource.remote.user.entity.UserProfileDto
+import okhttp3.MultipartBody
 import retrofit2.http.*
 
 interface UserApi {
@@ -22,9 +23,10 @@ interface UserApi {
         @Body updateProfileBodyDto: UpdateProfileBodyDto
     )
 
+    @Multipart
     @POST("api/Users/UploadProfilePicture")
     suspend fun uploadProfilePicture(
         @Header("Authorization") token: String,
-        @Body picture: String
+        @Part file: MultipartBody.Part
     )
 }

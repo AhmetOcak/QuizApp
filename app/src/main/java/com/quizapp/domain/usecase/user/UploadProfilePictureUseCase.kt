@@ -7,17 +7,18 @@ import com.quizapp.domain.repository.UserRepository
 import com.quizapp.domain.utils.Messages
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
+import okhttp3.MultipartBody
 import retrofit2.HttpException
 import java.io.IOException
 import javax.inject.Inject
 
 class UploadProfilePictureUseCase @Inject constructor(private val repository: UserRepository) {
 
-    suspend operator fun invoke(token: String, picture: String): Flow<Response<Unit>> = flow {
+    suspend operator fun invoke(token: String, filePart: MultipartBody.Part): Flow<Response<Unit>> = flow {
         try {
             emit(Response.Loading)
 
-            emit(Response.Success(data = repository.uploadProfilePicture(token, picture)))
+            emit(Response.Success(data = repository.uploadProfilePicture(token, filePart)))
         } catch (e: IOException) {
             emit(Response.Error(errorMessage = Messages.INTERNET))
             Log.e("upload profile error", e.stackTraceToString())

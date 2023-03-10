@@ -3,6 +3,7 @@ package com.quizapp.data.datasource.remote.user
 import com.quizapp.data.datasource.remote.user.entity.UpdatePasswordBodyDto
 import com.quizapp.data.datasource.remote.user.entity.UpdateProfileBodyDto
 import com.quizapp.data.datasource.remote.user.entity.UserProfileDto
+import okhttp3.MultipartBody
 
 interface UserRemoteDataSource {
 
@@ -12,5 +13,6 @@ interface UserRemoteDataSource {
 
     suspend fun updateProfile(token: String, updateProfileBodyDto: UpdateProfileBodyDto)
 
-    suspend fun uploadProfilePicture(token: String, picture: String)
+    suspend fun uploadProfilePicture(token: String, file: MultipartBody.Part)
+
 }

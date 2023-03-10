@@ -8,6 +8,7 @@ import com.quizapp.domain.model.user.UpdatePasswordBody
 import com.quizapp.domain.model.user.UpdateProfileBody
 import com.quizapp.domain.model.user.UserProfile
 import com.quizapp.domain.repository.UserRepository
+import okhttp3.MultipartBody
 import javax.inject.Inject
 
 class UserRepositoryImpl @Inject constructor(private val remoteDataSource: UserRemoteDataSource) : UserRepository {
@@ -21,6 +22,7 @@ class UserRepositoryImpl @Inject constructor(private val remoteDataSource: UserR
     override suspend fun updateProfile(token: String, updateProfileBody: UpdateProfileBody) =
         remoteDataSource.updateProfile(token = token, updateProfileBodyDto = updateProfileBody.toUpdateProfileBodyDto())
 
-    override suspend fun uploadProfilePicture(token: String, picture: String) =
-        remoteDataSource.uploadProfilePicture(token = token, picture = picture)
+    override suspend fun uploadProfilePicture(token: String, file: MultipartBody.Part) =
+        remoteDataSource.uploadProfilePicture(token = token, file = file)
+
 }

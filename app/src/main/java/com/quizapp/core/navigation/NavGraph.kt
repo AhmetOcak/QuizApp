@@ -1,6 +1,7 @@
 package com.quizapp.core.navigation
 
-import android.util.Log
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.animation.AnimatedContentScope
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.animation.core.tween
@@ -36,6 +37,7 @@ import com.quizapp.core.ui.theme.WhiteSmoke
 import com.quizapp.domain.model.quiz.QuizResult
 import com.quizapp.presentation.confirm_account.ConfirmAccountScreen
 import com.quizapp.presentation.create_quiz.CreateQuizScreen
+import com.quizapp.presentation.delete_account.DeleteAccountScreen
 import com.quizapp.presentation.edit_profile.EditProfileScreen
 import com.quizapp.presentation.search.SearchScreen
 import com.quizapp.presentation.reset_password.ResetPasswordScreen
@@ -48,12 +50,14 @@ import com.quizapp.presentation.quiz_result.QuizResultScreen
 import com.quizapp.presentation.register.RegisterScreen
 import com.quizapp.presentation.signin.SignInScreen
 import com.quizapp.presentation.update_password.UpdatePasswordScreen
+import com.quizapp.presentation.update_profile.UpdateProfileScreen
 
+@RequiresApi(Build.VERSION_CODES.P)
 @OptIn(ExperimentalAnimationApi::class)
 @Composable
 fun NavGraph(
     modifier: Modifier = Modifier,
-    startDestination: String = NavScreen.SignInScreen.route
+    startDestination: String = NavScreen.EditProfileScreen.route
 ) {
     val navController = rememberAnimatedNavController()
     val navBackStackEntry by navController.currentBackStackEntryAsState()
@@ -166,10 +170,11 @@ fun NavGraph(
                     val quizResult = navBackStackEntry.arguments?.getString("quizResult")?.let { Gson().fromJson( it, QuizResult::class.java) }
                     QuizResultScreen(quizResult = quizResult)
                 }
-                composable(
-                    route = NavScreen.UpdatePasswordScreen.route
-                ) {
+                composable(route = NavScreen.UpdatePasswordScreen.route) {
                     UpdatePasswordScreen()
+                }
+                composable(route = NavScreen.UpdateProfileScreen.route) {
+                    UpdateProfileScreen()
                 }
             }
             BottomAppBar(

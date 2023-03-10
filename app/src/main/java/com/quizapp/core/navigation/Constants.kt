@@ -15,6 +15,8 @@ object NavRoutes {
     const val create_quiz_screen = "create_quiz_screen"
     const val quiz_result_screen = "${NavNames.quiz_result_screen}/{quizResult}"
     const val update_password_screen = "update_password_screen"
+    const val update_profile_screen = "update_profile_screen"
+    const val delete_account_screen = "delete_account_screen"
 }
 
 object NavNames {
