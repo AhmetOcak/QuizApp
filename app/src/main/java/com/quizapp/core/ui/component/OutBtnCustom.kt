@@ -12,6 +12,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.composed
 import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.unit.dp
@@ -22,7 +23,9 @@ fun OutBtnCustom(
     modifier: Modifier,
     onClick: () -> Unit,
     buttonText: String,
-    enabled: Boolean = true
+    enabled: Boolean = true,
+    backgroundColor: Color = MaterialTheme.colors.onPrimary,
+    textColor: Color = MaterialTheme.colors.primary
 ) {
     OutlinedButton(
         modifier = if (enabled) modifier
@@ -41,11 +44,11 @@ fun OutBtnCustom(
         onClick = onClick,
         shape = RoundedCornerShape(20),
         colors = ButtonDefaults.outlinedButtonColors(
-            backgroundColor = MaterialTheme.colors.onPrimary
+            backgroundColor = backgroundColor
         ),
         enabled = enabled
     ) {
-        Text(text = buttonText, color = MaterialTheme.colors.primary)
+        Text(text = buttonText, color = textColor)
     }
 }
 
