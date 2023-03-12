@@ -31,14 +31,16 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
 import com.quizapp.R
+import com.quizapp.core.common.encodeForSafe
 import com.quizapp.core.common.getRealPathFromURI
 import com.quizapp.core.common.loadImage
+import com.quizapp.core.navigation.NavNames
+import com.quizapp.core.navigation.Navigator
 import com.quizapp.core.ui.component.CustomLoadingSpinner
 import com.quizapp.core.ui.component.CustomTopBarTitle
 import com.quizapp.core.ui.component.OtfCustom
 import com.quizapp.core.ui.component.OutBtnCustom
 import com.quizapp.presentation.utils.Dimens
-import com.quizapp.presentation.utils.Messages
 import com.quizapp.presentation.utils.UpdateProfileBottomSheetSubTitles
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
@@ -54,6 +56,11 @@ fun UpdateProfileScreen(
     modifier: Modifier = Modifier,
     viewModel: UpdateProfileViewModel = hiltViewModel()
 ) {
+    //Todo: Bazen hata fırlatıyor. Kontrol ve test etmen gerek.
+    LaunchedEffect(true) {
+        viewModel.getUserProfile()
+    }
+
     val updateProfileState by viewModel.updateProfileState.collectAsState()
 
     var showUploadImgSection by remember { mutableStateOf(false) }
@@ -89,6 +96,10 @@ fun UpdateProfileScreen(
 
     BackHandler(sheetState.isVisible) {
         coroutineScope.launch { sheetState.hide() }
+    }
+
+    BackHandler(!sheetState.isVisible) {
+        Navigator.navigate("${NavNames.edit_profile_screen}/${viewModel.firstName}/${viewModel.lastName}/${viewModel.userName}/${encodeForSafe(viewModel.profilePictureUrl)}")
     }
 
     UpdateProfileScreenContent(

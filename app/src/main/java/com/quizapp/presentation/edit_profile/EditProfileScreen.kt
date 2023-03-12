@@ -1,12 +1,13 @@
 package com.quizapp.presentation.edit_profile
 
 import android.annotation.SuppressLint
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -15,50 +16,40 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
 import com.quizapp.R
 import com.quizapp.core.common.loadImage
+import com.quizapp.core.navigation.NavScreen
+import com.quizapp.core.navigation.Navigator
 import com.quizapp.core.ui.component.CustomTopBarTitle
 import com.quizapp.core.ui.component.OtfCustom
 import com.quizapp.core.ui.component.OutBtnCustom
+import com.quizapp.presentation.utils.Dimens
+import com.quizapp.presentation.utils.EditProfileScreenPreferencesNames
 
-//Todo: Profile img size will set
-
-private val EDIT_PROFILE_IMG_SIZE = 176.dp
 private val SETTINGS_PROFILE_IMG_SIZE = 108.dp
 private val PREFERENCES_HEIGHT = 56.dp
 
-enum class Sections {
-    SETTINGS,
-    PROFILE,
-    CHANGE_PASSWORD
-}
-
-//Todo: PreferenceOnClickActions will be implement
-
-enum class PreferenceOnClickActions {
-    INFORMATION,
-    CHANGE_PASSWORD,
-    LOG_OUT,
-    NOTHING
-}
-
-//Todo: Edit icon color and update profile img button will change
-
 @Composable
-fun EditProfileScreen(modifier: Modifier = Modifier) {
+fun EditProfileScreen(
+    modifier: Modifier = Modifier,
+    viewModel: EditProfileViewModel = hiltViewModel()
+) {
+
+    BackHandler(viewModel.currentSection != Sections.PROFILE) {
+        viewModel.updateCurrentSection(Sections.PROFILE)
+        viewModel.setTopBarTitle()
+    }
+
+    BackHandler() {
+        Navigator.navigate(NavScreen.ProfileScreen.route)
+    }
 
     EditProfileScreenContent(
         modifier = modifier,
-        userName = "Ahmet",
-        userImage = "",
-        firstName = "Ahmet",
-        lastName = "Ocak",
-        onEditProfileClick = {}
+        viewModel = viewModel
     )
 }
 
@@ -66,31 +57,37 @@ fun EditProfileScreen(modifier: Modifier = Modifier) {
 @Composable
 private fun EditProfileScreenContent(
     modifier: Modifier,
-    userName: String,
-    userImage: String,
-    firstName: String,
-    lastName: String,
-    onEditProfileClick: () -> Unit
+    viewModel: EditProfileViewModel
 ) {
-    Scaffold(
+    Box(modifier = modifier.fillMaxSize(), contentAlignment = Alignment.TopCenter) {
+        CustomTopBarTitle(
+            modifier = modifier,
+            title = viewModel.topBarTitle
+        )
+    }
+    Column(
         modifier = modifier.fillMaxSize(),
-        topBar = { CustomTopBarTitle(modifier = modifier, title = "Settings") }
+        horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Column(
-            modifier = modifier.fillMaxSize(),
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            ProfileSection(
-                modifier = modifier,
-                userName = userName,
-                userImage = userImage,
-                firstName = firstName,
-                lastName = lastName,
-                onEditProfileClick = onEditProfileClick
-            )
-            //EditProfileSection(modifier = modifier, userImage = userImage)
-            //ChangePasswordSection(modifier = modifier)
-            //ContactUsSection(modifier = modifier)
+        when (viewModel.currentSection) {
+            Sections.PROFILE -> {
+                ProfileSection(
+                    modifier = modifier,
+                    userName = viewModel.userName,
+                    userImage = viewModel.profilePicture,
+                    firstName = viewModel.firstName,
+                    lastName = viewModel.lastName,
+                    onEditProfileClick = {
+                        Navigator.navigate(NavScreen.UpdateProfileScreen.route)
+                    },
+                    onPreferenceClick = {
+                        viewModel.setPreferenceOnClick(it)
+                    }
+                )
+            }
+            Sections.CONTACT_US -> {
+                ContactUsSection(modifier = modifier)
+            }
         }
     }
 }
@@ -102,16 +99,20 @@ private fun ProfileSection(
     userImage: String,
     firstName: String,
     lastName: String,
-    onEditProfileClick: () -> Unit
+    onEditProfileClick: () -> Unit,
+    onPreferenceClick: (String) -> Unit
 ) {
     Column(
         modifier = modifier
             .fillMaxWidth()
-            .padding(top = 32.dp),
+            .padding(top = Dimens.AppBarDefaultHeight + 16.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Column(modifier = modifier.weight(1f), horizontalAlignment = Alignment.CenterHorizontally) {
-            ProfileImage(modifier = modifier, userImage = userImage)
+            ProfileImage(
+                modifier = modifier,
+                userImage = userImage
+            )
             UserRealNameAndUserName(
                 modifier = modifier,
                 userName = userName,
@@ -121,7 +122,7 @@ private fun ProfileSection(
             EditProfileButton(modifier = modifier, onEditProfileClick = onEditProfileClick)
         }
 
-        Preferences(modifier = modifier.weight(1f))
+        Preferences(modifier = modifier.weight(1f), onPreferenceClick = onPreferenceClick)
     }
 }
 
@@ -172,7 +173,7 @@ private fun EditProfileButton(modifier: Modifier, onEditProfileClick: () -> Unit
 
 // Created for ProfileSection
 @Composable
-private fun Preferences(modifier: Modifier) {
+private fun Preferences(modifier: Modifier, onPreferenceClick: (String) -> Unit) {
     Column(
         modifier = modifier
             .background(
@@ -191,7 +192,7 @@ private fun Preferences(modifier: Modifier) {
             Preference(
                 iconId = it.iconId,
                 text = it.text,
-                onPreferenceClick = it.onPreferenceClick,
+                onPreferenceClick = { onPreferenceClick(it.text) },
                 action = it.action
             )
         }
@@ -204,7 +205,7 @@ private fun Preference(
     iconId: Int,
     text: String,
     onPreferenceClick: () -> Unit,
-    action: @Composable RowScope.() -> Unit,
+    action: @Composable RowScope.() -> Unit
 ) {
     Row(
         modifier = modifier
@@ -228,75 +229,7 @@ private fun Preference(
     }
 }
 
-@Composable
-private fun EditProfileSection(modifier: Modifier, userImage: String) {
-    Column(
-        modifier = modifier
-            .fillMaxSize()
-            .padding(top = 32.dp),
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        UpdateProfileImage(modifier = modifier, userImage = userImage)
-        Spacer(modifier = modifier.padding(vertical = 16.dp))
-        UpdateProfileInfo(
-            modifier = modifier,
-            iconId = R.drawable.ic_baseline_account_circle,
-            subTitle = "FirstName",
-            value = "Ahmet",
-            onClick = {}
-        )
-        Divider(
-            modifier = modifier.fillMaxWidth(),
-            thickness = 1.dp
-        )
-        UpdateProfileInfo(
-            modifier = modifier,
-            iconId = R.drawable.ic_baseline_account_circle,
-            subTitle = "LastName",
-            value = "Ocak",
-            onClick = {}
-        )
-        Divider(
-            modifier = modifier.fillMaxWidth(),
-            thickness = 1.dp,
-        )
-        UpdateProfileInfo(
-            modifier = modifier,
-            iconId = R.drawable.ic_baseline_info,
-            subTitle = "Bioraphy",
-            value = "DSADSA dsadsadsa dsasad",
-            onClick = {}
-        )
-    }
-}
 
-// Created for EditProfileSection
-@Composable
-private fun UpdateProfileImage(modifier: Modifier, userImage: String) {
-    Box(modifier = modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
-        ProfileImage(modifier = modifier, userImage = userImage)
-        Box(
-            modifier = modifier.size(EDIT_PROFILE_IMG_SIZE),
-            contentAlignment = Alignment.BottomEnd
-        ) {
-            IconButton(
-                modifier = modifier
-                    .background(color = Color.Blue, shape = CircleShape)
-                    .clip(CircleShape),
-                onClick = { /*TODO*/ }
-            ) {
-                Icon(
-                    modifier = modifier.padding(8.dp),
-                    painter = painterResource(id = R.drawable.ic_baseline_photo_camera),
-                    contentDescription = null
-                )
-            }
-        }
-    }
-}
-
-
-// Created for ProfileSection and EditProfileSection
 @Composable
 private fun ProfileImage(modifier: Modifier, userImage: String) {
     AsyncImage(
@@ -315,106 +248,16 @@ private fun ProfileImage(modifier: Modifier, userImage: String) {
     )
 }
 
-// Created for EditProfileSection
-@Composable
-private fun UpdateProfileInfo(
-    modifier: Modifier,
-    iconId: Int,
-    subTitle: String,
-    value: String,
-    onClick: () -> Unit
-) {
-    Row(
-        modifier = modifier
-            .fillMaxWidth()
-            .clickable { onClick() },
-        horizontalArrangement = Arrangement.SpaceBetween,
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        Row(
-            modifier = modifier
-                .padding(vertical = 32.dp)
-                .padding(start = 16.dp),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Icon(painter = painterResource(id = iconId), contentDescription = null)
-            Column(
-                modifier = modifier.padding(start = 32.dp),
-                verticalArrangement = Arrangement.SpaceBetween
-            ) {
-                Text(
-                    text = subTitle,
-                    style = MaterialTheme.typography.h4,
-                    color = MaterialTheme.colors.primaryVariant.copy(alpha = 0.5f)
-                )
-                Text(
-                    text = value,
-                    style = MaterialTheme.typography.h3.copy(fontWeight = FontWeight.SemiBold),
-                    color = MaterialTheme.colors.primaryVariant,
-                    overflow = TextOverflow.Ellipsis
-                )
-            }
-        }
-        Icon(
-            modifier = modifier.padding(end = 16.dp),
-            painter = painterResource(id = R.drawable.ic_baseline_edit),
-            contentDescription = null,
-            tint = Color.Blue
-        )
-    }
-}
-
-@Composable
-private fun ChangePasswordSection(modifier: Modifier) {
-    Column(
-        modifier = modifier
-            .fillMaxSize()
-            .padding(start = 16.dp, end = 16.dp, bottom = 64.dp),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center
-    ) {
-        OtfCustom(
-            modifier = modifier.fillMaxWidth(),
-            onValueChanged = {},
-            placeHolderText = "Old Password",
-            keyboardType = KeyboardType.Password
-        )
-        OtfCustom(
-            modifier = modifier
-                .fillMaxWidth()
-                .padding(top = 16.dp),
-            onValueChanged = {},
-            placeHolderText = "New Password",
-            keyboardType = KeyboardType.Password
-        )
-        OtfCustom(
-            modifier = modifier
-                .fillMaxWidth()
-                .padding(top = 16.dp),
-            onValueChanged = {},
-            placeHolderText = "Confirm New Password",
-            keyboardType = KeyboardType.Password
-        )
-        OutBtnCustom(
-            modifier = modifier
-                .fillMaxWidth()
-                .padding(top = 32.dp),
-            onClick = { /*TODO*/ },
-            buttonText = "Submit"
-        )
-    }
-}
-
 @Composable
 private fun ContactUsSection(modifier: Modifier) {
     Column(
         modifier = modifier
             .fillMaxSize()
-            .padding(horizontal = 16.dp),
+            .padding(horizontal = 16.dp)
+            .padding(top = Dimens.AppBarDefaultHeight + 16.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
-        Description()
         Input(modifier = modifier)
         OutBtnCustom(
             modifier = modifier
@@ -424,17 +267,6 @@ private fun ContactUsSection(modifier: Modifier) {
             buttonText = "Send"
         )
     }
-}
-
-// Created for ContactUsSection
-@Composable
-private fun Description() {
-    Text(
-        text = "You can send an email to us whenever you want !!!",
-        style = MaterialTheme.typography.h2.copy(fontWeight = FontWeight.Bold),
-        textAlign = TextAlign.Center,
-        color = MaterialTheme.colors.primaryVariant
-    )
 }
 
 // Created for ContactUsSection
@@ -477,7 +309,7 @@ data class PreferenceModel(
 private val preferenceList = listOf(
     PreferenceModel(
         iconId = R.drawable.ic_baseline_language,
-        text = "Language",
+        text = EditProfileScreenPreferencesNames.LANGUAGE,
         onPreferenceClick = {}
     ) {
         Text(
@@ -486,16 +318,16 @@ private val preferenceList = listOf(
             color = MaterialTheme.colors.primaryVariant
         )
     },
-    /*PreferenceModel(
+    PreferenceModel(
         iconId = R.drawable.ic_outline_dark_mode,
-        text = "Dark Mode",
+        text = EditProfileScreenPreferencesNames.DARK_MODE,
         onPreferenceClick = {}
     ) {
         Switch(checked = true, onCheckedChange = {})
-    },*/
+    },
     PreferenceModel(
         iconId = R.drawable.ic_baseline_info,
-        text = "Information",
+        text = EditProfileScreenPreferencesNames.INFORMATION,
         onPreferenceClick = {}
     ) {
         Text(
@@ -506,7 +338,7 @@ private val preferenceList = listOf(
     },
     PreferenceModel(
         iconId = R.drawable.ic_baseline_password,
-        text = "Change Password",
+        text = EditProfileScreenPreferencesNames.CHANGE_PASSWORD,
         onPreferenceClick = {}
     ) {
         Text(
@@ -517,7 +349,18 @@ private val preferenceList = listOf(
     },
     PreferenceModel(
         iconId = R.drawable.ic_baseline_headphones,
-        text = "Contact Us",
+        text = EditProfileScreenPreferencesNames.CONTACT_US,
+        onPreferenceClick = { }
+    ) {
+        Text(
+            text = ">",
+            style = MaterialTheme.typography.body1,
+            color = MaterialTheme.colors.primaryVariant
+        )
+    },
+    PreferenceModel(
+        iconId = R.drawable.ic_baseline_delete_forever,
+        text = EditProfileScreenPreferencesNames.DELETE_ACCOUNT,
         onPreferenceClick = {}
     ) {
         Text(
@@ -528,7 +371,7 @@ private val preferenceList = listOf(
     },
     PreferenceModel(
         iconId = R.drawable.ic_baseline_logout,
-        text = "Log Out",
+        text = EditProfileScreenPreferencesNames.LOG_OUT,
         onPreferenceClick = {}
     ) {
         Text(
@@ -536,5 +379,5 @@ private val preferenceList = listOf(
             style = MaterialTheme.typography.body1,
             color = MaterialTheme.colors.primaryVariant
         )
-    }
+    },
 )

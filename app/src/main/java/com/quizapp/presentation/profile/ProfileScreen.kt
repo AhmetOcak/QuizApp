@@ -25,11 +25,16 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
 import com.quizapp.R
+import com.quizapp.core.common.encodeForSafe
 import com.quizapp.core.common.loadImage
+import com.quizapp.core.navigation.NavNames
+import com.quizapp.core.navigation.NavRoutes
+import com.quizapp.core.navigation.Navigator
 import com.quizapp.core.ui.component.CustomLoadingSpinner
 import com.quizapp.core.ui.component.CustomSlider
 import com.quizapp.core.ui.component.OnBackPressed
 import com.quizapp.core.ui.theme.*
+import com.quizapp.domain.model.user.UserProfile
 import com.quizapp.presentation.utils.Dimens
 
 @Composable
@@ -42,7 +47,8 @@ fun ProfileScreen(modifier: Modifier = Modifier, viewModel: ProfileViewModel = h
 
     ProfileScreenContent(
         modifier = modifier,
-        getUserProfileState = getUserProfileState
+        getUserProfileState = getUserProfileState,
+        viewModel = viewModel
     )
 }
 
@@ -50,39 +56,42 @@ fun ProfileScreen(modifier: Modifier = Modifier, viewModel: ProfileViewModel = h
 @Composable
 private fun ProfileScreenContent(
     modifier: Modifier,
-    getUserProfileState: GetUserProfileState
+    getUserProfileState: GetUserProfileState,
+    viewModel: ProfileViewModel
 ) {
-    Column(
-        modifier = modifier
-            .fillMaxSize()
-            .verticalScroll(rememberScrollState())
-            .padding(
-                start = 16.dp,
-                end = 16.dp,
-                top = 16.dp,
-                bottom = 32.dp + Dimens.AppBarDefaultHeight
-            ),
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        when (getUserProfileState) {
-            is GetUserProfileState.Loading -> {
-                Box(modifier = modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                    CustomLoadingSpinner()
+    Scaffold(topBar = { TopAppBar(userData = viewModel.userData) }) {
+        Column(
+            modifier = modifier
+                .fillMaxSize()
+                .verticalScroll(rememberScrollState())
+                .padding(
+                    start = 16.dp,
+                    end = 16.dp,
+                    top = 16.dp,
+                    bottom = 32.dp + Dimens.AppBarDefaultHeight
+                ),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            when (getUserProfileState) {
+                is GetUserProfileState.Loading -> {
+                    Box(modifier = modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                        CustomLoadingSpinner()
+                    }
                 }
-            }
-            is GetUserProfileState.Success -> {
-                ProfileDetailSection(
-                    modifier = modifier,
-                    userName = getUserProfileState.data.userName,
-                    biography = getUserProfileState.data.biography ?: "",
-                    score = getUserProfileState.data.score,
-                    userProfileImg = getUserProfileState.data.profilePictureUrl
-                )
-                AchievementsSection(modifier = modifier)
-                InventorySection(modifier = modifier)
-            }
-            is GetUserProfileState.Error -> {
+                is GetUserProfileState.Success -> {
+                    ProfileDetailSection(
+                        modifier = modifier,
+                        userName = getUserProfileState.data.userName,
+                        biography = getUserProfileState.data.biography ?: "",
+                        score = getUserProfileState.data.score,
+                        userProfileImg = getUserProfileState.data.profilePictureUrl
+                    )
+                    AchievementsSection(modifier = modifier)
+                    InventorySection(modifier = modifier)
+                }
+                is GetUserProfileState.Error -> {
 
+                }
             }
         }
     }
@@ -96,10 +105,40 @@ private fun ProfileDetailSection(
     score: Int,
     userProfileImg: String
 ) {
-    Column(modifier = modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally) {
+    Column(
+        modifier = modifier.fillMaxWidth(),
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
         ProfileImage(modifier = modifier, userProfileImg = userProfileImg)
         ProfileInfo(modifier = modifier, userName = userName, biography = biography, score = score)
     }
+}
+
+@Composable
+private fun TopAppBar(userData: UserProfile?) {
+    TopAppBar(
+        title = {},
+        navigationIcon = {
+            IconButton(
+                onClick = {
+                    if (userData != null) {
+                        Navigator.navigate("${NavNames.edit_profile_screen}/${userData.firstName}/${userData.lastName}/${userData.userName}/${encodeForSafe(userData.profilePictureUrl)}") {}
+                    } else {
+                        Navigator.navigate("${NavRoutes.edit_profile_screen}/${""}/${""}/${""}/${""}")
+                    }
+                }
+            ) {
+                Icon(
+                    painter = painterResource(id = R.drawable.ic_baseline_settings),
+                    contentDescription = null,
+                    tint = WhiteSmoke
+                )
+            }
+        },
+        actions = {},
+        elevation = 0.dp,
+        backgroundColor = MaterialTheme.colors.background
+    )
 }
 
 // Created for Profile Detail Section
@@ -114,7 +153,8 @@ private fun ProfileImage(modifier: Modifier, userProfileImg: String) {
                     width = 1.dp,
                     color = MaterialTheme.colors.primaryVariant
                 ), shape = RoundedCornerShape(20)
-            ),
+            )
+            .padding(top = 32.dp),
         model = loadImage(context = LocalContext.current, imageUrl = userProfileImg),
         contentDescription = null,
         contentScale = ContentScale.Crop

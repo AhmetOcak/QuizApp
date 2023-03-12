@@ -48,6 +48,10 @@ class UpdateProfileViewModel @Inject constructor(
     var biography by mutableStateOf("")
         private set
 
+    // for the send edit profile screen
+    var userName by mutableStateOf("")
+        private set
+
     // for the change
     var firstNameBottomSheet by mutableStateOf("")
         private set
@@ -62,7 +66,6 @@ class UpdateProfileViewModel @Inject constructor(
 
     init {
         token = sharedPreferences.getToken()
-        getUserProfile()
     }
 
     fun setIsBiographySelected(newValue: Boolean) { isBiographySelected = newValue }
@@ -80,7 +83,7 @@ class UpdateProfileViewModel @Inject constructor(
         body = MultipartBody.Part.createFormData("image", file.name, reqFile)
     }
 
-    private fun getUserProfile() = viewModelScope.launch(Dispatchers.IO) {
+    fun getUserProfile() = viewModelScope.launch(Dispatchers.IO) {
         getUserProfileUseCase(token = "Bearer $token").collect() { response ->
             when (response) {
                 is Response.Loading -> {}
@@ -88,6 +91,7 @@ class UpdateProfileViewModel @Inject constructor(
                     firstName = response.data.firstName ?: "First Name"
                     lastName = response.data.lastName ?: "Last Name"
                     biography = response.data.biography ?: ""
+                    userName = response.data.userName
 
                     firstNameBottomSheet = firstName
                     lastNameBottomSheet = lastName

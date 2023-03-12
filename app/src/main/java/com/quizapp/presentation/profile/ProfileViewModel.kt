@@ -1,18 +1,16 @@
 package com.quizapp.presentation.profile
 
 import android.content.SharedPreferences
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.quizapp.core.common.Response
 import com.quizapp.core.common.getToken
+import com.quizapp.domain.model.user.UserProfile
 import com.quizapp.domain.usecase.user.GetUserProfileUseCase
-import com.quizapp.presentation.utils.Messages
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -27,9 +25,11 @@ class ProfileViewModel @Inject constructor(
 
     private var token: String = ""
 
+    var userData: UserProfile? = null
+        private set
+
     init {
         token = sharedPreferences.getToken() ?: ""
-        Log.e("token -> ", token)
         getUserProfile()
     }
 
@@ -41,6 +41,7 @@ class ProfileViewModel @Inject constructor(
                 }
                 is Response.Success -> {
                     _getUserProfileState.value = GetUserProfileState.Success(data = response.data)
+                    userData = response.data
                 }
                 is Response.Error -> {
                     _getUserProfileState.value = GetUserProfileState.Error(errorMessage = response.errorMessage)

@@ -29,11 +29,9 @@ import androidx.navigation.navArgument
 import com.google.accompanist.navigation.animation.AnimatedNavHost
 import com.google.accompanist.navigation.animation.rememberAnimatedNavController
 import com.google.gson.Gson
-import com.quizapp.R
 import com.quizapp.core.ui.component.CustomScaffold
 import com.quizapp.core.ui.theme.Black
 import com.quizapp.core.ui.theme.TransparentWhite
-import com.quizapp.core.ui.theme.WhiteSmoke
 import com.quizapp.domain.model.quiz.QuizResult
 import com.quizapp.presentation.confirm_account.ConfirmAccountScreen
 import com.quizapp.presentation.create_quiz.CreateQuizScreen
@@ -57,7 +55,7 @@ import com.quizapp.presentation.update_profile.UpdateProfileScreen
 @Composable
 fun NavGraph(
     modifier: Modifier = Modifier,
-    startDestination: String = NavScreen.SignInScreen.route
+    startDestination: String = NavScreen.ProfileScreen.route
 ) {
     val navController = rememberAnimatedNavController()
     val navBackStackEntry by navController.currentBackStackEntryAsState()
@@ -74,11 +72,6 @@ fun NavGraph(
 
     CustomScaffold(
         modifier = modifier.fillMaxSize(),
-        topBar = {
-            if (currentRoute == NavScreen.ProfileScreen.route) {
-                ProfileScreenTopAppBar()
-            }
-        },
         content = {
             AnimatedNavHost(
                 modifier = modifier.padding(it),
@@ -146,7 +139,15 @@ fun NavGraph(
                 ) {
                     QuizLandingScreen()
                 }
-                composable(route = NavScreen.EditProfileScreen.route) {
+                composable(
+                    route = NavScreen.EditProfileScreen.route,
+                    arguments = listOf(
+                        navArgument("firstName") { type = NavType.StringType },
+                        navArgument("lastName") { type = NavType.StringType },
+                        navArgument("userName") { type = NavType.StringType },
+                        navArgument("userProfileImage") { type = NavType.StringType }
+                    )
+                ) {
                     EditProfileScreen()
                 }
                 composable(
@@ -186,29 +187,6 @@ fun NavGraph(
                 navController = navController
             )
         }
-    )
-}
-
-@Composable
-private fun ProfileScreenTopAppBar() {
-    TopAppBar(
-        title = {},
-        navigationIcon = {
-            IconButton(
-                onClick = {
-                    Navigator.navigate(NavScreen.EditProfileScreen.route) {}
-                }
-            ) {
-                Icon(
-                    painter = painterResource(id = R.drawable.ic_baseline_settings),
-                    contentDescription = null,
-                    tint = WhiteSmoke
-                )
-            }
-        },
-        actions = {},
-        elevation = 0.dp,
-        backgroundColor = MaterialTheme.colors.background
     )
 }
 
