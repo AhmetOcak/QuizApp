@@ -123,8 +123,6 @@ private fun TopAppBar(userData: UserProfile?) {
                 onClick = {
                     if (userData != null) {
                         Navigator.navigate("${NavNames.edit_profile_screen}/${userData.firstName}/${userData.lastName}/${userData.userName}/${encodeForSafe(userData.profilePictureUrl)}") {}
-                    } else {
-                        Navigator.navigate("${NavRoutes.edit_profile_screen}/${""}/${""}/${""}/${""}")
                     }
                 }
             ) {
