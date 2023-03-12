@@ -24,7 +24,10 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.quizapp.R
+import com.quizapp.core.navigation.NavScreen
+import com.quizapp.core.navigation.Navigator
 import com.quizapp.core.ui.component.CustomLoadingSpinner
+import com.quizapp.core.ui.component.CustomTopBarTitle
 import com.quizapp.core.ui.component.OtfCustom
 import com.quizapp.core.ui.component.OutBtnCustom
 import com.quizapp.presentation.utils.Messages
@@ -114,7 +117,18 @@ private fun CreateQuizScreenContent(
     questionError: Boolean,
     questionTitleError: Boolean
 ) {
-    Scaffold(modifier = modifier, topBar = { TitleSection(modifier = modifier) }) {
+    Scaffold(
+        modifier = modifier,
+        topBar = {
+            CustomTopBarTitle(modifier = modifier, title = "Create Quiz")
+            if (createQuizState is CreateQuizState.Success) {
+                CompleteButton(
+                    modifier = modifier,
+                    onComplete = { Navigator.navigate(NavScreen.HomeScreen.route) {} }
+                )
+            }
+        }
+    ) {
         Column(
             modifier = modifier
                 .fillMaxSize()
@@ -180,18 +194,17 @@ private fun CreateQuizScreenContent(
 }
 
 @Composable
-private fun TitleSection(modifier: Modifier) {
-    Text(
-        modifier = modifier
-            .fillMaxWidth()
-            .padding(horizontal = 16.dp),
-        text = "Create Quiz",
-        style = MaterialTheme.typography.h1.copy(
-            fontWeight = FontWeight.SemiBold,
-            color = MaterialTheme.colors.primaryVariant
-        ),
-        textAlign = TextAlign.Center
-    )
+private fun CompleteButton(modifier: Modifier, onComplete: () -> Unit) {
+    Box(modifier = modifier.fillMaxWidth(), contentAlignment = Alignment.CenterEnd) {
+        IconButton(onClick = onComplete) {
+            Image(
+                modifier = modifier.size(24.dp),
+                painter = painterResource(id = R.drawable.complete_create_quiz),
+                contentDescription = null,
+                contentScale = ContentScale.Crop
+            )
+        }
+    }
 }
 
 @Composable
