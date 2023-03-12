@@ -24,4 +24,9 @@ sealed class BottomNavItem(val route: String, @DrawableRes val icon: Int) {
         NavRoutes.leaderboard_screen,
         R.drawable.ic_baseline_leaderboard
     )
+
+    object CreateQuiz : BottomNavItem(
+        NavRoutes.create_quiz_screen,
+        R.drawable.ic_baseline_add
+    )
 }

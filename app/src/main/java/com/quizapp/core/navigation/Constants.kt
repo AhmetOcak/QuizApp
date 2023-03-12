@@ -32,7 +32,8 @@ object BottomNavItems {
     val items = listOf(
         BottomNavItem.Home,
         BottomNavItem.Search,
+        BottomNavItem.CreateQuiz,
         BottomNavItem.Leaderboard,
-        BottomNavItem.Profile,
+        BottomNavItem.Profile
     )
 }
