@@ -151,8 +151,7 @@ private fun ProfileImage(modifier: Modifier, userProfileImg: String) {
                     width = 1.dp,
                     color = MaterialTheme.colors.primaryVariant
                 ), shape = RoundedCornerShape(20)
-            )
-            .padding(top = 32.dp),
+            ),
         model = loadImage(context = LocalContext.current, imageUrl = userProfileImg),
         contentDescription = null,
         contentScale = ContentScale.Crop
