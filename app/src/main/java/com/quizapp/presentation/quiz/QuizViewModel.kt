@@ -1,15 +1,16 @@
 package com.quizapp.presentation.quiz
 
 import android.content.SharedPreferences
+import android.os.Build
 import android.util.Log
+import androidx.annotation.RequiresApi
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.quizapp.core.common.Response
-import com.quizapp.core.common.getToken
+import com.quizapp.core.common.*
 import com.quizapp.core.navigation.NavNames
 import com.quizapp.core.navigation.NavScreen
 import com.quizapp.core.navigation.Navigator
@@ -25,6 +26,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
+@RequiresApi(Build.VERSION_CODES.O)
 @HiltViewModel
 class QuizViewModel @Inject constructor(
     private val startQuizUseCase: StartQuizUseCase,
@@ -47,6 +49,10 @@ class QuizViewModel @Inject constructor(
 
     private var answers: ArrayList<AnswersBody> = arrayListOf()
 
+    private var quizStartHour: Int = 0
+    private var quizStartMinute: Int = 0
+    private var quizStartSeconds: Int = 0
+
     var questionIndex by mutableStateOf(0)
         private set
     var questionCount by mutableStateOf(-1)
@@ -56,6 +62,10 @@ class QuizViewModel @Inject constructor(
         Log.e("quiz screen", quizId.toString())
         token = sharedPreferences.getToken()
         startQuiz(token = token)
+
+        quizStartHour = getHour()
+        quizStartMinute = getMinute()
+        quizStartSeconds = getSeconds()
     }
 
     fun goNextQuestion() {
@@ -142,7 +152,7 @@ class QuizViewModel @Inject constructor(
                     }
                     is Response.Success -> {
                         _quizResultState.value = QuizResultState.Success(data = response.data)
-                        Navigator.navigate("${NavNames.quiz_result_screen}/${response.data.toString()}")
+                        Navigator.navigate("${NavNames.quiz_result_screen}/${response.data.toString()}/${quizStartHour}/${quizStartMinute}/${quizStartSeconds}")
                         Log.e("quiz result", response.data.toString())
                     }
                     is Response.Error -> {

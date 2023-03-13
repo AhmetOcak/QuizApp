@@ -179,7 +179,10 @@ fun NavGraph(
                 composable(
                     route = NavScreen.QuizResultScreen.route,
                     arguments = listOf(
-                        navArgument("quizResult") { type = QuizResultArgType() }
+                        navArgument("quizResult") { type = QuizResultArgType() },
+                        navArgument("quizStartHour") { type = NavType.IntType },
+                        navArgument("quizStartMinute") { type = NavType.IntType },
+                        navArgument("quizStartSeconds") { type = NavType.IntType }
                     )
                 ) { navBackStackEntry ->
                     val quizResult = navBackStackEntry.arguments?.getString("quizResult")?.let { Gson().fromJson(it, QuizResult::class.java) }

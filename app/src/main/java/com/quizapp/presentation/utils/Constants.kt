@@ -43,3 +43,15 @@ object UpdateProfileBottomSheetSubTitles {
 object DeleteAccountWarningMessage {
     const val WARNING_MESSAGE = "Are you sure you want to delete your whole account ? You'll lose everything. This action cannot be undone."
 }
+
+object QuizResultMessages {
+    const val CONGRATULATIONS  = "CONGRATULATIONS"
+    const val NOT_BAD = "NOT BAD!"
+    const val BAD = "BAD :("
+}
+
+object QuizScoreMessages {
+    const val CONGRATULATIONS_MESSAGE = "You are very good !!!"
+    const val NOT_BAD_MESSAGE = "You should work a little more. You can do better"
+    const val BAD_MESSAGE = "Disappointment..."
+}
