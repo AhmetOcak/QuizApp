@@ -1,5 +1,6 @@
 package com.quizapp.presentation.quiz_result
 
+import android.content.SharedPreferences
 import android.os.Build
 import android.util.Log
 import androidx.annotation.RequiresApi
@@ -9,9 +10,7 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import com.quizapp.R
-import com.quizapp.core.common.getHour
-import com.quizapp.core.common.getMinute
-import com.quizapp.core.common.getSeconds
+import com.quizapp.core.common.*
 import com.quizapp.domain.model.quiz.QuizResult
 import com.quizapp.presentation.utils.QuizResultMessages
 import com.quizapp.presentation.utils.QuizScoreMessages
@@ -22,7 +21,8 @@ import javax.inject.Inject
 @RequiresApi(Build.VERSION_CODES.O)
 @HiltViewModel
 class QuizResultViewModel @Inject constructor(
-    savedStateHandle: SavedStateHandle
+    savedStateHandle: SavedStateHandle,
+    sharedPreferences: SharedPreferences
 ) : ViewModel() {
 
     lateinit var quizResult: QuizResult
@@ -48,6 +48,9 @@ class QuizResultViewModel @Inject constructor(
         spentHour = getHour() - quizStartHour
         spentMinute = getMinute() - quizStartMinute
         spentSeconds = getSeconds() - quizStartSeconds
+
+        val token = sharedPreferences.getToken()
+        userName = token?.let { getUserNameFromToken(it) } ?: "-"
     }
 
     fun getQuizResult(quizResult: QuizResult?) {

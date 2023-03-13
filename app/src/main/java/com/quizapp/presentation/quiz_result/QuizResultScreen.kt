@@ -66,7 +66,7 @@ private fun QuizResultScreenContent(modifier: Modifier, viewModel: QuizResultVie
         QuizResultSection(
             modifier = modifier,
             onClose = { Navigator.navigate(NavScreen.HomeScreen.route) {} },
-            userName = "Ahmet",
+            userName = viewModel.userName,
             score = viewModel.score,
             resultMessage = viewModel.setQuizResultMessage(),
             scoreMessage = viewModel.setQuizScoreMessage(),
