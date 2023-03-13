@@ -13,7 +13,7 @@ object NavRoutes {
     const val quiz_landing_screen = "${NavNames.quiz_landing_screen}/{quizId}/{quizTitle}/{quizDescription}/{quizAuthorUserName}/{quizCreatedDate}/{quizAuthorUserImage}/{categoryName}"
     const val confirm_account_screen = "${NavNames.confirm_account_screen}/{email}/{token}"
     const val create_quiz_screen = "create_quiz_screen"
-    const val quiz_result_screen = "${NavNames.quiz_result_screen}/{quizResult}"
+    const val quiz_result_screen = "${NavNames.quiz_result_screen}/{quizResult}/{quizStartHour}/{quizStartMinute}/{quizStartSeconds}"
     const val update_password_screen = "update_password_screen"
     const val update_profile_screen = "update_profile_screen"
     const val delete_account_screen = "delete_account_screen"
