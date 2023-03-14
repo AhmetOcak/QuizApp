@@ -1,40 +1,77 @@
 package com.quizapp.presentation.main
 
+import android.Manifest
 import android.content.Intent
-import android.content.SharedPreferences
+import android.content.pm.PackageManager
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
 import androidx.compose.ui.Modifier
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.lifecycleScope
 import com.quizapp.core.common.ImageLoader
-import com.quizapp.core.common.getToken
 import com.quizapp.core.navigation.NavGraph
 import com.quizapp.core.navigation.NavNames
-import com.quizapp.core.navigation.NavScreen
 import com.quizapp.core.navigation.Navigator
 import com.quizapp.core.ui.theme.QuizAppTheme
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import java.net.URLEncoder
 import java.nio.charset.StandardCharsets
-import javax.inject.Inject
+
+//Todo: change UrlEncoder.encode function to encodeForSafe function
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
 
-    @Inject
-    lateinit var sharedPreferences: SharedPreferences
+    private val requestPermissionLauncher = registerForActivityResult(
+        ActivityResultContracts.RequestPermission()
+    ) { isGranted ->
+        if (isGranted) {
+            Log.i("Permission ", "Granted")
+        } else {
+            Log.i("Permission ", "Denied")
+        }
+    }
 
+    private fun requestPermission() {
+        when {
+            ContextCompat.checkSelfPermission(
+                this,
+                Manifest.permission.WRITE_EXTERNAL_STORAGE
+            ) == PackageManager.PERMISSION_GRANTED -> {
+                // Permission Granted
+            }
+            ActivityCompat.shouldShowRequestPermissionRationale(
+                this,
+                Manifest.permission.WRITE_EXTERNAL_STORAGE
+            ) -> {
+                // Additional rationale should be displayed
+                requestPermissionLauncher.launch(Manifest.permission.WRITE_EXTERNAL_STORAGE)
+            }
+            else -> {
+                // Permission has been asked yet
+                requestPermissionLauncher.launch(Manifest.permission.WRITE_EXTERNAL_STORAGE)
+            }
+        }
+    }
+
+    @RequiresApi(Build.VERSION_CODES.P)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         ImageLoader.load(context = applicationContext)
+
+        requestPermission()
 
         setContent {
             QuizAppTheme {
@@ -51,7 +88,7 @@ class MainActivity : ComponentActivity() {
                             sharedPreferences = sharedPreferences
                         )
                     }*/
-                    NavGraph(sharedPreferences = sharedPreferences)
+                    NavGraph()
                 }
             }
         }
