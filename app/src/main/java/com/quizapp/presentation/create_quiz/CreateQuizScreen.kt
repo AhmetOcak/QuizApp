@@ -2,6 +2,7 @@ package com.quizapp.presentation.create_quiz
 
 import android.annotation.SuppressLint
 import android.widget.Toast
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
@@ -49,6 +50,10 @@ fun CreateQuizScreen(
 
     var selectedCategory by remember { mutableStateOf(-1) }
     var isTrueAnswer by remember { mutableStateOf(-1) }
+
+    BackHandler() {
+        Navigator.navigate(NavScreen.HomeScreen.route) { popUpTo(-1) }
+    }
 
     CreateQuizScreenContent(
         modifier = modifier,
