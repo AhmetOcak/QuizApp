@@ -55,7 +55,7 @@ import com.quizapp.presentation.utils.Dimens
 @Composable
 fun NavGraph(
     modifier: Modifier = Modifier,
-    startDestination: String = NavScreen.HomeScreen.route
+    startDestination: String = NavScreen.ProfileScreen.route
 ) {
     val navController = rememberAnimatedNavController()
     val navBackStackEntry by navController.currentBackStackEntryAsState()
@@ -115,8 +115,8 @@ fun NavGraph(
                 composable(
                     route = NavScreen.ForgotPasswordScreen.route,
                     arguments = listOf(
-                        navArgument("email") { type = NavType.StringType },
-                        navArgument("token") { type = NavType.StringType }
+                        navArgument(ForgotPasswordScreenArgs.EMAIL) { type = NavType.StringType },
+                        navArgument(ForgotPasswordScreenArgs.TOKEN) { type = NavType.StringType }
                     )
                 ) {
                     ResetPasswordScreen()
@@ -125,7 +125,7 @@ fun NavGraph(
                 composable(
                     route = NavScreen.QuizScreen.route,
                     arguments = listOf(
-                        navArgument("quizId") { type = NavType.StringType }
+                        navArgument(QuizScreenArgs.QUIZ_ID) { type = NavType.StringType }
                     )
                 ) {
                     QuizScreen()
@@ -138,13 +138,13 @@ fun NavGraph(
                 composable(
                     route = NavScreen.QuizLandingScreen.route,
                     arguments = listOf(
-                        navArgument("quizId") { type = NavType.StringType },
-                        navArgument("quizTitle") { type = NavType.StringType },
-                        navArgument("quizDescription") { type = NavType.StringType },
-                        navArgument("quizAuthorUserName") { type = NavType.StringType },
-                        navArgument("quizCreatedDate") { type = NavType.StringType },
-                        navArgument("quizAuthorUserImage") { type = NavType.StringType },
-                        navArgument("categoryName") { type = NavType.StringType }
+                        navArgument(QuizLandingScreenArgs.QUIZ_ID) { type = NavType.StringType },
+                        navArgument(QuizLandingScreenArgs.QUIZ_TITLE) { type = NavType.StringType },
+                        navArgument(QuizLandingScreenArgs.QUIZ_DESCR) { type = NavType.StringType },
+                        navArgument(QuizLandingScreenArgs.QUIZ_AUTHOR_NAME) { type = NavType.StringType },
+                        navArgument(QuizLandingScreenArgs.QUIZ_CREATED_DATE) { type = NavType.StringType },
+                        navArgument(QuizLandingScreenArgs.QUIZ_AUTHOR_IMG) { type = NavType.StringType },
+                        navArgument(QuizLandingScreenArgs.QUIZ_CATEGORY) { type = NavType.StringType }
                     )
                 ) {
                     QuizLandingScreen()
@@ -153,10 +153,10 @@ fun NavGraph(
                 composable(
                     route = NavScreen.EditProfileScreen.route,
                     arguments = listOf(
-                        navArgument("firstName") { type = NavType.StringType },
-                        navArgument("lastName") { type = NavType.StringType },
-                        navArgument("userName") { type = NavType.StringType },
-                        navArgument("userProfileImage") { type = NavType.StringType }
+                        navArgument(EditProfileScreenArgs.FIRST_NAME) { type = NavType.StringType },
+                        navArgument(EditProfileScreenArgs.LAST_NAME) { type = NavType.StringType },
+                        navArgument(EditProfileScreenArgs.USER_NAME) { type = NavType.StringType },
+                        navArgument(EditProfileScreenArgs.USER_PROFILE_IMG) { type = NavType.StringType }
                     )
                 ) {
                     EditProfileScreen()
@@ -165,8 +165,8 @@ fun NavGraph(
                 composable(
                     route = NavScreen.ConfirmAccountScreen.route,
                     arguments = listOf(
-                        navArgument("email") { type = NavType.StringType },
-                        navArgument("token") { type = NavType.StringType }
+                        navArgument(ConfirmAccountScreenArgs.EMAIL) { type = NavType.StringType },
+                        navArgument(ConfirmAccountScreenArgs.TOKEN) { type = NavType.StringType }
                     )
                 ) {
                     ConfirmAccountScreen()
@@ -179,13 +179,15 @@ fun NavGraph(
                 composable(
                     route = NavScreen.QuizResultScreen.route,
                     arguments = listOf(
-                        navArgument("quizResult") { type = QuizResultArgType() },
-                        navArgument("quizStartHour") { type = NavType.IntType },
-                        navArgument("quizStartMinute") { type = NavType.IntType },
-                        navArgument("quizStartSeconds") { type = NavType.IntType }
+                        navArgument(QuizResultScreenArgs.QUIZ_RESULT) { type = QuizResultArgType() },
+                        navArgument(QuizResultScreenArgs.QUIZ_START_HOUR) { type = NavType.IntType },
+                        navArgument(QuizResultScreenArgs.QUIZ_START_MIN) { type = NavType.IntType },
+                        navArgument(QuizResultScreenArgs.QUIZ_START_SEC) { type = NavType.IntType }
                     )
                 ) { navBackStackEntry ->
-                    val quizResult = navBackStackEntry.arguments?.getString("quizResult")?.let { Gson().fromJson(it, QuizResult::class.java) }
+                    val quizResult = navBackStackEntry.arguments?.getString(QuizResultScreenArgs.QUIZ_RESULT)
+                        ?.let { Gson().fromJson(it, QuizResult::class.java) }
+
                     QuizResultScreen(quizResult = quizResult)
                     showFab = false
                 }

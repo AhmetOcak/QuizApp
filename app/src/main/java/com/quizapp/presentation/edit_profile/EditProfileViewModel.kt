@@ -8,6 +8,7 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import com.quizapp.core.common.removeToken
+import com.quizapp.core.navigation.EditProfileScreenArgs
 import com.quizapp.core.navigation.NavScreen
 import com.quizapp.core.navigation.Navigator
 import com.quizapp.presentation.utils.EditProfileScreenPreferencesNames
@@ -40,10 +41,10 @@ class EditProfileViewModel @Inject constructor(
         private set
 
     init {
-        firstName = savedStateHandle["firstName"] ?: "-"
-        lastName = savedStateHandle["lastName"] ?: "-"
-        userName = savedStateHandle["userName"] ?: "-"
-        profilePicture = savedStateHandle["userProfileImage"] ?: ""
+        firstName = savedStateHandle[EditProfileScreenArgs.FIRST_NAME] ?: "-"
+        lastName = savedStateHandle[EditProfileScreenArgs.LAST_NAME] ?: "-"
+        userName = savedStateHandle[EditProfileScreenArgs.USER_NAME] ?: "-"
+        profilePicture = savedStateHandle[EditProfileScreenArgs.USER_PROFILE_IMG] ?: ""
     }
 
     fun updateCurrentSection(newSection: Sections) { currentSection = newSection }
@@ -78,7 +79,7 @@ class EditProfileViewModel @Inject constructor(
                     popUpTo(0)
                 }
             }
-            else -> { Log.e("set", preferenceName) }
+            else -> { Log.e("edit profile ", preferenceName) }
         }
     }
 }

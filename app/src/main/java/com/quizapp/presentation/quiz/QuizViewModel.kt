@@ -2,7 +2,6 @@ package com.quizapp.presentation.quiz
 
 import android.content.SharedPreferences
 import android.os.Build
-import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -12,8 +11,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.quizapp.core.common.*
 import com.quizapp.core.navigation.NavNames
-import com.quizapp.core.navigation.NavScreen
 import com.quizapp.core.navigation.Navigator
+import com.quizapp.core.navigation.QuizScreenArgs
 import com.quizapp.domain.model.quiz.AnswersBody
 import com.quizapp.domain.model.quiz.FinishQuizBody
 import com.quizapp.domain.model.quiz.FinishedBodyQuiz
@@ -41,7 +40,7 @@ class QuizViewModel @Inject constructor(
     private val _quizResultState = MutableStateFlow<QuizResultState>(QuizResultState.Nothing)
     val quizResultState = _quizResultState.asStateFlow()
 
-    private val quizId: String? = savedStateHandle["quizId"]
+    private val quizId: String? = savedStateHandle[QuizScreenArgs.QUIZ_ID]
     private var token: String? = null
 
     private var quizTitle: String = ""
@@ -59,7 +58,6 @@ class QuizViewModel @Inject constructor(
         private set
 
     init {
-        Log.e("quiz screen", quizId.toString())
         token = sharedPreferences.getToken()
         startQuiz(token = token)
 
@@ -89,8 +87,6 @@ class QuizViewModel @Inject constructor(
                 index = answers.indexOfFirst { it.questionId == answer.questionId }
             )
         }
-
-        Log.e("selected options", answers.toString())
     }
 
     private fun updateSelectedAnswer(answer: AnswersBody, index: Int) {
@@ -120,8 +116,6 @@ class QuizViewModel @Inject constructor(
                         questionCount = response.data.startedQuiz.questions.size
                         quizTitle = response.data.startedQuiz.title
                         quizDescription = response.data.startedQuiz.description
-                        Log.e("question count", questionCount.toString())
-                        Log.e("quiz data", response.data.toString())
                     }
                     is Response.Error -> {
                         _startQuizState.value = StartQuizState.Error(errorMessage = response.errorMessage)
@@ -153,7 +147,6 @@ class QuizViewModel @Inject constructor(
                     is Response.Success -> {
                         _quizResultState.value = QuizResultState.Success(data = response.data)
                         Navigator.navigate("${NavNames.quiz_result_screen}/${response.data.toString()}/${quizStartHour}/${quizStartMinute}/${quizStartSeconds}")
-                        Log.e("quiz result", response.data.toString())
                     }
                     is Response.Error -> {
                         _quizResultState.value = QuizResultState.Error(errorMessage = response.errorMessage)

@@ -11,6 +11,7 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import com.quizapp.R
 import com.quizapp.core.common.*
+import com.quizapp.core.navigation.QuizResultScreenArgs
 import com.quizapp.domain.model.quiz.QuizResult
 import com.quizapp.presentation.utils.QuizResultMessages
 import com.quizapp.presentation.utils.QuizScoreMessages
@@ -40,9 +41,9 @@ class QuizResultViewModel @Inject constructor(
     var spentSeconds by mutableStateOf(0)
         private set
 
-    private var quizStartHour = savedStateHandle["quizStartHour"] ?: 0
-    private var quizStartMinute = savedStateHandle["quizStartMinute"] ?: 0
-    private var quizStartSeconds = savedStateHandle["quizStartSeconds"] ?: 0
+    private var quizStartHour = savedStateHandle[QuizResultScreenArgs.QUIZ_START_HOUR] ?: 0
+    private var quizStartMinute = savedStateHandle[QuizResultScreenArgs.QUIZ_START_MIN] ?: 0
+    private var quizStartSeconds = savedStateHandle[QuizResultScreenArgs.QUIZ_START_SEC] ?: 0
 
     init {
         spentHour = getHour() - quizStartHour

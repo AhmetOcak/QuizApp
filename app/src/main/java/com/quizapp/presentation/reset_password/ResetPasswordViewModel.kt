@@ -8,6 +8,7 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.quizapp.core.common.Response
+import com.quizapp.core.navigation.ForgotPasswordScreenArgs
 import com.quizapp.domain.model.reset_password.ResetPassword
 import com.quizapp.domain.model.reset_password.ResetPasswordBody
 import com.quizapp.domain.usecase.reset_password.ResetPasswordUseCase
@@ -42,16 +43,14 @@ class ResetPasswordViewModel @Inject constructor(
     var confirmNewPasswordError by mutableStateOf(false)
         private set
 
-    private val token: String? = savedStateHandle["token"]
-    private val email: String? = savedStateHandle["email"]
+    private val token: String? = savedStateHandle[ForgotPasswordScreenArgs.TOKEN]
+    private val email: String? = savedStateHandle[ForgotPasswordScreenArgs.EMAIL]
 
     fun updateNewPassword(newValue: String) { newPassword = newValue }
 
     fun updateConfirmNewPassword(newValue: String) { confirmNewPassword = newValue }
 
     fun resetPassword() = viewModelScope.launch(Dispatchers.IO) {
-        Log.e("email => ", email ?: "null")
-        Log.e("token => ", token ?: "null")
 
         if (checkInputFields() && checkNewPassword() && checkPasswordsMatches()) {
             if (token != null && email != null) {
@@ -64,22 +63,19 @@ class ResetPasswordViewModel @Inject constructor(
                 ).collect() { response ->
                     when (response) {
                         is Response.Loading -> {
-                            Log.e("reset password", "loading")
                             _resetPasswordState.value = ResetPasswordState.Loading
                         }
                         is Response.Success -> {
-                            Log.e("reset password", "success")
                             _resetPasswordState.value = ResetPasswordState.Success
                         }
                         is Response.Error -> {
-                            Log.e("reset password", response.errorMessage)
                             _resetPasswordState.value = ResetPasswordState.Error(errorMessage = response.errorMessage)
                         }
                     }
                 }
             } else {
                 _resetPasswordState.value = ResetPasswordState.Error(errorMessage = "Something went wrong. Try again later.")
-                Log.e("email or token null", ":/")
+                Log.e("reset password", "email or token null")
             }
         }
     }
