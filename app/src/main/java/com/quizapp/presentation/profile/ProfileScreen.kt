@@ -2,9 +2,11 @@ package com.quizapp.presentation.profile
 
 import android.annotation.SuppressLint
 import android.app.Activity
+import android.util.Log
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
@@ -15,12 +17,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
@@ -28,7 +32,6 @@ import com.quizapp.R
 import com.quizapp.core.common.encodeForSafe
 import com.quizapp.core.common.loadImage
 import com.quizapp.core.navigation.NavNames
-import com.quizapp.core.navigation.NavRoutes
 import com.quizapp.core.navigation.Navigator
 import com.quizapp.core.ui.component.CustomLoadingSpinner
 import com.quizapp.core.ui.component.CustomSlider
@@ -41,6 +44,7 @@ import com.quizapp.presentation.utils.Dimens
 fun ProfileScreen(modifier: Modifier = Modifier, viewModel: ProfileViewModel = hiltViewModel()) {
 
     val getUserProfileState by viewModel.getUserProfileState.collectAsState()
+    val getUserQuizzesState by viewModel.getUserQuizzesState.collectAsState()
 
     val activity = LocalContext.current as Activity
     OnBackPressed(activity = activity)
@@ -48,6 +52,7 @@ fun ProfileScreen(modifier: Modifier = Modifier, viewModel: ProfileViewModel = h
     ProfileScreenContent(
         modifier = modifier,
         getUserProfileState = getUserProfileState,
+        getUserQuizzesState = getUserQuizzesState,
         viewModel = viewModel
     )
 }
@@ -57,6 +62,7 @@ fun ProfileScreen(modifier: Modifier = Modifier, viewModel: ProfileViewModel = h
 private fun ProfileScreenContent(
     modifier: Modifier,
     getUserProfileState: GetUserProfileState,
+    getUserQuizzesState: GetUserQuizzesState,
     viewModel: ProfileViewModel
 ) {
     Scaffold(topBar = { TopAppBar(userData = viewModel.userData) }) {
@@ -86,11 +92,18 @@ private fun ProfileScreenContent(
                         score = getUserProfileState.data.score,
                         userProfileImg = getUserProfileState.data.profilePictureUrl
                     )
-                    AchievementsSection(modifier = modifier)
-                    InventorySection(modifier = modifier)
+                    UserQuizzesSection(
+                        modifier = modifier,
+                        getUserQuizzesState = getUserQuizzesState
+                    )
+                    /*AchievementsSection(modifier = modifier)
+                    InventorySection(modifier = modifier)*/
                 }
                 is GetUserProfileState.Error -> {
-
+                    ErrorSection(
+                        modifier = modifier,
+                        errorMessage = getUserProfileState.errorMessage
+                    )
                 }
             }
         }
@@ -122,7 +135,9 @@ private fun TopAppBar(userData: UserProfile?) {
             IconButton(
                 onClick = {
                     if (userData != null) {
-                        Navigator.navigate("${NavNames.edit_profile_screen}/${userData.firstName}/${userData.lastName}/${userData.userName}/${encodeForSafe(userData.profilePictureUrl)}") {}
+                        Navigator.navigate(
+                            "${NavNames.edit_profile_screen}/${userData.firstName}/${userData.lastName}/${userData.userName}/${encodeForSafe(userData.profilePictureUrl)}"
+                        ) {}
                     }
                 }
             ) {
@@ -294,6 +309,125 @@ private fun Statistics(modifier: Modifier, iconId: Int, value: Int, description:
 }
 
 @Composable
+private fun UserQuizzesSection(modifier: Modifier, getUserQuizzesState: GetUserQuizzesState) {
+    when (getUserQuizzesState) {
+        is GetUserQuizzesState.Loading -> {
+            Box(modifier = modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
+                CustomLoadingSpinner()
+            }
+        }
+        is GetUserQuizzesState.Success -> {
+            Card(
+                modifier = modifier
+                    .fillMaxWidth()
+                    .padding(vertical = 16.dp)
+                    .clip(shape = RoundedCornerShape(20))
+            ) {
+                Column(modifier = modifier.padding(vertical = 16.dp)) {
+                    Text(
+                        modifier = modifier.padding(start = 16.dp),
+                        text = "My Quizzes",
+                        style = MaterialTheme.typography.h3.copy(fontWeight = FontWeight.Bold),
+                        color = MaterialTheme.colors.primaryVariant
+                    )
+                    LazyRow(
+                        modifier = modifier
+                            .fillMaxWidth()
+                            .padding(top = 16.dp),
+                        horizontalArrangement = Arrangement.spacedBy(8.dp),
+                        contentPadding = PaddingValues(horizontal = 16.dp)
+                    ) {
+                        items(getUserQuizzesState.data.quizzes) {
+                            MyQuiz(
+                                modifier = modifier,
+                                title = it.title,
+                                quizId = it.quizId,
+                                onClick = { quizId ->
+                                    Log.i("quiz Id ", quizId)
+                                } //Todo: Navigate UpdateQuiz Screen
+                            )
+                        }
+                    }
+                }
+            }
+        }
+        is GetUserQuizzesState.Error -> {
+            ErrorSection(modifier = modifier, errorMessage = getUserQuizzesState.errorMessage)
+        }
+    }
+}
+
+@OptIn(ExperimentalMaterialApi::class)
+@Composable
+private fun MyQuiz(modifier: Modifier, title: String, quizId: String, onClick: (String) -> Unit) {
+    Card(
+        modifier = modifier.size(144.dp),
+        shape = RoundedCornerShape(20),
+        border = BorderStroke(
+            width = 1.dp,
+            brush = Brush.horizontalGradient(
+                listOf(
+                    LightPink,
+                    StrangeRed,
+                    StrangeOrange,
+                    LightBrown,
+                    LightYellow
+                )
+            )
+        ),
+        onClick = { onClick(quizId) }
+    ) {
+        MyQuizTitle(modifier = modifier, title = title)
+    }
+}
+
+@Composable
+private fun MyQuizTitle(modifier: Modifier, title: String) {
+    Column(
+        modifier = modifier.fillMaxSize(),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center
+    ) {
+        Text(
+            modifier = modifier
+                .fillMaxWidth()
+                .padding(horizontal = 16.dp),
+            text = title,
+            textAlign = TextAlign.Center,
+            maxLines = 1,
+            overflow = TextOverflow.Ellipsis,
+            style = MaterialTheme.typography.h3.copy(fontWeight = FontWeight.Bold),
+            color = MaterialTheme.colors.primaryVariant
+        )
+    }
+}
+
+@Composable
+private fun ErrorSection(modifier: Modifier, errorMessage: String) {
+    Column(
+        modifier = modifier.fillMaxSize(),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center
+    ) {
+        Image(
+            modifier = modifier.size(96.dp),
+            painter = painterResource(id = R.drawable.error_image),
+            contentDescription = null,
+            contentScale = ContentScale.Crop
+        )
+        Text(
+            modifier = modifier
+                .fillMaxWidth()
+                .padding(top = 16.dp),
+            text = errorMessage,
+            style = MaterialTheme.typography.h3.copy(fontWeight = FontWeight.SemiBold),
+            color = MaterialTheme.colors.primaryVariant,
+            textAlign = TextAlign.Center
+        )
+    }
+}
+
+/*@Composable
 private fun AchievementsSection(modifier: Modifier) {
     Card(
         modifier = modifier
@@ -316,9 +450,9 @@ private fun AchievementsSection(modifier: Modifier) {
             UserItems(modifier = modifier)
         }
     }
-}
+}*/
 
-@Composable
+/*@Composable
 private fun InventorySection(modifier: Modifier) {
     Card(
         modifier = modifier
@@ -341,9 +475,9 @@ private fun InventorySection(modifier: Modifier) {
             UserItems(modifier = modifier)
         }
     }
-}
+}*/
 
-// Created for AchievementsSection and InventorySection
+/*// Created for AchievementsSection and InventorySection
 @Composable
 private fun TitleAndSlider(
     modifier: Modifier,
@@ -363,9 +497,9 @@ private fun TitleAndSlider(
         TitleAndCount(modifier = modifier, title = title, count = count)
         Slider(modifier = modifier, sliderDescr = sliderDescr, value = value)
     }
-}
+}*/
 
-// Created for AchievementsSection and InventorySection
+/*// Created for AchievementsSection and InventorySection
 @Composable
 private fun TitleAndCount(modifier: Modifier, title: String, count: Int) {
     Row {
@@ -392,9 +526,9 @@ private fun TitleAndCount(modifier: Modifier, title: String, count: Int) {
             )
         }
     }
-}
+}*/
 
-// Created for AchievementsSection and InventorySection
+/*// Created for AchievementsSection and InventorySection
 @Composable
 private fun Slider(modifier: Modifier, sliderDescr: String, value: Float) {
     Row(
@@ -411,9 +545,9 @@ private fun Slider(modifier: Modifier, sliderDescr: String, value: Float) {
             value = value
         )
     }
-}
+}*/
 
-// Created for AchievementsSection and InventorySection
+/*// Created for AchievementsSection and InventorySection
 @Composable
 private fun UserItems(modifier: Modifier) {
     LazyRow(
@@ -431,9 +565,9 @@ private fun UserItems(modifier: Modifier) {
             )
         }
     }
-}
+}*/
 
-// Achievement and Inventory Item Card
+/*// Achievement and Inventory Item Card
 @Composable
 private fun UserCard(modifier: Modifier, contentName: String, contentImage: Int) {
     Column(
@@ -448,9 +582,9 @@ private fun UserCard(modifier: Modifier, contentName: String, contentImage: Int)
             color = MaterialTheme.colors.primaryVariant
         )
     }
-}
+}*/
 
-// Achievement And Inventory Card
+/*// Achievement And Inventory Card
 @Composable
 private fun RotatedCard(modifier: Modifier, contentImage: Int) {
     Card(
@@ -482,4 +616,4 @@ private fun RotatedCard(modifier: Modifier, contentImage: Int) {
             )
         }
     }
-}
+}*/

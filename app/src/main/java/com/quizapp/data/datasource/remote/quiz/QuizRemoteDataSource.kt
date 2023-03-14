@@ -19,4 +19,6 @@ interface QuizRemoteDataSource {
     suspend fun startQuiz(quizId: String, token: String) : StartQuizDto
 
     suspend fun finishQuiz(answers: FinishQuizBodyDto, token: String) : FinishQuizResponseDto
+
+    suspend fun getUserQuizzes(token: String) : UserQuizzesDto
 }

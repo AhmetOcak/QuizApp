@@ -33,4 +33,7 @@ class QuizRemoteDataSourceImpl @Inject constructor(private val api: QuizApi) :
     override suspend fun finishQuiz(answers: FinishQuizBodyDto, token: String) =
         api.finishQuiz(answers = answers, token = token)
 
+    override suspend fun getUserQuizzes(token: String): UserQuizzesDto =
+        api.getUserQuizzes(token = token)
+
 }

@@ -50,4 +50,9 @@ interface QuizApi {
         @Body answers: FinishQuizBodyDto,
         @Header("Authorization") token: String
     ): FinishQuizResponseDto
+
+    @GET("api/Quizzes/GetUserQuizzes")
+    suspend fun getUserQuizzes(
+        @Header("Authorization") token: String
+    ): UserQuizzesDto
 }

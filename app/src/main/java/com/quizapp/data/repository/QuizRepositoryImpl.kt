@@ -47,4 +47,7 @@ class QuizRepositoryImpl @Inject constructor(
 
     override suspend fun finishQuiz(answers: FinishQuizBody, token: String) =
         remoteDataSource.finishQuiz(answers = answers.toFinishQuizDto(), token = token).toQuizResult()
+
+    override suspend fun getUserQuizzes(token: String): UserQuizzes =
+        remoteDataSource.getUserQuizzes(token = token).toUserQuizzes()
 }

@@ -156,3 +156,19 @@ fun FinishQuizResponseDto.toQuizResult(): QuizResult {
         )
     )
 }
+
+fun UserQuizzesDto.toUserQuizzes(): UserQuizzes {
+    return UserQuizzes(
+        quizzes = quizzes.map {
+            UserQuizzesDetail(
+                quizId = it.quizId,
+                title = it.title,
+                userName = it.userName,
+                description = it.description,
+                categoryName = it.categoryName,
+                quizCreatedDate = it.quizCreatedDate,
+                userPhotoUrl = it.userPhotoUrl
+            )
+        } as ArrayList<UserQuizzesDetail>
+    )
+}
