@@ -54,7 +54,10 @@ fun QuizScreen(modifier: Modifier = Modifier, viewModel: QuizViewModel = hiltVie
         startQuizState = startQuizState,
         questionIndex = viewModel.questionIndex,
         onChecked = { selectedOptionId = it },
-        onPreviousClicked = { viewModel.goPreviousQuestion() },
+        onPreviousClicked = {
+            selectedOptionId = ""
+            viewModel.goPreviousQuestion()
+        },
         onNextClicked = {
             if (selectedOptionId.isNotBlank()) {
                 viewModel.addSelectedAnswer(
