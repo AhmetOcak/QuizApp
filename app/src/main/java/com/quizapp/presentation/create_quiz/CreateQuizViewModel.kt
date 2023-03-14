@@ -86,7 +86,6 @@ class CreateQuizViewModel @Inject constructor(
     init {
         token = sharedPreferences.getToken() ?: ""
         getAllCategories()
-        Log.e("token -> ", token)
     }
 
     fun setCategoryId(id: String) { categoryId = id }
@@ -124,15 +123,12 @@ class CreateQuizViewModel @Inject constructor(
             when (response) {
                 is Response.Loading -> {
                     _categoriesState.value = CategoriesState.Loading
-                    Log.e("categories", "loading")
                 }
                 is Response.Success -> {
                     _categoriesState.value = CategoriesState.Success(data = response.data)
-                    Log.e("categories success", response.data.toString())
                 }
                 is Response.Error -> {
                     _categoriesState.value = CategoriesState.Error(errorMessage = response.errorMessage)
-                    Log.e("categories error", response.errorMessage)
                 }
             }
         }
@@ -151,16 +147,13 @@ class CreateQuizViewModel @Inject constructor(
                 when (response) {
                     is Response.Loading -> {
                         _createQuizState.value = CreateQuizState.Loading
-                        Log.e("create quiz", "loading")
                     }
                     is Response.Success -> {
                         _createQuizState.value = CreateQuizState.Success
-                        Log.e("create quiz", "success")
                         quizId = response.data.quizId
                     }
                     is Response.Error -> {
                         _createQuizState.value = CreateQuizState.Error(errorMessage = response.errorMessage)
-                        Log.e("create quiz", "error")
                     }
                 }
             }
@@ -180,18 +173,15 @@ class CreateQuizViewModel @Inject constructor(
                 when (response) {
                     is Response.Loading -> {
                         _createQuestionState.value = CreateQuestionState.Loading
-                        Log.e("create question", "loading")
                     }
                     is Response.Success -> {
                         _createQuestionState.value = CreateQuestionState.Success
-                        Log.e("create question", "success")
                         questionId = response.data.questionId
                         options = setOptions()
                         createOptions()
                     }
                     is Response.Error -> {
                         _createQuestionState.value = CreateQuestionState.Error(errorMessage = response.errorMessage)
-                        Log.e("create question", response.errorMessage)
                     }
                 }
             }

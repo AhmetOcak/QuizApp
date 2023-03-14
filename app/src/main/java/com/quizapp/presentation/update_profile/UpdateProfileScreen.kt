@@ -45,8 +45,6 @@ import com.quizapp.presentation.utils.UpdateProfileBottomSheetSubTitles
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
-//Todo: You must implement runtime permissons for the access media storage
-
 private val EDIT_PROFILE_IMG_SIZE = 176.dp
 
 @RequiresApi(Build.VERSION_CODES.P)

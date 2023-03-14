@@ -35,8 +35,6 @@ import com.quizapp.core.ui.theme.*
 import com.quizapp.domain.model.quiz.QuizResult
 import com.quizapp.presentation.utils.Dimens
 
-//Todo: handle viewmodel
-
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun QuizResultScreen(
@@ -115,7 +113,6 @@ private fun QuizResultSection(
     }
 }
 
-// Created for QuizResultSection
 @Composable
 private fun ScoreCard(
     modifier: Modifier,

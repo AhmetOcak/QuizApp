@@ -1,7 +1,6 @@
 package com.quizapp.presentation.search
 
 import android.app.Activity
-import android.util.Log
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn

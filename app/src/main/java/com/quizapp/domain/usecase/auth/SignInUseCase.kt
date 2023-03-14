@@ -1,5 +1,6 @@
 package com.quizapp.domain.usecase.auth
 
+import android.util.Log
 import com.quizapp.core.common.Response
 import com.quizapp.core.common.getErrorMessage
 import com.quizapp.domain.model.auth.Login
@@ -25,11 +26,14 @@ class SignInUseCase @Inject constructor(private val authRepository: AuthReposito
             val errorMessage = e.getErrorMessage()
             if (errorMessage != null) {
                 emit(Response.Error(errorMessage = errorMessage))
+                Log.e("sign in error", e.stackTraceToString())
             } else {
                 emit(Response.Error(errorMessage = Messages.UNKNOWN))
+                Log.e("sign in error", e.stackTraceToString())
             }
         } catch (e: Exception) {
             emit(Response.Error(errorMessage = e.message ?: Messages.UNKNOWN))
+            Log.e("sign in error", e.stackTraceToString())
         }
     }
 }

@@ -11,7 +11,10 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun CustomTopBarTitle(modifier: Modifier, title: String) {
+fun CustomTopBarTitle(
+    modifier: Modifier,
+    title: String
+) {
     Text(
         modifier = modifier
             .fillMaxWidth()

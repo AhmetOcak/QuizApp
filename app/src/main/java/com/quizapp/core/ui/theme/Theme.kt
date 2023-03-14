@@ -11,7 +11,7 @@ import com.google.accompanist.systemuicontroller.rememberSystemUiController
 private val DarkColorPalette = darkColors(
     primary = BlackSmoke,
     primaryVariant = TextWhite, // Text - Icon color
-    secondary = Teal200,
+    secondary = Teal200, // Profile Settings Icon Color
     background = Black,
     surface = BlackSmoke, // Card background color
     onPrimary = WhiteSmoke,
@@ -23,7 +23,7 @@ fun QuizAppTheme(content: @Composable () -> Unit) {
     val colors = DarkColorPalette
     val systemUiController = rememberSystemUiController()
 
-    systemUiController.setStatusBarColor(color = Black, darkIcons = false)
+    systemUiController.setStatusBarColor(color = Color.Black, darkIcons = false)
 
     MaterialTheme(
         colors = colors,
