@@ -1,9 +1,7 @@
 package com.quizapp.presentation.quiz_result
 
 import android.content.SharedPreferences
-import android.os.Build
 import android.util.Log
-import androidx.annotation.RequiresApi
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -19,7 +17,6 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import java.lang.NullPointerException
 import javax.inject.Inject
 
-@RequiresApi(Build.VERSION_CODES.O)
 @HiltViewModel
 class QuizResultViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,

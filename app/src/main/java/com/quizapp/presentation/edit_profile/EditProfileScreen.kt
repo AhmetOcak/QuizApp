@@ -43,7 +43,7 @@ fun EditProfileScreen(
         viewModel.setTopBarTitle()
     }
 
-    BackHandler() {
+    BackHandler {
         Navigator.navigate(NavScreen.ProfileScreen.route)
     }
 
@@ -126,7 +126,6 @@ private fun ProfileSection(
     }
 }
 
-// Created for ProfileSection
 @Composable
 private fun UserRealNameAndUserName(
     modifier: Modifier,
@@ -153,7 +152,6 @@ private fun UserRealNameAndUserName(
     }
 }
 
-// Created for ProfileSection
 @Composable
 private fun EditProfileButton(modifier: Modifier, onEditProfileClick: () -> Unit) {
     TextButton(
@@ -171,7 +169,6 @@ private fun EditProfileButton(modifier: Modifier, onEditProfileClick: () -> Unit
     }
 }
 
-// Created for ProfileSection
 @Composable
 private fun Preferences(modifier: Modifier, onPreferenceClick: (String) -> Unit) {
     Column(

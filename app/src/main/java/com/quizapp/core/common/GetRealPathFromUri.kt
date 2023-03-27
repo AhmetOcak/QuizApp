@@ -8,13 +8,14 @@ import java.io.File
 import java.io.FileOutputStream
 import java.io.InputStream
 
+
+//Todo: Android SDK Problem :(
 fun getRealPathFromURI(uri: Uri, context: Context): String? {
     val returnCursor = context.contentResolver.query(uri, null, null, null, null)
     val nameIndex =  returnCursor!!.getColumnIndex(OpenableColumns.DISPLAY_NAME)
     val sizeIndex = returnCursor.getColumnIndex(OpenableColumns.SIZE)
     returnCursor.moveToFirst()
     val name = returnCursor.getString(nameIndex)
-    val size = returnCursor.getLong(sizeIndex).toString()
     val file = File(context.filesDir, name)
     try {
         val inputStream: InputStream? = context.contentResolver.openInputStream(uri)
@@ -32,13 +33,11 @@ fun getRealPathFromURI(uri: Uri, context: Context): String? {
             } != -1) {
             outputStream.write(buffers, 0, read)
         }
-        Log.e("Profile Picture Size", "Size " + file.length())
         inputStream?.close()
         outputStream.close()
-        Log.e("Profile Picture Path", "Path " + file.path)
 
     } catch (e: java.lang.Exception) {
-        Log.e("Exception", e.message!!)
+        Log.e("GetRealPathFromUri.kt", e.message!!)
     }
     return file.path
 }

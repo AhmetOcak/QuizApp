@@ -61,15 +61,12 @@ class SignInViewModel @Inject constructor(
             when (response) {
                 is Response.Loading -> {
                     _forgotPasswordState.value = ForgotPasswordState.Loading
-                    Log.e("forgot password", "loading")
                 }
                 is Response.Success -> {
                     _forgotPasswordState.value = ForgotPasswordState.Success
-                    Log.e("forgot password", "success")
                 }
                 is Response.Error -> {
                     _forgotPasswordState.value = ForgotPasswordState.Error(errorMessage = response.errorMessage)
-                    Log.e("forgot password", "error")
                 }
             }
         }

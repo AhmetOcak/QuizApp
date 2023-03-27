@@ -2,7 +2,6 @@ package com.quizapp.presentation.profile
 
 import android.annotation.SuppressLint
 import android.app.Activity
-import android.util.Log
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyRow
@@ -15,8 +14,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.rotate
-import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
@@ -135,9 +132,7 @@ private fun TopAppBar(userData: UserProfile?) {
             IconButton(
                 onClick = {
                     if (userData != null) {
-                        Navigator.navigate(
-                            "${NavNames.edit_profile_screen}/${userData.firstName}/${userData.lastName}/${userData.userName}/${encodeForSafe(userData.profilePictureUrl)}"
-                        ) {}
+                        Navigator.navigate("${NavNames.edit_profile_screen}/${userData.firstName}/${userData.lastName}/${userData.userName}/${encodeForSafe(userData.profilePictureUrl)}") {}
                     }
                 }
             ) {
@@ -154,7 +149,6 @@ private fun TopAppBar(userData: UserProfile?) {
     )
 }
 
-// Created for Profile Detail Section
 @Composable
 private fun ProfileImage(modifier: Modifier, userProfileImg: String) {
     AsyncImage(
@@ -173,7 +167,6 @@ private fun ProfileImage(modifier: Modifier, userProfileImg: String) {
     )
 }
 
-// Created for Profile Detail Section
 @Composable
 private fun ProfileInfo(modifier: Modifier, userName: String, biography: String, score: Int) {
     Column(
@@ -187,7 +180,6 @@ private fun ProfileInfo(modifier: Modifier, userName: String, biography: String,
     }
 }
 
-// Created for Profile Info
 @Composable
 private fun UserNameAndBiography(userName: String, biography: String) {
     Text(
@@ -202,7 +194,6 @@ private fun UserNameAndBiography(userName: String, biography: String) {
     )
 }
 
-// Created for Profile Info
 @Composable
 private fun UserLevelAndStatistics(modifier: Modifier, score: Int) {
     Card(
@@ -218,7 +209,6 @@ private fun UserLevelAndStatistics(modifier: Modifier, score: Int) {
     }
 }
 
-// Created for UserLevelAndStatistics
 @Composable
 private fun LevelSlider(modifier: Modifier) {
     Box(
@@ -242,7 +232,6 @@ private fun LevelSlider(modifier: Modifier) {
     }
 }
 
-// Created for UserLevelAndStatistics
 @Composable
 private fun UserStatistics(modifier: Modifier, score: Int) {
     Row(
@@ -267,8 +256,6 @@ private fun UserStatistics(modifier: Modifier, score: Int) {
     }
 }
 
-// Statistics Component
-// Created for Profile Info
 @Composable
 private fun Statistics(modifier: Modifier, iconId: Int, value: Int, description: String) {
     Row(verticalAlignment = Alignment.CenterVertically) {

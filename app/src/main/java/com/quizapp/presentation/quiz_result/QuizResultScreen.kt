@@ -1,9 +1,7 @@
 package com.quizapp.presentation.quiz_result
 
 import android.annotation.SuppressLint
-import android.os.Build
 import androidx.activity.compose.BackHandler
-import androidx.annotation.RequiresApi
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -11,7 +9,6 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
-import androidx.compose.material.SnackbarDefaults.backgroundColor
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -35,7 +32,6 @@ import com.quizapp.core.ui.theme.*
 import com.quizapp.domain.model.quiz.QuizResult
 import com.quizapp.presentation.utils.Dimens
 
-@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun QuizResultScreen(
     modifier: Modifier = Modifier,
@@ -53,7 +49,6 @@ fun QuizResultScreen(
     QuizResultScreenContent(modifier = modifier, viewModel = viewModel)
 }
 
-@RequiresApi(Build.VERSION_CODES.O)
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
 private fun QuizResultScreenContent(modifier: Modifier, viewModel: QuizResultViewModel) {

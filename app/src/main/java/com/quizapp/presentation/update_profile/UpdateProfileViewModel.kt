@@ -76,7 +76,6 @@ class UpdateProfileViewModel @Inject constructor(
 
     fun updateBiographyField(newValue: String) { biographyBottomSheet = newValue }
 
-    //Todo: you must test every API
     fun handleMultipartBody(filePath: String) {
         val file = File(filePath)
         val reqFile = file.asRequestBody("image/${file.extension}".toMediaTypeOrNull())

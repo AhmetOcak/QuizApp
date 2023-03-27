@@ -2,7 +2,6 @@ package com.quizapp.presentation.update_profile
 
 import android.net.Uri
 import android.os.Build
-import android.util.Log
 import android.widget.Toast
 import androidx.activity.compose.BackHandler
 import androidx.activity.compose.ManagedActivityResultLauncher
@@ -83,7 +82,6 @@ fun UpdateProfileScreen(
                 viewModel.handleMultipartBody(filePath)
             }
         } catch (e: Exception) {
-            Log.e("image upload", e.stackTraceToString())
             Toast.makeText(
                 context,
                 com.quizapp.domain.utils.Messages.UNKNOWN,
@@ -251,7 +249,6 @@ private fun EditProfileSection(
             viewModel.resetUpdateProfileState()
         }
     }
-
 }
 
 @Composable

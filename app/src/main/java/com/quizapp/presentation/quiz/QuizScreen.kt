@@ -1,9 +1,7 @@
 package com.quizapp.presentation.quiz
 
 import android.annotation.SuppressLint
-import android.os.Build
 import android.widget.Toast
-import androidx.annotation.RequiresApi
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -40,7 +38,6 @@ private val gradientColors = listOf(
     LightYellow
 )
 
-@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun QuizScreen(modifier: Modifier = Modifier, viewModel: QuizViewModel = hiltViewModel()) {
 
@@ -81,7 +78,6 @@ fun QuizScreen(modifier: Modifier = Modifier, viewModel: QuizViewModel = hiltVie
     )
 }
 
-@RequiresApi(Build.VERSION_CODES.O)
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
 private fun QuizScreenContent(
@@ -132,7 +128,6 @@ private fun QuizScreenContent(
     }
 }
 
-@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 private fun QuizSection(
     modifier: Modifier,
@@ -293,8 +288,6 @@ private fun AnswersSection(
     }
 }
 
-// Answer Component
-// Created for Answers Section
 @Composable
 private fun Answer(
     modifier: Modifier,

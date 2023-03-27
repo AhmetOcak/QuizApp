@@ -148,7 +148,10 @@ private fun CreateQuizScreenContent(
                         onClick = onClick,
                         categoriesState = categoriesState
                     )
-                    QuizContentSection(modifier = modifier, viewModel = viewModel)
+                    QuizContentSection(
+                        modifier = modifier,
+                        viewModel = viewModel
+                    )
                     CreateQuizButtonSection(
                         modifier = modifier,
                         onClick = { viewModel.createQuiz() }

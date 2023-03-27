@@ -71,19 +71,11 @@ private fun DeleteAccountScreenContent(
                     CustomLoadingSpinner()
                 }
                 is DeleteAccountState.Success -> {
-                    Toast.makeText(
-                        LocalContext.current,
-                        "Your account deleted successfully.",
-                        Toast.LENGTH_LONG
-                    ).show()
+                    ShowMessage(message = "Your account deleted successfully.")
                     Navigator.navigate(NavScreen.SignInScreen.route) { popUpTo(0) }
                 }
                 is DeleteAccountState.Error -> {
-                    Toast.makeText(
-                        LocalContext.current,
-                        deleteAccountState.errorMessage,
-                        Toast.LENGTH_LONG
-                    ).show()
+                    ShowMessage(message = deleteAccountState.errorMessage)
                     viewModel.resetDeleteAccountState()
                 }
             }
@@ -136,4 +128,13 @@ private fun Title(modifier: Modifier) {
         style = MaterialTheme.typography.h1.copy(fontWeight = FontWeight.SemiBold),
         color = MaterialTheme.colors.primaryVariant
     )
+}
+
+@Composable
+private fun ShowMessage(message: String) {
+    Toast.makeText(
+        LocalContext.current,
+        message,
+        Toast.LENGTH_LONG
+    ).show()
 }

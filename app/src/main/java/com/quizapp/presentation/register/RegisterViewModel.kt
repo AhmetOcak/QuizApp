@@ -157,11 +157,4 @@ class RegisterViewModel @Inject constructor(
     fun resetRegisterInpFieldState() { _registerInputFieldState.value = RegisterInputFieldState.Nothing }
 
     fun resetCreateUserState() { _createUserState.value = CreateUserState.Nothing }
-
-/*    fun resetInputErrors() {
-        userNameError = false
-        userEmailError = false
-        userPasswordError = false
-        userConfirmPasswordError = false
-    }*/
 }

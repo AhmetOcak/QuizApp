@@ -1,7 +1,6 @@
 package com.quizapp.presentation.delete_account
 
 import android.content.SharedPreferences
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.quizapp.core.common.Response
@@ -30,7 +29,6 @@ class DeleteAccountViewModel @Inject constructor(
     init {
         token = sharedPreferences.getToken()
         userId = token?.let { getUserIdFromToken(it) }
-        Log.e("user id", userId ?: "empty")
     }
 
     fun deleteAccount() = viewModelScope.launch(Dispatchers.IO) {

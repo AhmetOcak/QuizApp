@@ -1,7 +1,6 @@
 package com.quizapp.presentation.edit_profile
 
 import android.content.SharedPreferences
-import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -79,7 +78,7 @@ class EditProfileViewModel @Inject constructor(
                     popUpTo(0)
                 }
             }
-            else -> { Log.e("edit profile ", preferenceName) }
+            else -> { }
         }
     }
 }

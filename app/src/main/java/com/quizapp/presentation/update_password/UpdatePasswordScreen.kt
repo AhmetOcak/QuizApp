@@ -118,30 +118,27 @@ private fun ChangePasswordSection(
             CustomLoadingSpinner()
         }
         is UpdatePasswordState.Success -> {
-            Toast.makeText(
-                LocalContext.current,
-                "Your password updated successfully !!",
-                Toast.LENGTH_LONG
-            ).show()
+            ShowMessage(message = "Your password updated successfully !!")
             viewModel.resetUpdatePasswordState()
         }
         is UpdatePasswordState.Error -> {
-            Toast.makeText(
-                LocalContext.current,
-                updatePasswordState.errorMessage,
-                Toast.LENGTH_LONG
-            ).show()
+            ShowMessage(message = updatePasswordState.errorMessage)
         }
     }
     when (showChangePasswordInputErrors) {
         is ShowChangePasswordInputErrors.Nothing -> {}
         is ShowChangePasswordInputErrors.Error -> {
-            Toast.makeText(
-                LocalContext.current,
-                showChangePasswordInputErrors.message,
-                Toast.LENGTH_LONG
-            ).show()
+            ShowMessage(message = showChangePasswordInputErrors.message)
             viewModel.resetUpdatePasswordInputState()
         }
     }
+}
+
+@Composable
+private fun ShowMessage(message: String) {
+    Toast.makeText(
+        LocalContext.current,
+        message,
+        Toast.LENGTH_LONG
+    ).show()
 }

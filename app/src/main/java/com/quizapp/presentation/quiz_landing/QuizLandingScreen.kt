@@ -70,16 +70,28 @@ private fun QuizLandingScreenContent(
             verticalArrangement = Arrangement.Center
         ) {
             LandingImage(modifier = modifier)
-            QuizName(modifier = modifier, quizName = quizTitle)
+            QuizName(
+                modifier = modifier,
+                quizName = quizTitle
+            )
             QuizAuthorNameAndCreatedDate(
                 modifier = modifier,
                 authorName = quizAuthorUserName,
                 createdDate = quizCreatedDate,
                 authorUserImage = authorUserImage
             )
-            QuizCategoryName(modifier = modifier, categoryName = categoryName)
-            QuizDescription(modifier = modifier, quizDescription = quizDescription)
-            StartQuiz(modifier = modifier, startQuiz = startQuiz)
+            QuizCategoryName(
+                modifier = modifier,
+                categoryName = categoryName
+            )
+            QuizDescription(
+                modifier = modifier,
+                quizDescription = quizDescription
+            )
+            StartQuiz(
+                modifier = modifier,
+                startQuiz = startQuiz
+            )
         }
     }
 }

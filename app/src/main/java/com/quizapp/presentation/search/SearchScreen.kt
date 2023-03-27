@@ -118,7 +118,6 @@ private fun SearchResultSection(modifier: Modifier, viewModel: SearchViewModel) 
     QuizList(modifier = modifier, viewModel = viewModel)
 }
 
-// Created for SearchResultSection
 @Composable
 private fun QuizList(modifier: Modifier, viewModel: SearchViewModel) {
     if (!viewModel.isSearchKeywordBlank()) {
@@ -138,7 +137,6 @@ private fun QuizList(modifier: Modifier, viewModel: SearchViewModel) {
                 key = { it.quizId }
             ) { quiz ->
                 if (quiz != null) {
-
                     val colorIndex = viewModel.produceRandomNumber()
 
                     Quiz(

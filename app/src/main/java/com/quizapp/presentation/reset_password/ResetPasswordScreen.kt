@@ -2,7 +2,6 @@ package com.quizapp.presentation.reset_password
 
 import android.annotation.SuppressLint
 import android.app.Activity
-import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
@@ -72,7 +71,6 @@ private fun ForgotPasswordScreenContent(
                 ChangePasswordSuccessSection(modifier = modifier, activity = activity)
             }
             is ResetPasswordState.Error -> {
-                Log.e("error forgot screen", resetPasswordState.errorMessage)
                 ChangePasswordSection(modifier = modifier, viewModel = viewModel)
                 ShowMessage(message = resetPasswordState.errorMessage, onReset = { viewModel.resetPasswordState() })
             }
@@ -155,7 +153,6 @@ private fun ChangePasswordSuccessSection(modifier: Modifier, activity: Activity)
     }
 }
 
-// Created for this screen (image comp)
 @Composable
 private fun DefaultImage(modifier: Modifier, imageId: Int) {
     Image(
@@ -168,7 +165,6 @@ private fun DefaultImage(modifier: Modifier, imageId: Int) {
     )
 }
 
-// Created for this screen (text comp)
 @Composable
 private fun DefaultText(modifier: Modifier, text: String) {
     Text(

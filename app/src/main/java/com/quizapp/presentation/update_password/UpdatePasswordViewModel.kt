@@ -1,7 +1,6 @@
 package com.quizapp.presentation.update_password
 
 import android.content.SharedPreferences
-import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -74,7 +73,6 @@ class UpdatePasswordViewModel @Inject constructor(
                         }
                         is Response.Error -> {
                             _updatePasswordState.value = UpdatePasswordState.Error(response.errorMessage)
-                            Log.e("update password error", response.errorMessage)
                         }
                     }
                 }

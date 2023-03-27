@@ -1,7 +1,6 @@
 package com.quizapp.presentation.register
 
 import android.annotation.SuppressLint
-import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.MaterialTheme
@@ -68,11 +67,9 @@ private fun RegisterScreenContent(
                     }
                 }
                 is CreateUserState.Success -> {
-                    Log.e("register", "Success")
                     ShowMessage(message = Messages.USER_CREATE_SUCCESS)
                 }
                 is CreateUserState.Error -> {
-                    Log.e("register", "error => " + createUserState.errorMessage)
                     ShowMessage(
                         message = createUserState.errorMessage,
                         createUserState = createUserState,
@@ -168,7 +165,6 @@ private fun ShowInputFieldErrors(
                 Toast.LENGTH_SHORT
             ).show()
             viewModel.resetRegisterInpFieldState()
-            //viewModel.resetInputErrors()
         }
         is RegisterInputFieldState.Nothing -> {}
     }

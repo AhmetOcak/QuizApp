@@ -2,7 +2,6 @@ package com.quizapp.presentation.signin
 
 import android.annotation.SuppressLint
 import android.app.Activity
-import android.util.Log
 import android.widget.Toast
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.Image
@@ -103,7 +102,7 @@ private fun SignIn(
             }
         }
         is SignInState.Success -> {
-            Log.e("sign in", "Success => " + signInState.data.token.accessToken)
+            // Navigating Home Screen. Safe travels :))
         }
         is SignInState.Error -> {
             ShowMessage(
@@ -111,7 +110,6 @@ private fun SignIn(
                 viewModel = viewModel,
                 isSignInContent = true
             )
-            Log.e("sign in", "Error => " + signInState.errorMessage)
         }
     }
     ShowInputFieldErrors(signInInputFieldState = signInInputFieldState, viewModel = viewModel)
@@ -141,7 +139,6 @@ private fun ForgotPassword(
                 viewModel = viewModel,
                 isSignInContent = false
             )
-            // we need show message to user
             viewModel.resetShowForPas()
         }
         is ForgotPasswordState.Error -> {
