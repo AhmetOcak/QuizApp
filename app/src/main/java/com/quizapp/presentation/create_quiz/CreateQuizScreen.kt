@@ -125,10 +125,10 @@ private fun CreateQuizScreenContent(
     Scaffold(
         modifier = modifier,
         topBar = {
-            CustomTopBarTitle(modifier = modifier, title = "Create Quiz")
+            CustomTopBarTitle(modifier = modifier.padding(top = 16.dp), title = "Create Quiz")
             if (createQuizState is CreateQuizState.Success) {
                 CompleteButton(
-                    modifier = modifier,
+                    modifier = modifier.padding(top = 16.dp),
                     onComplete = { Navigator.navigate(NavScreen.HomeScreen.route) {} }
                 )
             }
@@ -409,7 +409,8 @@ private fun Category(
                 colorFilter = if (index == selectedCategory) null else ColorFilter.colorMatrix(
                     ColorMatrix().apply {
                         setToSaturation(0f)
-                    })
+                    }
+                )
             )
         }
         Text(
@@ -467,13 +468,13 @@ private fun CreateQuestionSection(
                     onAnswerClick = onAnswerClick,
                     isTrueAnswer = isTrueAnswer
                 )
-                OutBtnCustom(
-                    modifier = modifier
-                        .fillMaxWidth()
-                        .padding(top = 16.dp),
-                    onClick = onCreateQuestionClick,
-                    buttonText = "Create Question"
-                )
+                Box(modifier = modifier.fillMaxSize(), contentAlignment = Alignment.BottomCenter) {
+                    OutBtnCustom(
+                        modifier = modifier.fillMaxWidth(),
+                        onClick = onCreateQuestionClick,
+                        buttonText = "Create Question"
+                    )
+                }
             }
             is CreateQuestionState.Loading -> {
                 Box(modifier = modifier.fillMaxSize(), contentAlignment = Alignment.Center) {

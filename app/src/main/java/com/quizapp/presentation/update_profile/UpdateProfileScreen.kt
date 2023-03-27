@@ -95,7 +95,13 @@ fun UpdateProfileScreen(
     }
 
     BackHandler(!sheetState.isVisible) {
-        Navigator.navigate("${NavNames.edit_profile_screen}/${viewModel.firstName}/${viewModel.lastName}/${viewModel.userName}/${encodeForSafe(viewModel.profilePictureUrl)}")
+        Navigator.navigate(
+            "${NavNames.edit_profile_screen}/${viewModel.firstName}/${viewModel.lastName}/${viewModel.userName}/${
+                encodeForSafe(
+                    viewModel.profilePictureUrl
+                )
+            }"
+        )
     }
 
     UpdateProfileScreenContent(
@@ -137,7 +143,12 @@ private fun UpdateProfileScreenContent(
             onCancelImgClick = onCancelImgClick
         )
     } else {
-        Box(modifier = modifier.fillMaxSize(), contentAlignment = Alignment.TopCenter) {
+        Box(
+            modifier = modifier
+                .fillMaxSize()
+                .padding(top = 16.dp),
+            contentAlignment = Alignment.TopCenter
+        ) {
             CustomTopBarTitle(
                 modifier = modifier,
                 title = "Update Profile"
@@ -187,7 +198,7 @@ private fun EditProfileSection(
                 Column(
                     modifier = modifier
                         .fillMaxSize()
-                        .padding(top = Dimens.AppBarDefaultHeight + 16.dp),
+                        .padding(top = Dimens.AppBarDefaultHeight + 48.dp),
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     UpdateProfileImage(

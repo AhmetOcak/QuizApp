@@ -59,7 +59,12 @@ private fun EditProfileScreenContent(
     modifier: Modifier,
     viewModel: EditProfileViewModel
 ) {
-    Box(modifier = modifier.fillMaxSize(), contentAlignment = Alignment.TopCenter) {
+    Box(
+        modifier = modifier
+            .fillMaxSize()
+            .padding(top = 16.dp),
+        contentAlignment = Alignment.TopCenter
+    ) {
         CustomTopBarTitle(
             modifier = modifier,
             title = viewModel.topBarTitle
@@ -103,12 +108,14 @@ private fun ProfileSection(
     onPreferenceClick: (String) -> Unit
 ) {
     Column(
-        modifier = modifier
-            .fillMaxWidth()
-            .padding(top = Dimens.AppBarDefaultHeight + 16.dp),
+        modifier = modifier.fillMaxWidth(),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Column(modifier = modifier.weight(1f), horizontalAlignment = Alignment.CenterHorizontally) {
+        Column(
+            modifier = modifier.weight(1f),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center
+        ) {
             ProfileImage(
                 modifier = modifier,
                 userImage = userImage

@@ -107,7 +107,7 @@ private fun UpdateQuizScreenContent(
 ) {
     Scaffold(
         topBar = {
-            CustomTopBarTitle(modifier = modifier, title = "Update Quiz")
+            CustomTopBarTitle(modifier = modifier.padding(top = 16.dp), title = "Update Quiz")
         }
     ) {
         Column(modifier = modifier.fillMaxSize()) {
