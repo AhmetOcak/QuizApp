@@ -12,10 +12,14 @@ import androidx.compose.ui.res.painterResource
 import com.quizapp.R
 
 @Composable
-fun CircleCheckbox(modifier: Modifier, onChecked: () -> Unit, selected: Boolean = false) {
+fun CircleCheckbox(
+    modifier: Modifier,
+    onChecked: () -> Unit,
+    selected: Boolean = false,
+    tint: Color = if (selected) MaterialTheme.colors.secondary else MaterialTheme.colors.primaryVariant
+) {
 
     val imageVector = if (selected) R.drawable.ic_baseline_check_circle else R.drawable.ic_outline_circle_24
-    val tint = if (selected) MaterialTheme.colors.secondary else MaterialTheme.colors.primaryVariant
     val background = if (selected) MaterialTheme.colors.background else Color.Transparent
 
     IconButton(onClick = onChecked) {
