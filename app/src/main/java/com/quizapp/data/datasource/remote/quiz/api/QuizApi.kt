@@ -55,4 +55,10 @@ interface QuizApi {
     suspend fun getUserQuizzes(
         @Header("Authorization") token: String
     ): UserQuizzesDto
+
+    @PUT("api/Quizzes/Update")
+    suspend fun updateQuiz(
+        @Header("Authorization") token: String,
+        @Body body: UpdateQuizBodyDto
+    )
 }

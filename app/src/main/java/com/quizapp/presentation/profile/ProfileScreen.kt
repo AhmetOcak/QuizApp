@@ -337,14 +337,14 @@ private fun UserQuizzesSection(modifier: Modifier, getUserQuizzesState: GetUserQ
                         horizontalArrangement = Arrangement.spacedBy(8.dp),
                         contentPadding = PaddingValues(horizontal = 16.dp)
                     ) {
-                        items(getUserQuizzesState.data.quizzes) {
+                        items(getUserQuizzesState.data.quizzes) { quiz ->
                             MyQuiz(
                                 modifier = modifier,
-                                title = it.title,
-                                quizId = it.quizId,
-                                onClick = { quizId ->
-                                    Log.i("quiz Id ", quizId)
-                                } //Todo: Navigate UpdateQuiz Screen
+                                title = quiz.title,
+                                quizId = quiz.quizId,
+                                onClick = {
+                                    Navigator.navigate("${NavNames.update_quiz_screen}/${quiz.quizId}/${quiz.title}/${quiz.description}") {}
+                                }
                             )
                         }
                     }
@@ -394,7 +394,7 @@ private fun MyQuizTitle(modifier: Modifier, title: String) {
                 .padding(horizontal = 16.dp),
             text = title,
             textAlign = TextAlign.Center,
-            maxLines = 1,
+            maxLines = 2,
             overflow = TextOverflow.Ellipsis,
             style = MaterialTheme.typography.h3.copy(fontWeight = FontWeight.Bold),
             color = MaterialTheme.colors.primaryVariant

@@ -172,3 +172,11 @@ fun UserQuizzesDto.toUserQuizzes(): UserQuizzes {
         } as ArrayList<UserQuizzesDetail>
     )
 }
+
+fun UpdateQuizBody.toUpdateQuizBodyDto(): UpdateQuizBodyDto {
+    return UpdateQuizBodyDto(
+        id = id,
+        title = title,
+        description = description
+    )
+}

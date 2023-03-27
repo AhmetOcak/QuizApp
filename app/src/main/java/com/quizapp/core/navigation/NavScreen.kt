@@ -17,4 +17,5 @@ sealed class NavScreen(val route: String) {
     object UpdatePasswordScreen : NavScreen(route = NavRoutes.update_password_screen)
     object UpdateProfileScreen : NavScreen(route = NavRoutes.update_profile_screen)
     object DeleteAccountScreen : NavScreen(route = NavRoutes.delete_account_screen)
+    object UpdateQuizScreen : NavScreen(route = NavRoutes.update_quiz_screen)
 }

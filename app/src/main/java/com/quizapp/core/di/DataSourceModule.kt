@@ -4,6 +4,10 @@ import com.quizapp.data.datasource.remote.auth.AuthRemoteDataSource
 import com.quizapp.data.datasource.remote.auth.AuthRemoteDataSourceImpl
 import com.quizapp.data.datasource.remote.confirm_account.ConfirmAccountRemoteDataSource
 import com.quizapp.data.datasource.remote.confirm_account.ConfirmAccountRemoteDataSourceImpl
+import com.quizapp.data.datasource.remote.option.OptionRemoteDataSource
+import com.quizapp.data.datasource.remote.option.OptionRemoteDataSourceImpl
+import com.quizapp.data.datasource.remote.question.QuestionRemoteDataSource
+import com.quizapp.data.datasource.remote.question.QuestionRemoteDataSourceImpl
 import com.quizapp.data.datasource.remote.quiz.QuizRemoteDataSource
 import com.quizapp.data.datasource.remote.quiz.QuizRemoteDataSourceImpl
 import com.quizapp.data.datasource.remote.reset_password.ResetPasswordRemoteDataSource
@@ -39,4 +43,12 @@ abstract class DataSourceModule {
     @Binds
     @Singleton
     abstract fun bindUserRemoteDataSource(userRemoteDataSourceImpl: UserRemoteDataSourceImpl): UserRemoteDataSource
+
+    @Binds
+    @Singleton
+    abstract fun bindQuestionRemoteDataSource(questionRemoteDataSourceImpl: QuestionRemoteDataSourceImpl): QuestionRemoteDataSource
+
+    @Binds
+    @Singleton
+    abstract fun bindOptionRemoteDataSource(optionRemoteDataSourceImpl: OptionRemoteDataSourceImpl): OptionRemoteDataSource
 }

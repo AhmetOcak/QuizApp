@@ -55,3 +55,11 @@ object QuizScoreMessages {
     const val NOT_BAD_MESSAGE = "You should work a little more. You can do better"
     const val BAD_MESSAGE = "Disappointment..."
 }
+
+object UpdateQuizBottomSheetSubTitles {
+    const val TITLE = "Quiz Title"
+    const val DESCR = "Quiz Description"
+    const val QUEST_TITLE = "Question Title"
+    const val QUEST_DESCR = "Question Description"
+    const val OPTION = "Option"
+}

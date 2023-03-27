@@ -28,6 +28,7 @@ object NavRoutes {
     const val update_password_screen = "update_password_screen"
     const val update_profile_screen = "update_profile_screen"
     const val delete_account_screen = "delete_account_screen"
+    const val update_quiz_screen = "${NavNames.update_quiz_screen}/{${UpdateQuizScreenArgs.ID}}/{${UpdateQuizScreenArgs.TITLE}}/{${UpdateQuizScreenArgs.DESCR}}"
 }
 
 object NavNames {
@@ -37,6 +38,7 @@ object NavNames {
     const val quiz_screen = "quiz_screen"
     const val quiz_result_screen = "quiz_result_screen"
     const val edit_profile_screen = "edit_profile_screen"
+    const val update_quiz_screen = "update_quiz_screen"
 }
 
 object BottomNavItems {
@@ -85,4 +87,10 @@ object QuizResultScreenArgs {
     const val QUIZ_START_HOUR = "quizStartHour"
     const val QUIZ_START_MIN = "quizStartMinute"
     const val QUIZ_START_SEC = "quizStartSeconds"
+}
+
+object UpdateQuizScreenArgs {
+    const val ID = "quizId"
+    const val TITLE = "quizTitle"
+    const val DESCR = "quizDescription"
 }

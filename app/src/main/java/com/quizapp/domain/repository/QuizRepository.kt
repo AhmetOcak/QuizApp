@@ -24,4 +24,6 @@ interface QuizRepository {
     suspend fun finishQuiz(answers: FinishQuizBody, token: String) : QuizResult
 
     suspend fun getUserQuizzes(token: String) : UserQuizzes
+
+    suspend fun updateQuiz(token: String, body: UpdateQuizBody)
 }

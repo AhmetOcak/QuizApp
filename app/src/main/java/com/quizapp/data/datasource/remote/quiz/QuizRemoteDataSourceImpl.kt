@@ -4,8 +4,7 @@ import com.quizapp.data.datasource.remote.quiz.api.QuizApi
 import com.quizapp.data.datasource.remote.quiz.entity.*
 import javax.inject.Inject
 
-class QuizRemoteDataSourceImpl @Inject constructor(private val api: QuizApi) :
-    QuizRemoteDataSource {
+class QuizRemoteDataSourceImpl @Inject constructor(private val api: QuizApi) : QuizRemoteDataSource {
 
     override suspend fun getQuizList(quizzesQueryDto: QuizzesQueryDto): QuizzesDto =
         api.getQuizList(page = quizzesQueryDto.page, pageSize = quizzesQueryDto.pageSize)
@@ -35,5 +34,8 @@ class QuizRemoteDataSourceImpl @Inject constructor(private val api: QuizApi) :
 
     override suspend fun getUserQuizzes(token: String): UserQuizzesDto =
         api.getUserQuizzes(token = token)
+
+    override suspend fun updateQuiz(token: String, body: UpdateQuizBodyDto) =
+        api.updateQuiz(token = token, body = body)
 
 }

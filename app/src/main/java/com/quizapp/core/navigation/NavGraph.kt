@@ -48,6 +48,7 @@ import com.quizapp.presentation.register.RegisterScreen
 import com.quizapp.presentation.signin.SignInScreen
 import com.quizapp.presentation.update_password.UpdatePasswordScreen
 import com.quizapp.presentation.update_profile.UpdateProfileScreen
+import com.quizapp.presentation.update_quiz.UpdateQuizScreen
 import com.quizapp.presentation.utils.Dimens
 
 @RequiresApi(Build.VERSION_CODES.P)
@@ -55,7 +56,7 @@ import com.quizapp.presentation.utils.Dimens
 @Composable
 fun NavGraph(
     modifier: Modifier = Modifier,
-    startDestination: String = NavScreen.ProfileScreen.route
+    startDestination: String = NavScreen.SignInScreen.route
 ) {
     val navController = rememberAnimatedNavController()
     val navBackStackEntry by navController.currentBackStackEntryAsState()
@@ -201,6 +202,17 @@ fun NavGraph(
                 }
                 composable(route = NavScreen.DeleteAccountScreen.route) {
                     DeleteAccountScreen()
+                    showFab = false
+                }
+                composable(
+                    route = NavScreen.UpdateQuizScreen.route,
+                    arguments = listOf(
+                        navArgument(UpdateQuizScreenArgs.ID) { type = NavType.StringType },
+                        navArgument(UpdateQuizScreenArgs.TITLE) { type = NavType.StringType },
+                        navArgument(UpdateQuizScreenArgs.DESCR) { type = NavType.StringType }
+                    )
+                ) {
+                    UpdateQuizScreen()
                     showFab = false
                 }
             }
