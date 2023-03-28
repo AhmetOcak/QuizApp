@@ -1,6 +1,7 @@
 package com.quizapp.data.datasource.remote.user
 
 import com.quizapp.data.datasource.remote.user.api.UserApi
+import com.quizapp.data.datasource.remote.user.entity.LeaderboardDto
 import com.quizapp.data.datasource.remote.user.entity.UpdatePasswordBodyDto
 import com.quizapp.data.datasource.remote.user.entity.UpdateProfileBodyDto
 import com.quizapp.data.datasource.remote.user.entity.UserProfileDto
@@ -23,4 +24,7 @@ class UserRemoteDataSourceImpl @Inject constructor(private val api: UserApi) : U
         api.uploadProfilePicture(token = token, file = file)
 
     override suspend fun deleteAccount(userId: String) = api.deleteAccount(userId = userId)
+
+    override suspend fun getLeaderboard(): ArrayList<LeaderboardDto> =
+        api.getLeaderboard()
 }

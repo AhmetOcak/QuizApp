@@ -1,5 +1,6 @@
 package com.quizapp.data.datasource.remote.user.api
 
+import com.quizapp.data.datasource.remote.user.entity.LeaderboardDto
 import com.quizapp.data.datasource.remote.user.entity.UpdatePasswordBodyDto
 import com.quizapp.data.datasource.remote.user.entity.UpdateProfileBodyDto
 import com.quizapp.data.datasource.remote.user.entity.UserProfileDto
@@ -34,4 +35,7 @@ interface UserApi {
     suspend fun deleteAccount(
         @Query("userId") userId: String
     )
+
+    @GET("api/Users/GetLeaderboard")
+    suspend fun getLeaderboard(): ArrayList<LeaderboardDto>
 }

@@ -1,5 +1,6 @@
 package com.quizapp.domain.repository
 
+import com.quizapp.domain.model.user.Leaderboard
 import com.quizapp.domain.model.user.UpdatePasswordBody
 import com.quizapp.domain.model.user.UpdateProfileBody
 import com.quizapp.domain.model.user.UserProfile
@@ -16,4 +17,6 @@ interface UserRepository {
     suspend fun uploadProfilePicture(token: String, file: MultipartBody.Part)
 
     suspend fun deleteAccount(userId: String)
+
+    suspend fun getLeaderboard(): ArrayList<Leaderboard>
 }

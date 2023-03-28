@@ -1,5 +1,6 @@
 package com.quizapp.data.datasource.remote.user
 
+import com.quizapp.data.datasource.remote.user.entity.LeaderboardDto
 import com.quizapp.data.datasource.remote.user.entity.UpdatePasswordBodyDto
 import com.quizapp.data.datasource.remote.user.entity.UpdateProfileBodyDto
 import com.quizapp.data.datasource.remote.user.entity.UserProfileDto
@@ -16,4 +17,6 @@ interface UserRemoteDataSource {
     suspend fun uploadProfilePicture(token: String, file: MultipartBody.Part)
 
     suspend fun deleteAccount(userId: String)
+
+    suspend fun getLeaderboard(): ArrayList<LeaderboardDto>
 }
