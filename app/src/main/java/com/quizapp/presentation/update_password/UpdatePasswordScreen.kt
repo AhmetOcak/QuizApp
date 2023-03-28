@@ -3,7 +3,10 @@ package com.quizapp.presentation.update_password
 import android.annotation.SuppressLint
 import android.widget.Toast
 import androidx.compose.foundation.layout.*
+import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Scaffold
+import androidx.compose.material.Text
+import androidx.compose.material.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -11,6 +14,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.quizapp.core.ui.component.CustomLoadingSpinner
@@ -45,12 +49,7 @@ private fun UpdatePasswordScreenContent(
 ) {
     Scaffold(
         modifier = modifier.fillMaxSize(),
-        topBar = {
-            CustomTopBarTitle(
-                modifier = modifier.fillMaxWidth(),
-                title = "Update Password"
-            )
-        }
+        topBar = { Title(modifier = modifier) }
     ) {
         Column(
             modifier = modifier
@@ -67,6 +66,23 @@ private fun UpdatePasswordScreenContent(
             )
         }
     }
+}
+
+@Composable
+private fun Title(modifier: Modifier) {
+    TopAppBar(
+        modifier = modifier.fillMaxWidth(),
+        backgroundColor = MaterialTheme.colors.background,
+        title = {
+            Text(
+                modifier = modifier.fillMaxWidth(),
+                text = "Update Password",
+                color = MaterialTheme.colors.primaryVariant,
+                style = MaterialTheme.typography.h1,
+                textAlign = TextAlign.Center
+            )
+        }
+    )
 }
 
 @Composable
