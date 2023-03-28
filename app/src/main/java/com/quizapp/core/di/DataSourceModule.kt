@@ -2,6 +2,8 @@ package com.quizapp.core.di
 
 import com.quizapp.data.datasource.remote.auth.AuthRemoteDataSource
 import com.quizapp.data.datasource.remote.auth.AuthRemoteDataSourceImpl
+import com.quizapp.data.datasource.remote.category.CategoriesRemoteDataSource
+import com.quizapp.data.datasource.remote.category.CategoriesRemoteDataSourceImp
 import com.quizapp.data.datasource.remote.confirm_account.ConfirmAccountRemoteDataSource
 import com.quizapp.data.datasource.remote.confirm_account.ConfirmAccountRemoteDataSourceImpl
 import com.quizapp.data.datasource.remote.option.OptionRemoteDataSource
@@ -51,4 +53,8 @@ abstract class DataSourceModule {
     @Binds
     @Singleton
     abstract fun bindOptionRemoteDataSource(optionRemoteDataSourceImpl: OptionRemoteDataSourceImpl): OptionRemoteDataSource
+
+    @Binds
+    @Singleton
+    abstract fun bindCategoriesRemoteDataSource(categoriesRemoteDataSourceImpl: CategoriesRemoteDataSourceImp): CategoriesRemoteDataSource
 }

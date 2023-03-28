@@ -3,10 +3,10 @@ package com.quizapp.presentation.home
 import android.annotation.SuppressLint
 import android.app.Activity
 import androidx.compose.foundation.*
-import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
@@ -22,6 +22,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
@@ -30,23 +31,31 @@ import com.quizapp.core.common.loadImage
 import com.quizapp.core.ui.component.CustomLoadingSpinner
 import com.quizapp.core.ui.component.OnBackPressed
 import com.quizapp.core.ui.theme.*
-import com.quizapp.domain.model.auth.User
 import com.quizapp.presentation.utils.Dimens
 
 @Composable
 fun HomeScreen(modifier: Modifier = Modifier, viewModel: HomeViewModel = hiltViewModel()) {
 
     val userState by viewModel.userState.collectAsState()
+    val categoriesState by viewModel.categoriesState.collectAsState()
 
     val activity = LocalContext.current as Activity
     OnBackPressed(activity = activity)
 
-    HomeScreenContent(modifier = modifier, userState = userState)
+    HomeScreenContent(
+        modifier = modifier,
+        userState = userState,
+        categoriesState = categoriesState
+    )
 }
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
-private fun HomeScreenContent(modifier: Modifier, userState: UserState) {
+private fun HomeScreenContent(
+    modifier: Modifier,
+    userState: UserState,
+    categoriesState: CategoriesState
+) {
     Column(
         modifier = modifier
             .fillMaxSize()
@@ -62,7 +71,7 @@ private fun HomeScreenContent(modifier: Modifier, userState: UserState) {
             TopBarSection(modifier = modifier, userState = userState)
             PopularQuizzesSection(modifier = modifier)
         }
-        QuizCategoriesSection(modifier = modifier)
+        QuizCategoriesSection(modifier = modifier, categoriesState = categoriesState)
     }
 }
 
@@ -82,7 +91,10 @@ private fun TopBarSection(modifier: Modifier, userState: UserState) {
                 }
             }
             is UserState.Success -> {
-                ProfileImage(modifier = modifier, userProfileImage = userState.data.profilePictureUrl)
+                ProfileImage(
+                    modifier = modifier,
+                    userProfileImage = userState.data.profilePictureUrl
+                )
                 UserNameLevel(modifier = modifier, userName = userState.data.userName)
                 Notification(modifier = modifier)
             }
@@ -215,7 +227,7 @@ private fun PopularQuizzesSection(modifier: Modifier) {
 }
 
 @Composable
-private fun QuizCategoriesSection(modifier: Modifier) {
+private fun QuizCategoriesSection(modifier: Modifier, categoriesState: CategoriesState) {
     Column(
         modifier = modifier
             .fillMaxWidth()
@@ -228,17 +240,59 @@ private fun QuizCategoriesSection(modifier: Modifier) {
                 color = MaterialTheme.colors.primaryVariant
             )
         )
-        // 56.dp added (offset image value)
-        LazyColumn(
-            contentPadding = PaddingValues(
-                top = 72.dp,
-                bottom = 72.dp + Dimens.AppBarDefaultHeight
-            ),
-            verticalArrangement = Arrangement.spacedBy(64.dp),
-        ) {
-            items(5) {
-                CategoryCard(modifier = modifier, onClick = {})
+        when (categoriesState) {
+            is CategoriesState.Loading -> {
+                Box(modifier = modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
+                    CustomLoadingSpinner()
+                }
             }
+            is CategoriesState.Success -> {
+                // 56.dp added (offset image value)
+                LazyColumn(
+                    contentPadding = PaddingValues(
+                        top = 72.dp,
+                        bottom = 72.dp + Dimens.AppBarDefaultHeight
+                    ),
+                    verticalArrangement = Arrangement.spacedBy(64.dp),
+                ) {
+                    items(categoriesState.data.categories) {
+                        CategoryCard(
+                            modifier = modifier,
+                            onClick = {},
+                            categoryName = it.categoryName
+                        )
+                    }
+                }
+            }
+            is CategoriesState.Error -> {
+                CategoriesError(modifier = modifier, errorMessage = categoriesState.errorMessage)
+            }
+        }
+    }
+}
+
+@Composable
+private fun CategoriesError(modifier: Modifier, errorMessage: String) {
+    Box(modifier = modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
+        Column(
+            modifier.fillMaxWidth(),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center
+        ) {
+            Image(
+                modifier = modifier.size(96.dp),
+                painter = painterResource(id = R.drawable.error_image),
+                contentDescription = null
+            )
+            Text(
+                modifier = modifier
+                    .fillMaxWidth()
+                    .padding(top = 16.dp),
+                text = errorMessage,
+                style = MaterialTheme.typography.h2.copy(fontWeight = FontWeight.SemiBold),
+                color = MaterialTheme.colors.primaryVariant,
+                textAlign = TextAlign.Center
+            )
         }
     }
 }
@@ -338,7 +392,7 @@ private fun QuizCardButton(modifier: Modifier, onClick: () -> Unit) {
 }
 
 @Composable
-private fun CategoryCard(modifier: Modifier, onClick: () -> Unit) {
+private fun CategoryCard(modifier: Modifier, onClick: () -> Unit, categoryName: String) {
     Box {
         Card(
             modifier = modifier
@@ -348,7 +402,7 @@ private fun CategoryCard(modifier: Modifier, onClick: () -> Unit) {
             shape = RoundedCornerShape(25)
         ) {
             QuizCardBackground(modifier = modifier, isQuizCard = false)
-            CategoryInterface(modifier = modifier, categoryName = "Literature", onClick = onClick)
+            CategoryInterface(modifier = modifier, categoryName = categoryName, onClick = onClick)
         }
         CategoryImage(modifier = modifier, image = R.drawable.books)
     }

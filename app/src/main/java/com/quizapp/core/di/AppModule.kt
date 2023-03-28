@@ -1,6 +1,7 @@
 package com.quizapp.core.di
 
 import com.quizapp.data.datasource.remote.auth.api.AuthApi
+import com.quizapp.data.datasource.remote.category.api.CategoryApi
 import com.quizapp.data.datasource.remote.confirm_account.api.ConfirmAccountApi
 import com.quizapp.data.datasource.remote.option.api.OptionApi
 import com.quizapp.data.datasource.remote.question.api.QuestionApi
@@ -24,7 +25,7 @@ import javax.net.ssl.SSLSocketFactory
 import javax.net.ssl.TrustManager
 import javax.net.ssl.X509TrustManager
 
-const val BASE_URL = "https://10.0.2.2:7250"
+const val BASE_URL = "https://192.168.1.11:7250"
 
 @Module
 @InstallIn(SingletonComponent::class)
@@ -105,6 +106,17 @@ object AppModule {
             .client(getUnsafeOkHttpClient().build())
             .build()
             .create(OptionApi::class.java)
+    }
+
+    @Provides
+    @Singleton
+    fun provideCategoryApi(): CategoryApi {
+        return Retrofit.Builder()
+            .baseUrl(BASE_URL)
+            .addConverterFactory(GsonConverterFactory.create())
+            .client(getUnsafeOkHttpClient().build())
+            .build()
+            .create(CategoryApi::class.java)
     }
 }
 
