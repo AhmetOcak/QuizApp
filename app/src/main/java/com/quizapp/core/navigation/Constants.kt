@@ -29,6 +29,7 @@ object NavRoutes {
     const val update_profile_screen = "update_profile_screen"
     const val delete_account_screen = "delete_account_screen"
     const val update_quiz_screen = "${NavNames.update_quiz_screen}/{${UpdateQuizScreenArgs.ID}}/{${UpdateQuizScreenArgs.TITLE}}/{${UpdateQuizScreenArgs.DESCR}}"
+    const val contact_us_screen = "contact_us_screen"
 }
 
 object NavNames {

@@ -24,9 +24,6 @@ import com.quizapp.core.common.loadImage
 import com.quizapp.core.navigation.NavScreen
 import com.quizapp.core.navigation.Navigator
 import com.quizapp.core.ui.component.CustomTopBarTitle
-import com.quizapp.core.ui.component.OtfCustom
-import com.quizapp.core.ui.component.OutBtnCustom
-import com.quizapp.presentation.utils.Dimens
 import com.quizapp.presentation.utils.EditProfileScreenPreferencesNames
 
 private val SETTINGS_PROFILE_IMG_SIZE = 108.dp
@@ -37,12 +34,6 @@ fun EditProfileScreen(
     modifier: Modifier = Modifier,
     viewModel: EditProfileViewModel = hiltViewModel()
 ) {
-
-    BackHandler(viewModel.currentSection != Sections.PROFILE) {
-        viewModel.updateCurrentSection(Sections.PROFILE)
-        viewModel.setTopBarTitle()
-    }
-
     BackHandler {
         Navigator.navigate(NavScreen.ProfileScreen.route)
     }
@@ -67,33 +58,26 @@ private fun EditProfileScreenContent(
     ) {
         CustomTopBarTitle(
             modifier = modifier,
-            title = viewModel.topBarTitle
+            title = "Edit Profile"
         )
     }
     Column(
         modifier = modifier.fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        when (viewModel.currentSection) {
-            Sections.PROFILE -> {
-                ProfileSection(
-                    modifier = modifier,
-                    userName = viewModel.userName,
-                    userImage = viewModel.profilePicture,
-                    firstName = viewModel.firstName,
-                    lastName = viewModel.lastName,
-                    onEditProfileClick = {
-                        Navigator.navigate(NavScreen.UpdateProfileScreen.route)
-                    },
-                    onPreferenceClick = {
-                        viewModel.setPreferenceOnClick(it)
-                    }
-                )
+        ProfileSection(
+            modifier = modifier,
+            userName = viewModel.userName,
+            userImage = viewModel.profilePicture,
+            firstName = viewModel.firstName,
+            lastName = viewModel.lastName,
+            onEditProfileClick = {
+                Navigator.navigate(NavScreen.UpdateProfileScreen.route)
+            },
+            onPreferenceClick = {
+                viewModel.setPreferenceOnClick(it)
             }
-            Sections.CONTACT_US -> {
-                ContactUsSection(modifier = modifier)
-            }
-        }
+        )
     }
 }
 
@@ -250,57 +234,6 @@ private fun ProfileImage(modifier: Modifier, userImage: String) {
         contentDescription = null,
         contentScale = ContentScale.Crop
     )
-}
-
-@Composable
-private fun ContactUsSection(modifier: Modifier) {
-    Column(
-        modifier = modifier
-            .fillMaxSize()
-            .padding(horizontal = 16.dp)
-            .padding(top = Dimens.AppBarDefaultHeight + 16.dp),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center
-    ) {
-        Input(modifier = modifier)
-        OutBtnCustom(
-            modifier = modifier
-                .fillMaxWidth()
-                .padding(top = 32.dp),
-            onClick = { },
-            buttonText = "Send"
-        )
-    }
-}
-
-// Created for ContactUsSection
-@Composable
-private fun Input(modifier: Modifier) {
-    Column(
-        modifier = modifier
-            .fillMaxWidth()
-            .padding(top = 32.dp),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.spacedBy(16.dp)
-    ) {
-        OtfCustom(
-            modifier = modifier.fillMaxWidth(),
-            onValueChanged = {},
-            placeHolderText = "Name"
-        )
-        OtfCustom(
-            modifier = modifier.fillMaxWidth(),
-            onValueChanged = {},
-            placeHolderText = "Subject"
-        )
-        OtfCustom(
-            modifier = modifier
-                .fillMaxWidth()
-                .height(144.dp),
-            onValueChanged = {},
-            placeHolderText = "Message"
-        )
-    }
 }
 
 data class PreferenceModel(

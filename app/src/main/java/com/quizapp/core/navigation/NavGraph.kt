@@ -33,6 +33,7 @@ import com.quizapp.core.ui.theme.Black
 import com.quizapp.core.ui.theme.TransparentWhite
 import com.quizapp.domain.model.quiz.QuizResult
 import com.quizapp.presentation.confirm_account.ConfirmAccountScreen
+import com.quizapp.presentation.contact_us.ContactUsScreen
 import com.quizapp.presentation.create_quiz.CreateQuizScreen
 import com.quizapp.presentation.delete_account.DeleteAccountScreen
 import com.quizapp.presentation.edit_profile.EditProfileScreen
@@ -56,7 +57,7 @@ import com.quizapp.presentation.utils.Dimens
 @Composable
 fun NavGraph(
     modifier: Modifier = Modifier,
-    startDestination: String = NavScreen.SignInScreen.route
+    startDestination: String = NavScreen.ProfileScreen.route
 ) {
     val navController = rememberAnimatedNavController()
     val navBackStackEntry by navController.currentBackStackEntryAsState()
@@ -213,6 +214,12 @@ fun NavGraph(
                     )
                 ) {
                     UpdateQuizScreen()
+                    showFab = false
+                }
+                composable(
+                    route = NavScreen.ContactUsScreen.route,
+                ) {
+                    ContactUsScreen()
                     showFab = false
                 }
             }

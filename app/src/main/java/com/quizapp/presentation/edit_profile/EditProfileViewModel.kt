@@ -14,21 +14,12 @@ import com.quizapp.presentation.utils.EditProfileScreenPreferencesNames
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
-enum class Sections {
-    PROFILE,
-    CONTACT_US
-}
 
 @HiltViewModel
 class EditProfileViewModel @Inject constructor(
     private val sharedPreferences: SharedPreferences,
     savedStateHandle: SavedStateHandle
 ) : ViewModel() {
-
-    var currentSection by mutableStateOf(Sections.PROFILE)
-        private set
-    var topBarTitle by mutableStateOf("Profile")
-        private set
 
     var firstName by mutableStateOf("")
         private set
@@ -46,15 +37,6 @@ class EditProfileViewModel @Inject constructor(
         profilePicture = savedStateHandle[EditProfileScreenArgs.USER_PROFILE_IMG] ?: ""
     }
 
-    fun updateCurrentSection(newSection: Sections) { currentSection = newSection }
-
-    fun setTopBarTitle() {
-        topBarTitle = when(currentSection) {
-            Sections.PROFILE -> { "Profile" }
-            Sections.CONTACT_US -> { "Contact Us" }
-        }
-    }
-
     fun setPreferenceOnClick(preferenceName: String) {
         when(preferenceName) {
             EditProfileScreenPreferencesNames.LANGUAGE -> { }
@@ -64,8 +46,7 @@ class EditProfileViewModel @Inject constructor(
                 Navigator.navigate(NavScreen.UpdatePasswordScreen.route) {}
             }
             EditProfileScreenPreferencesNames.CONTACT_US -> {
-                updateCurrentSection(Sections.CONTACT_US)
-                setTopBarTitle()
+                Navigator.navigate(NavScreen.ContactUsScreen.route) {}
             }
             EditProfileScreenPreferencesNames.DELETE_ACCOUNT -> {
                 Navigator.navigate(NavScreen.DeleteAccountScreen.route) {}
