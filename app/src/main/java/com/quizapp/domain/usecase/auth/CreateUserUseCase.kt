@@ -1,5 +1,6 @@
 package com.quizapp.domain.usecase.auth
 
+import android.util.Log
 import com.quizapp.core.common.Response
 import com.quizapp.core.common.getErrorMessage
 import com.quizapp.domain.model.auth.User
@@ -23,6 +24,7 @@ class CreateUserUseCase @Inject constructor(private val authRepository: AuthRepo
             )
         } catch (e: IOException) {
             emit(Response.Error(errorMessage = Messages.INTERNET))
+            Log.e("CreateUserUseCase.kt", e.stackTraceToString())
         } catch (e: HttpException) {
             val errorMessage = e.getErrorMessage()
             if (errorMessage != null) {
@@ -30,8 +32,10 @@ class CreateUserUseCase @Inject constructor(private val authRepository: AuthRepo
             } else {
                 emit(Response.Error(errorMessage = Messages.UNKNOWN))
             }
+            Log.e("CreateUserUseCase.kt", e.stackTraceToString())
         } catch (e: Exception) {
             emit(Response.Error(errorMessage = e.message ?: Messages.UNKNOWN))
+            Log.e("CreateUserUseCase.kt", e.stackTraceToString())
         }
     }
 }

@@ -21,19 +21,18 @@ class UploadProfilePictureUseCase @Inject constructor(private val repository: Us
             emit(Response.Success(data = repository.uploadProfilePicture(token, filePart)))
         } catch (e: IOException) {
             emit(Response.Error(errorMessage = Messages.INTERNET))
-            Log.e("upload profile error", e.stackTraceToString())
+            Log.e("UploadProfilePictureUseCase.kt", e.stackTraceToString())
         } catch (e: HttpException) {
             val errorMessage = e.getErrorMessage()
             if (errorMessage != null) {
                 emit(Response.Error(errorMessage = errorMessage))
-                Log.e("upload profile error", e.stackTraceToString())
             } else {
                 emit(Response.Error(errorMessage = Messages.UNKNOWN))
-                Log.e("upload profile error", e.stackTraceToString())
             }
+            Log.e("UploadProfilePictureUseCase.kt", e.stackTraceToString())
         } catch (e: Exception) {
             emit(Response.Error(errorMessage = e.message ?: Messages.UNKNOWN))
-            Log.e("upload profile error", e.stackTraceToString())
+            Log.e("UploadProfilePictureUseCase.kt", e.stackTraceToString())
         }
     }
 }

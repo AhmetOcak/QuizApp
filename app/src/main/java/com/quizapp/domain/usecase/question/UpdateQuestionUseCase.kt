@@ -21,19 +21,18 @@ class UpdateQuestionUseCase @Inject constructor(private val repository: Question
             emit(Response.Success(data = repository.updateQuestion(token, body)))
         } catch (e: IOException) {
             emit(Response.Error(errorMessage = Messages.INTERNET))
-            Log.e("update question error", e.stackTraceToString())
+            Log.e("UpdateQuestionUseCase.kt", e.stackTraceToString())
         } catch (e: HttpException) {
             val errorMessage = e.getErrorMessage()
             if (errorMessage != null) {
                 emit(Response.Error(errorMessage = errorMessage))
-                Log.e("update question error", e.stackTraceToString())
             } else {
                 emit(Response.Error(errorMessage = Messages.UNKNOWN))
-                Log.e("update question error", e.stackTraceToString())
             }
+            Log.e("UpdateQuestionUseCase.kt", e.stackTraceToString())
         } catch (e: Exception) {
             emit(Response.Error(errorMessage = e.message ?: Messages.UNKNOWN))
-            Log.e("update question error", e.stackTraceToString())
+            Log.e("UpdateQuestionUseCase.kt", e.stackTraceToString())
         }
     }
 }

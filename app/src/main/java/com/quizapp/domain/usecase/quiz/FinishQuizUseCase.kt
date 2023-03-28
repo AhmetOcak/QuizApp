@@ -22,19 +22,18 @@ class FinishQuizUseCase @Inject constructor(private val repository: QuizReposito
             emit(Response.Success(data = repository.finishQuiz(answers, token)))
         } catch (e: IOException) {
             emit(Response.Error(errorMessage = Messages.INTERNET))
-            Log.e("finish quiz error", e.stackTraceToString())
+            Log.e("FinishQuizUseCase.kt", e.stackTraceToString())
         } catch (e: HttpException) {
             val errorMessage = e.getErrorMessage()
             if (errorMessage != null) {
                 emit(Response.Error(errorMessage = errorMessage))
-                Log.e("finish quiz error", e.stackTraceToString())
             } else {
                 emit(Response.Error(errorMessage = Messages.UNKNOWN))
-                Log.e("finish quiz error", e.stackTraceToString())
             }
+            Log.e("FinishQuizUseCase.kt", e.stackTraceToString())
         } catch (e: Exception) {
             emit(Response.Error(errorMessage = e.message ?: Messages.UNKNOWN))
-            Log.e("finish quiz error", e.stackTraceToString())
+            Log.e("FinishQuizUseCase.kt", e.stackTraceToString())
         }
     }
 }

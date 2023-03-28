@@ -22,19 +22,18 @@ class SendPasswordResetMailUseCase @Inject constructor(private val repository: R
                 emit(Response.Success(data = repository.sendPasswordResetMail(sendPasswordResetMail)))
             } catch (e: IOException) {
                 emit(Response.Error(errorMessage = Messages.INTERNET))
-                Log.e("send reset password mail", e.stackTraceToString())
+                Log.e("SendPasswordResetMailUseCase.kt", e.stackTraceToString())
             } catch (e: HttpException) {
                 val errorMessage = e.getErrorMessage()
                 if (errorMessage != null) {
                     emit(Response.Error(errorMessage = errorMessage))
-                    Log.e("send reset password mail", e.stackTraceToString())
                 } else {
                     emit(Response.Error(errorMessage = Messages.UNKNOWN))
-                    Log.e("send reset password mail", e.stackTraceToString())
                 }
+                Log.e("SendPasswordResetMailUseCase.kt", e.stackTraceToString())
             } catch (e: Exception) {
                 emit(Response.Error(errorMessage = e.message ?: Messages.UNKNOWN))
-                Log.e("send reset password mail", e.stackTraceToString())
+                Log.e("SendPasswordResetMailUseCase.kt", e.stackTraceToString())
             }
         }
 }

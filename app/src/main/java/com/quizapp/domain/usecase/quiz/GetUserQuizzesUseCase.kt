@@ -21,19 +21,18 @@ class GetUserQuizzesUseCase @Inject constructor(private val repository: QuizRepo
             emit(Response.Success(data = repository.getUserQuizzes(token)))
         } catch (e: IOException) {
             emit(Response.Error(errorMessage = Messages.INTERNET))
-            Log.e("get user quizzes error", e.stackTraceToString())
+            Log.e("GetUserQuizzesUseCase.kt", e.stackTraceToString())
         } catch (e: HttpException) {
             val errorMessage = e.getErrorMessage()
             if (errorMessage != null) {
                 emit(Response.Error(errorMessage = errorMessage))
-                Log.e("get user quizzes error", e.stackTraceToString())
             } else {
                 emit(Response.Error(errorMessage = Messages.UNKNOWN))
-                Log.e("get user quizzes error", e.stackTraceToString())
             }
+            Log.e("GetUserQuizzesUseCase.kt", e.stackTraceToString())
         } catch (e: Exception) {
             emit(Response.Error(errorMessage = e.message ?: Messages.UNKNOWN))
-            Log.e("get user quizzes error", e.stackTraceToString())
+            Log.e("GetUserQuizzesUseCase.kt", e.stackTraceToString())
         }
     }
 }

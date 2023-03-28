@@ -21,19 +21,18 @@ class UpdateAnswerUseCase @Inject constructor(private val repository: OptionRepo
             emit(Response.Success(data = repository.updateAnswer(token, body)))
         } catch (e: IOException) {
             emit(Response.Error(errorMessage = Messages.INTERNET))
-            Log.e("update answer error", e.stackTraceToString())
+            Log.e("UpdateAnswerUseCase.kt", e.stackTraceToString())
         } catch (e: HttpException) {
             val errorMessage = e.getErrorMessage()
             if (errorMessage != null) {
                 emit(Response.Error(errorMessage = errorMessage))
-                Log.e("update answer error", e.stackTraceToString())
             } else {
                 emit(Response.Error(errorMessage = Messages.UNKNOWN))
-                Log.e("update answer error", e.stackTraceToString())
             }
+            Log.e("UpdateAnswerUseCase.kt", e.stackTraceToString())
         } catch (e: Exception) {
             emit(Response.Error(errorMessage = e.message ?: Messages.UNKNOWN))
-            Log.e("update answer error", e.stackTraceToString())
+            Log.e("UpdateAnswerUseCase.kt", e.stackTraceToString())
         }
     }
 }

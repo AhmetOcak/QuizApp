@@ -22,18 +22,18 @@ class SignInUseCase @Inject constructor(private val authRepository: AuthReposito
             emit(Response.Success(data = authRepository.signIn(login = login)))
         } catch (e: IOException) {
             emit(Response.Error(errorMessage = Messages.INTERNET))
+            Log.e("SignInUseCase.kt", e.stackTraceToString())
         } catch (e: HttpException) {
             val errorMessage = e.getErrorMessage()
             if (errorMessage != null) {
                 emit(Response.Error(errorMessage = errorMessage))
-                Log.e("sign in error", e.stackTraceToString())
             } else {
                 emit(Response.Error(errorMessage = Messages.UNKNOWN))
-                Log.e("sign in error", e.stackTraceToString())
             }
+            Log.e("SignInUseCase.kt", e.stackTraceToString())
         } catch (e: Exception) {
             emit(Response.Error(errorMessage = e.message ?: Messages.UNKNOWN))
-            Log.e("sign in error", e.stackTraceToString())
+            Log.e("SignInUseCase.kt", e.stackTraceToString())
         }
     }
 }

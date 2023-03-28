@@ -21,19 +21,18 @@ class UpdateProfileUseCase @Inject constructor(private val repository: UserRepos
             emit(Response.Success(data = repository.updateProfile(token, updateProfileBody)))
         } catch (e: IOException) {
             emit(Response.Error(errorMessage = Messages.INTERNET))
-            Log.e("update profile error", e.stackTraceToString())
+            Log.e("UpdateProfileUseCase.kt", e.stackTraceToString())
         } catch (e: HttpException) {
             val errorMessage = e.getErrorMessage()
             if (errorMessage != null) {
                 emit(Response.Error(errorMessage = errorMessage))
-                Log.e("update profile error", e.stackTraceToString())
             } else {
                 emit(Response.Error(errorMessage = Messages.UNKNOWN))
-                Log.e("update profile error", e.stackTraceToString())
             }
+            Log.e("UpdateProfileUseCase.kt", e.stackTraceToString())
         } catch (e: Exception) {
             emit(Response.Error(errorMessage = e.message ?: Messages.UNKNOWN))
-            Log.e("update profile error", e.stackTraceToString())
+            Log.e("UpdateProfileUseCase.kt", e.stackTraceToString())
         }
     }
 }

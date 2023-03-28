@@ -21,19 +21,18 @@ class GetQuestionsUseCase @Inject constructor(private val repository: QuestionRe
             emit(Response.Success(data = repository.getQuestions(token, quizId)))
         } catch (e: IOException) {
             emit(Response.Error(errorMessage = Messages.INTERNET))
-            Log.e("get questions error", e.stackTraceToString())
+            Log.e("GetQuestionsUseCase.kt", e.stackTraceToString())
         } catch (e: HttpException) {
             val errorMessage = e.getErrorMessage()
             if (errorMessage != null) {
                 emit(Response.Error(errorMessage = errorMessage))
-                Log.e("get questions error", e.stackTraceToString())
             } else {
                 emit(Response.Error(errorMessage = Messages.UNKNOWN))
-                Log.e("get questions error", e.stackTraceToString())
             }
+            Log.e("GetQuestionsUseCase.kt", e.stackTraceToString())
         } catch (e: Exception) {
             emit(Response.Error(errorMessage = e.message ?: Messages.UNKNOWN))
-            Log.e("get questions error", e.stackTraceToString())
+            Log.e("GetQuestionsUseCase.kt", e.stackTraceToString())
         }
     }
 }

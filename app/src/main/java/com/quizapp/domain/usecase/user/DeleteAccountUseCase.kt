@@ -20,19 +20,18 @@ class DeleteAccountUseCase @Inject constructor(private val repository: UserRepos
             emit(Response.Success(data = repository.deleteAccount(userId)))
         } catch (e: IOException) {
             emit(Response.Error(errorMessage = Messages.INTERNET))
-            Log.e("delete account error", e.stackTraceToString())
+            Log.e("DeleteAccountUseCase.kt", e.stackTraceToString())
         } catch (e: HttpException) {
             val errorMessage = e.getErrorMessage()
             if (errorMessage != null) {
                 emit(Response.Error(errorMessage = errorMessage))
-                Log.e("delete account error", e.stackTraceToString())
             } else {
                 emit(Response.Error(errorMessage = Messages.UNKNOWN))
-                Log.e("delete account error", e.stackTraceToString())
             }
+            Log.e("DeleteAccountUseCase.kt", e.stackTraceToString())
         } catch (e: Exception) {
             emit(Response.Error(errorMessage = e.message ?: Messages.UNKNOWN))
-            Log.e("delete account error", e.stackTraceToString())
+            Log.e("DeleteAccountUseCase.kt", e.stackTraceToString())
         }
     }
 }
