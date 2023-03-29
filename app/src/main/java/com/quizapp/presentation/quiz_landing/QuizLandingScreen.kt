@@ -1,6 +1,7 @@
 package com.quizapp.presentation.quiz_landing
 
 import android.annotation.SuppressLint
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
@@ -41,6 +42,10 @@ fun QuizLandingScreen(
         authorUserImage = viewModel.quizAuthorUserImage,
         navigateBack = { viewModel.navigateBackScreen() }
     )
+
+    BackHandler {
+        viewModel.navigateBackScreen()
+    }
 }
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
@@ -134,7 +139,9 @@ private fun QuizAuthorNameAndCreatedDate(
         verticalAlignment = Alignment.CenterVertically
     ) {
         AsyncImage(
-            modifier = Modifier.size(48.dp).clip(CircleShape),
+            modifier = Modifier
+                .size(48.dp)
+                .clip(CircleShape),
             model = loadImage(context = LocalContext.current, imageUrl = authorUserImage),
             imageLoader = LocalContext.current.imageLoader,
             contentDescription = null,
