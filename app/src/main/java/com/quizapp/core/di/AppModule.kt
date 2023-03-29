@@ -25,7 +25,7 @@ import javax.net.ssl.SSLSocketFactory
 import javax.net.ssl.TrustManager
 import javax.net.ssl.X509TrustManager
 
-const val BASE_URL = "https://192.168.1.11:7250"
+const val BASE_URL = "https://Localhost:7250"
 
 @Module
 @InstallIn(SingletonComponent::class)
