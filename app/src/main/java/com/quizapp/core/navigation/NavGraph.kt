@@ -57,7 +57,7 @@ import com.quizapp.presentation.utils.Dimens
 @Composable
 fun NavGraph(
     modifier: Modifier = Modifier,
-    startDestination: String = NavScreen.ProfileScreen.route
+    startDestination: String = NavScreen.SignInScreen.route
 ) {
     val navController = rememberAnimatedNavController()
     val navBackStackEntry by navController.currentBackStackEntryAsState()

@@ -2,6 +2,7 @@ package com.quizapp.presentation.main
 
 import android.Manifest
 import android.content.Intent
+import android.content.SharedPreferences
 import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Build
@@ -19,27 +20,31 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.lifecycleScope
 import com.quizapp.core.common.ImageLoader
+import com.quizapp.core.common.getToken
 import com.quizapp.core.navigation.NavGraph
 import com.quizapp.core.navigation.NavNames
+import com.quizapp.core.navigation.NavScreen
 import com.quizapp.core.navigation.Navigator
 import com.quizapp.core.ui.theme.QuizAppTheme
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import java.net.URLEncoder
 import java.nio.charset.StandardCharsets
-
-//Todo: change UrlEncoder.encode function to encodeForSafe function
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
+
+    @Inject
+    lateinit var sharedPreferences : SharedPreferences
 
     private val requestPermissionLauncher = registerForActivityResult(
         ActivityResultContracts.RequestPermission()
     ) { isGranted ->
         if (isGranted) {
-            Log.i("Permission ", "Granted")
+            Log.i("MainActivity.kt", "Permission Granted")
         } else {
-            Log.i("Permission ", "Denied")
+            Log.i("MainActivity.kt", "Permission Denied")
         }
     }
 
@@ -80,15 +85,11 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colors.background
                 ) {
-                    /*if (sharedPreferences.getToken().isNullOrEmpty()) {
-                        NavGraph(sharedPreferences = sharedPreferences)
+                    if (sharedPreferences.getToken().isNullOrEmpty()) {
+                        NavGraph()
                     } else {
-                        NavGraph(
-                            startDestination = NavScreen.HomeScreen.route,
-                            sharedPreferences = sharedPreferences
-                        )
-                    }*/
-                    NavGraph()
+                        NavGraph(startDestination = NavScreen.HomeScreen.route,)
+                    }
                 }
             }
         }
@@ -125,11 +126,8 @@ class MainActivity : ComponentActivity() {
             .build().also {
                 email = appLinkData.getQueryParameter("email")
                 token = appLinkData.getQueryParameter("token")
-                Log.e("email", email.toString())
-                Log.e("token", token.toString())
 
                 val encodedToken = URLEncoder.encode(token, StandardCharsets.UTF_8.toString())
-                Log.e("encoded token", encodedToken)
 
                 lifecycleScope.launch() {
                     Navigator.navigate("${NavNames.confirm_account_screen}/${email}/${encodedToken}") {}
@@ -147,11 +145,8 @@ class MainActivity : ComponentActivity() {
             .build().also {
                 token = appLinkData.getQueryParameter("token")
                 email = appLinkData.getQueryParameter("email")
-                Log.e(" password reset token", token.toString())
-                Log.e(" password reset email", email.toString())
 
                 val encodedToken = URLEncoder.encode(token, StandardCharsets.UTF_8.toString())
-                Log.e("encoded token", encodedToken)
 
                 lifecycleScope.launch() {
                     Navigator.navigate("${NavNames.forgot_password_screen}/${email}/${encodedToken}") {}

@@ -1,5 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
+  <component name="DesignSurface">
+    <option name="filePathToZoomLevelMap">
+      <map>
+        <entry key="..\:/Users/ahmet/QuizApp/app/src/main/res/drawable/animated_home_icon.xml" value="0.1165" />
+        <entry key="..\:/Users/ahmet/QuizApp/app/src/main/res/drawable/avd_home.xml" value="0.177" />
+        <entry key="..\:/Users/ahmet/QuizApp/app/src/main/res/drawable/ic_baseline_check.xml" value="0.17" />
+        <entry key="..\:/Users/ahmet/QuizApp/app/src/main/res/drawable/ic_baseline_check_circle.xml" value="0.17" />
+        <entry key="..\:/Users/ahmet/QuizApp/app/src/main/res/drawable/ic_baseline_home.xml" value="0.172" />
+        <entry key="..\:/Users/ahmet/QuizApp/app/src/main/res/drawable/ic_baseline_leaderboard.xml" value="0.1095" />
+        <entry key="..\:/Users/ahmet/QuizApp/app/src/main/res/drawable/ic_baseline_notifications.xml" value="0.3595" />
+        <entry key="..\:/Users/ahmet/QuizApp/app/src/main/res/drawable/ic_cccoil.xml" value="0.1" />
+        <entry key="..\:/Users/ahmet/QuizApp/app/src/main/res/drawable/ic_cccoil__1_.xml" value="0.1" />
+        <entry key="..\:/Users/ahmet/QuizApp/app/src/main/res/drawable/ic_outline_cancel.xml" value="0.1175" />
+        <entry key="..\:/Users/ahmet/QuizApp/app/src/main/res/drawable/ic_test.xml" value="0.1" />
+        <entry key="..\:/Users/ahmet/QuizApp/app/src/main/res/xml/network_security_config.xml" value="0.1" />
+      </map>
+    </option>
+  </component>
   <component name="ProjectRootManager" version="2" languageLevel="JDK_11" default="true" project-jdk-name="Android Studio default JDK" project-jdk-type="JavaSDK">
     <output url="file://$PROJECT_DIR$/build/classes" />
   </component>
