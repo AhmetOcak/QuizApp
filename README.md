@@ -53,5 +53,5 @@ The app uses MVVM [Model-View-ViewModel] architecture to have a unidirectional f
 
 ![mvvm](https://user-images.githubusercontent.com/73544434/197416569-d42a6bbe-126e-4776-9c8f-2791925f738c.png)
 
-## Warning ⚠
+## Status ⚠
 The application is still under development. Therefore, some features may not work.
